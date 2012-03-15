@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="retry">Retry</string>
+    <string name="remoteconn_unavailable">Remote connection is unavailable at the moment.</string>
+    <string name="history_unavailable">History cannot be restored from SD card.</string>
+    <string name="history_unsaveable">History cannot be stored to SD card.</string>
+    <string name="history_erase">Are you sure you want to erase history completely?</string>
+    <string name="options_view_hex">View Hexagram</string>
+    <string name="options_references">References</string>
+    <string name="options_references_message">
+        &lt;p&gt;
+	        All the contents available to this application were found on the net.
+	        In particular the most complete and freely available sources are:
+	    &lt;/p&gt;
+	    &lt;p&gt;
+		    &lt;p&gt; http://wengu.tartarie.com/wg/wengu.php?l=Yijing&amp;no=0&lt;/p&gt;
+		    &lt;p&gt; http://www.ichingonline.net/instruction.php&lt;/p&gt;
+		&lt;p&gt;
+	    &lt;p&gt;
+	        This application is by no mean affiliated to the listed references.
+        &lt;/p&gt;
+    </string>
+    <string name="options_algo">Algorithm</string>
+    <string name="options_algo_message">
+        &lt;p&gt;
+	        The program uses the three coins method to produce hexagram lines. 
+	        Further informations about this method can be found on Wikipedia.
+        &lt;/p&gt;
+        &lt;p&gt;
+            Moreover, the applicable changing lines are obtained through 
+            Master Yin\'s rules.
+        &lt;/p&gt;
+        &lt;p&gt;
+            Keep in mind, however, that as long as the algorithm can actually reach each and every
+            possible combination of hexagrams and changing lines, it doesn\'t really matter which are the 
+            probabilities each symbol can appear with, if you believe a supreme Force to be responsible 
+            for the results.
+        &lt;/p&gt;
+    </string>
+    <string name="options_about">About</string>
+    <string name="options_about_message">
+        &lt;p&gt;
+	        This application is distributed freely in the hope that it will be useful.
+	        My purpose was to develop a free and complete I Ching Oracle for Android OS.
+	        If you want to contact me or if you spot any bug drop me an email at:	        
+        &lt;/p&gt;
+        &lt;p&gt;
+        	digitalillusion@altervista.org
+        &lt;/p&gt;
+        &lt;p&gt;
+        	Namaste!
+        &lt;/p&gt;
+    </string>
+    
+    
+    <string name="hex01">乾 Ch\'ien / The Creative</string>
+    <string name="hex02">坤 K\'un / The Receptive</string>
+    <string name="hex03">屯 Chun / Difficulty at the Beginning</string>
+    <string name="hex04">蒙 Mêng / Youthful Folly</string>
+    <string name="hex05">需 Hsü / Waiting (Nourishment)</string>
+    <string name="hex06">訟 Sung / Conflict</string>
+    <string name="hex07">師 Shih / The Army</string>
+    <string name="hex08">比 Pi / Holding Together [Union]</string>
+    <string name="hex09">小 畜 Hsiao Ch\'u / The Taming Power of the Small</string>
+    <string name="hex10">履 Lü / Treading [Conduct]</string>
+    <string name="hex11">泰 T\'ai / Peace</string>
+    <string name="hex12">否 P\'i / Standstill [Stagnation]</string>
+    <string name="hex13">同 人 T\'ung Jên / Fellowship with Men</string>
+    <string name="hex14">大 有 Ta Yu / Possession in Great Measure</string>
+    <string name="hex15">謙 Ch\'ien / Modesty</string>
+    <string name="hex16">豫 Yü / Enthusiasm</string>
+    <string name="hex17">隨 Sui / Following</string>
+    <string name="hex18">蠱 Ku / Work on What Has Been Spoiled [Decay]</string>
+    <string name="hex19">臨 Lin / Approach</string>
+    <string name="hex20">觀 Kuan / Contemplation (View)</string>
+    <string name="hex21">噬 嗑 Shih Ho / Biting Through</string>
+    <string name="hex22">賁 Pi / Grace</string>
+    <string name="hex23">剝 Po / Splitting Apart</string>
+    <string name="hex24">復 Fu / Return (The Turning Point)</string>
+    <string name="hex25">無 妄 Wu Wang / Innocence (The Unexpected)</string>
+    <string name="hex26">大 畜 Ta Ch\'u / The Taming Power of the Great</string>
+    <string name="hex27">頤 I / Corners of the Mouth (Providing Nourishment)</string>
+    <string name="hex28">大 過 Ta Kuo / Preponderance of the Great</string>
+    <string name="hex29">坎 K\'an / The Abysmal (Water)</string>
+    <string name="hex30">離 Li / The Clinging, Fire</string>
+    <string name="hex31">咸 Hsien / Influence (Wooing)</string>
+    <string name="hex32">恆 Hêng / Duration</string>
+    <string name="hex33">遯 TUN / Retreat</string>
+    <string name="hex34">大 壯 Ta Chuang / The Power of the Great</string>
+    <string name="hex35">晉 Chin / Progress</string>
+    <string name="hex36">明 夷 Ming I / Darkening of the Light</string>
+    <string name="hex37">家 人 Chia Jên / The Family [The Clan]</string>
+    <string name="hex38">睽 K\'uei / Opposition</string>
+    <string name="hex39">蹇 Chien / Obstruction</string>
+    <string name="hex40">解 Hsieh / Deliverance</string>
+    <string name="hex41">損 Sun / Decrease</string>
+    <string name="hex42">益 I / Increase</string>
+    <string name="hex43">夬 Kuai / Break-through (Resoluteness)</string>
+    <string name="hex44">姤 Kou / Coming to Meet</string>
+    <string name="hex45">萃 Ts\'ui / Gathering Together [Massing]</string>
+    <string name="hex46">升 Shêng / Pushing Upward</string>
+    <string name="hex47">困 K\'un / Oppression (Exhaustion)</string>
+    <string name="hex48">井 Ching / The Well</string>
+    <string name="hex49">革 Ko / Revolution (Molting)</string>
+    <string name="hex50">鼎 Ting / The Caldron</string>
+    <string name="hex51">震 Chên / The Arousing (Shock, Thunder)</string>
+    <string name="hex52">艮 Kên / Keeping Still, Mountain</string>
+    <string name="hex53">漸 Chien / Development (Gradual Progress)</string>
+    <string name="hex54">歸 妹 Kuei Mei / The Marrying Maiden</string>
+    <string name="hex55">豐 Fêng / Abundance [Fullness]</string>
+    <string name="hex56">旅 Lü / The Wanderer</string>
+    <string name="hex57">巽 Sun / The Gentle (The Penetrating, Wind)</string>
+    <string name="hex58">兌 Tui / The Joyous, Lake</string>
+    <string name="hex59">渙 Huan / Dispersion [Dissolution]</string>
+    <string name="hex60">節 Chieh / Limitation</string>
+    <string name="hex61">中 孚 Chung Fu / Inner Truth</string>
+    <string name="hex62">小 過 Hsiao Kuo / Preponderance of the Small</string>
+    <string name="hex63">既 濟 Chi Chi / After Completion</string>
+    <string name="hex64">未 濟 Wei Chi / Before Completion</string>
+    <string name="intro_header_icon_alt">I Ching logo</string>
+    <string name="consult_coin_alt">I Ching logo</string>
+    <string name="intro_header">        The I Ching is a "reflection of the universe in miniature". 
+        The word "I" has three meanings: ease and simplicity, change 
+        and transformation, and invariability. Both of the two 
+        branches of Chinese philosophy, Confucianism and Taoism, 
+        have their common roots here.</string>
+    <string name="intro_question_label">Pose your question to the Oracle:</string>
+    <string name="intro_noquestion_alert">Proceed without specifying a question?</string>
+    <string name="intro_consult">Consult</string>
+    <string name="intro_history_label">Or pick a question from your history:</string>
+    <string name="intro_history">View history</string>
+    <string name="intro_history_delete_entry">Delete</string>
+    <string name="intro_history_delete_all">Erase history</string>
+    <string name="consult_tapcoins">Tap the coins to generate an hexagram</string>
+    <string name="consult_read_desc">Read Description</string>
+    <string name="read_judge">The Judgement</string>
+    <string name="read_image">The Image</string>
+    <string name="app_name">I Ching</string>
+    <string name="read_cast">Cast Hexagram</string>
+    <string name="read_changing">Changing lines</string>
+    <string name="read_transformed">Transformed Hexagram</string>
+    <string name="read_changing_none">There are no changing lines</string>
+    <string name="read_changing_one">There is one changing line</string>
+    <string name="read_changing_count">There are %1$d changing lines</string>
+    <string name="read_changing_apply">Line %1$d applies.</string>
+    <string name="read_changing_apply_h">Cast hexagram apply.</string>
+    <string name="read_changing_apply_ht">Both hexagrams apply.</string>
+    <string name="read_changing_apply_t">Transformed hexagram apply.</string>
+
+</resources>
