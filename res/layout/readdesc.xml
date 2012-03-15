@@ -29,7 +29,7 @@
 
                 <LinearLayout
                     android:id="@+id/layHexAndDesc"
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="0dp"
                     android:layout_weight="0.79"
                     android:baselineAligned="false" >
@@ -43,7 +43,7 @@
                         <TableLayout
                             android:id="@+id/tblHexagram"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
+                            android:layout_height="fill_parent"
                             android:gravity="center_vertical|center_horizontal" >
 
                             <TableRow
@@ -123,27 +123,27 @@
 
                 <LinearLayout
                     android:id="@+id/layJudgeAndImage"
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1.11"
                     android:orientation="vertical" >
 
                     <LinearLayout
                         android:id="@+id/layJudge"
-                        android:layout_width="match_parent"
+                        android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
                         android:orientation="vertical" >
 
                         <LinearLayout
                             android:id="@+id/layJudgeInner"
-                            android:layout_width="match_parent"
+                            android:layout_width="fill_parent"
                             android:layout_height="98dp"
                             android:orientation="vertical" >
 
                             <TextView
                                 android:id="@+id/tvJudgeTitle"
-                                android:layout_width="match_parent"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:text="@string/read_judge"
                                 android:textAppearance="?android:attr/textAppearanceSmall"
@@ -151,7 +151,7 @@
 
                             <EditText
                                 android:id="@+id/etJudge"
-                                android:layout_width="match_parent"
+                                android:layout_width="fill_parent"
                                 android:layout_height="0dp"
                                 android:layout_weight="0.16"
                                 android:background="@android:color/black"
@@ -170,21 +170,21 @@
 
                     <LinearLayout
                         android:id="@+id/layImage"
-                        android:layout_width="match_parent"
+                        android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:layout_weight="0.82"
                         android:orientation="vertical" >
 
                         <LinearLayout
                             android:id="@+id/layImageInner"
-                            android:layout_width="match_parent"
+                            android:layout_width="fill_parent"
                             android:layout_height="76dp"
                             android:layout_weight="0.51"
                             android:orientation="vertical" >
 
                             <TextView
                                 android:id="@+id/tvImageTitle"
-                                android:layout_width="match_parent"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:text="@string/read_image"
                                 android:textAppearance="?android:attr/textAppearanceSmall"
@@ -192,7 +192,7 @@
 
                             <EditText
                                 android:id="@+id/etImage"
-                                android:layout_width="match_parent"
+                                android:layout_width="fill_parent"
                                 android:layout_height="0dp"
                                 android:layout_weight="0.20"
                                 android:background="@android:color/black"

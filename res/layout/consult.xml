@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:id="@+id/layConsult"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.10"
@@ -17,8 +17,8 @@
 
         <TextView
             android:id="@+id/tvQuestionConsult"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:text=""
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
@@ -31,7 +31,7 @@
 
 		<TableRow
             android:id="@+id/hexRow6"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="15dp">
         </TableRow>
         
@@ -68,7 +68,7 @@
 
  	<LinearLayout
         android:id="@+id/layInstructions"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical|center_horizontal" >
         
@@ -82,7 +82,7 @@
     
     <LinearLayout
         android:id="@+id/layCoins"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.1"
         android:gravity="fill_vertical|center_horizontal" >

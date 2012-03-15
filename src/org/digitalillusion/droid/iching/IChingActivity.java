@@ -32,7 +32,6 @@ import android.text.Spanned;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -45,14 +44,12 @@ import android.view.ViewGroup;
 import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TableRow;
@@ -348,7 +345,7 @@ public class IChingActivity extends Activity {
 				InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(etQuestion.getWindowToken(), 0);
 
-				if (question.isEmpty()) {
+				if (question.equals("")) {
 					AlertDialog alertDialog = new AlertDialog.Builder(IChingActivity.this).create();
 					alertDialog.setMessage(Utils.s(R.string.intro_noquestion_alert));
 					alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, Utils.s(R.string.yes), new DialogInterface.OnClickListener() {
