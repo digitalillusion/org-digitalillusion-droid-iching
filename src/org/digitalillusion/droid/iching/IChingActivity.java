@@ -324,7 +324,9 @@ public class IChingActivity extends Activity {
 			case ORACLE : 
 				setupTab(tabHost, "tab_consult", R.string.read_cast, R.id.layReadDesc);
 				setupTab(tabHost, "tab_changing", R.string.read_changing, R.id.layReadDesc);
-				setupTab(tabHost, "tab_future", R.string.read_transformed, R.id.layReadDesc);
+				if (changing != ICHING_APPLY_CAST) {
+					setupTab(tabHost, "tab_future", R.string.read_transformed, R.id.layReadDesc);
+				}
 				break;
 			case VIEW_HEX :
 				setupTab(tabHost, "tab_consult", R.string.read_cast, R.id.layReadDesc);
@@ -1397,6 +1399,7 @@ public class IChingActivity extends Activity {
 		
 		etChanging.setVisibility(View.VISIBLE);
 		String desc = "";
+		etOutput.setText(desc);
 		
 		switch (mode) {
 			case ORACLE :
