@@ -45,15 +45,21 @@
     <string name="options_about">About</string>
     <string name="options_about_message">
         &lt;p&gt;
-	        This application is distributed freely in the hope that it will be useful.
-	        My purpose was to develop a free and complete I Ching Oracle for Android OS.
-	        If you want to contact me or if you spot any bug drop me an email at:	        
+	        This application is Open Source released under GNU GPL v3, distributed freely 
+	        in the hope that it will be useful. The complete source code can be browsed and 
+	        downloaded at:
+	    &lt;/p&gt;
+	    &lt;p&gt;
+	        code.google.com/p/org-digitalillusion-droid-iching/
         &lt;/p&gt;
         &lt;p&gt;
+        	If you want to contact me or if you spot any bug drop me an email at:	        
+        &lt;/p&gt;
         	digitalillusion@altervista.org
         &lt;/p&gt;
         &lt;p&gt;
-        	Namaste!
+        	Thanks for your feedback, &lt;br/&gt;
+        	namaste!
         &lt;/p&gt;
     </string>
     
@@ -138,6 +144,7 @@
     <string name="intro_history_delete_all">Erase history</string>
     <string name="consult_tapcoins">Tap the coins to generate an hexagram</string>
     <string name="consult_read_desc">Read Description</string>
+    <string name="read_desc">Description</string>
     <string name="read_judge">The Judgement</string>
     <string name="read_image">The Image</string>
     <string name="app_name">I Ching</string>
@@ -151,5 +158,14 @@
     <string name="read_changing_apply_h">Cast hexagram apply.</string>
     <string name="read_changing_apply_ht">Both hexagrams apply.</string>
     <string name="read_changing_apply_t">Transformed hexagram apply.</string>
+    <string name="read_changing_select">Choose any of the lines to consult:</string>
+    <string name="read_changing_select_1">Bottom line</string>
+    <string name="read_changing_select_2">Second line</string>
+    <string name="read_changing_select_3">Third line</string>
+    <string name="read_changing_select_4">Fourth line</string>
+    <string name="read_changing_select_5">Fifth line</string>
+    <string name="read_changing_select_6">Upper line</string>
+    <string name="read_changing_select_all">All lines</string>
+    
 
 </resources>

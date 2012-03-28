@@ -12,7 +12,8 @@
         <TabWidget
             android:id="@android:id/tabs"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="31dp"
+            android:layout_gravity="" />
 
         <FrameLayout
             android:id="@android:id/tabcontent"
@@ -20,197 +21,175 @@
             android:layout_height="fill_parent" >
 
             <LinearLayout
-                android:id="@+id/layConsult"
+                android:id="@+id/layReadDesc"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:baselineAligned="false"
                 android:orientation="vertical"
                 android:padding="5dp" >
 
+                <TextView
+		            android:id="@+id/tvQuestionReadDesc"
+		            android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                android:layout_weight="0.01"
+		            android:text=""
+		            android:textAppearance="?android:attr/textAppearanceMedium" 
+		            android:textColor="@android:color/white"/>
+                    
+                <TextView
+	                android:id="@+id/tvHexName"
+	                android:layout_width="fill_parent"
+	                android:layout_height="30dp"
+	                android:layout_weight="0.01"
+	                android:textAppearance="?android:attr/textAppearanceSmall"
+	                android:textStyle="bold" />
+
                 <LinearLayout
-                    android:id="@+id/layHexAndDesc"
-                    android:layout_width="fill_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="0.79"
+                    android:id="@+id/layHexAndButtons"
+                    android:layout_width="match_parent"
+                    android:layout_height="118dp"
                     android:baselineAligned="false" >
 
-                    <LinearLayout
-                        android:id="@+id/layHex"
-                        android:layout_width="120px"
-                        android:layout_height="120px"
-                        android:layout_gravity="center_vertical" >
+                    <TableLayout
+                        android:id="@+id/tblHexagram"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center_vertical|center_horizontal" >
 
-                        <TableLayout
-                            android:id="@+id/tblHexagram"
+                        <TableRow
+                            android:id="@+id/hexRow6"
                             android:layout_width="wrap_content"
-                            android:layout_height="fill_parent"
-                            android:gravity="center_vertical|center_horizontal" >
+                            android:layout_height="8dp"
+                            android:layout_weight="1" >
+                        </TableRow>
 
-                            <TableRow
-                                android:id="@+id/hexRow6"
-                                android:layout_width="wrap_content"
-                                android:layout_height="8px" >
-                            </TableRow>
+                        <TableRow
+                            android:id="@+id/hexRow5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="8dp"
+                            android:layout_weight="1" >
+                        </TableRow>
 
-                            <TableRow
-                                android:id="@+id/hexRow5"
-                                android:layout_width="wrap_content"
-                                android:layout_height="8px" >
-                            </TableRow>
+                        <TableRow
+                            android:id="@+id/hexRow4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="8dp"
+                            android:layout_weight="1" >
+                        </TableRow>
 
-                            <TableRow
-                                android:id="@+id/hexRow4"
-                                android:layout_width="wrap_content"
-                                android:layout_height="8px" >
-                            </TableRow>
+                        <TableRow
+                            android:id="@+id/hexRow3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="8dp"
+                            android:layout_weight="1" >
+                        </TableRow>
 
-                            <TableRow
-                                android:id="@+id/hexRow3"
-                                android:layout_width="wrap_content"
-                                android:layout_height="8px" >
-                            </TableRow>
+                        <TableRow
+                            android:id="@+id/hexRow2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="8dp"
+                            android:layout_weight="1" >
+                        </TableRow>
 
-                            <TableRow
-                                android:id="@+id/hexRow2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="8px" >
-                            </TableRow>
-
-                            <TableRow
-                                android:id="@+id/hexRow1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="8px" >
-                            </TableRow>
-                        </TableLayout>
-                    </LinearLayout>
+                        <TableRow
+                            android:id="@+id/hexRow1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="8dp"
+                            android:layout_weight="1" >
+                        </TableRow>
+                    </TableLayout>
 
                     <LinearLayout
-                        android:id="@+id/layDesc"
-                        android:layout_width="0dp"
-                        android:layout_height="fill_parent"
-                        android:layout_weight="0.46"
-                        android:orientation="vertical"
-                        android:paddingLeft="10dp" >
+                        android:id="@+id/layButtonsAndChanging"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_margin="5dp"
+                        android:orientation="vertical" >
+                        
+                        <!-- Buttons for description, judgement and image -->
+                        <Button
+                            android:id="@+id/btReadDesc"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center"
+                            android:layout_weight="0.33"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:text="@string/read_desc" />
 
-                        <LinearLayout
-                            android:id="@+id/layDescInner"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical" >
+                        <Button
+                            android:id="@+id/btReadJudge"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="0.33"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:text="@string/read_judge" />
 
-                            <TextView
-                                android:id="@+id/tvDescTitle"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceSmall"
-                                android:textStyle="bold" />
+                        <Button
+                            android:id="@+id/btReadImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="0.33"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:text="@string/read_image" />
+                        
+                        <!-- Interface for changing lines -->
+                        <TextView
+	                        android:id="@+id/tvChanging"
+	                        android:layout_width="fill_parent"
+	                        android:layout_height="fill_parent"
+	                        android:layout_weight="0.33"
+	                        android:background="@android:color/black"
+	                        android:fadingEdge="vertical"
+	                        android:focusable="false"
+	                        android:paddingLeft="5dp"
+	                        android:textColor="@android:color/white" 
+	                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                            <EditText
-                                android:id="@+id/etDesc"
-                                android:layout_width="fill_parent"
-                                android:layout_height="fill_parent"
-                                android:background="@android:color/black"
-                                android:fadingEdge="vertical"
-                                android:focusable="false"
-                                android:inputType="textMultiLine"
-                                android:scrollbarStyle="insideInset"
-                                android:scrollbars="vertical"
-                                android:textAppearance="?android:attr/textAppearanceSmall"
-                                android:textColor="@android:color/white" android:paddingLeft="5dp"/>
-                        </LinearLayout>
+                        <Spinner 
+                            android:id="@+id/spChanging"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="0.33"
+                            android:textAppearance="?android:attr/textAppearanceSmall" 
+                            android:visibility="gone">
+                        </Spinner>
                     </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/layJudgeAndImage"
+                    android:id="@+id/layOutput"
                     android:layout_width="fill_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1.11"
+                    android:layout_weight="1"
+                    android:baselineAligned="true"
                     android:orientation="vertical" >
 
-                    <LinearLayout
-                        android:id="@+id/layJudge"
+                    <EditText
+                        android:id="@+id/etOutput"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical" >
+                        android:layout_weight="0.33"
+                        android:background="@android:color/black"
+                        android:fadingEdge="vertical"
+                        android:fadingEdgeLength="20dp"
+                        android:focusable="false"
+                        android:paddingLeft="5dp"
+                        android:scrollbarStyle="insideInset"
+                        android:scrollbars="vertical"
+                        android:textColor="@android:color/white"
+                        android:inputType="none" >
 
-                        <LinearLayout
-                            android:id="@+id/layJudgeInner"
-                            android:layout_width="fill_parent"
-                            android:layout_height="98dp"
-                            android:orientation="vertical" >
-
-                            <TextView
-                                android:id="@+id/tvJudgeTitle"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:text="@string/read_judge"
-                                android:textAppearance="?android:attr/textAppearanceSmall"
-                                android:textStyle="bold" />
-
-                            <EditText
-                                android:id="@+id/etJudge"
-                                android:layout_width="fill_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="0.16"
-                                android:background="@android:color/black"
-                                android:fadingEdge="vertical"
-                                android:focusable="false"
-                                android:inputType="textMultiLine"
-                                android:scrollbarStyle="insideInset"
-                                android:scrollbars="vertical"
-                                android:textAppearance="?android:attr/textAppearanceSmall"
-                                android:textColor="@android:color/white" android:paddingLeft="5dp">
-
-                                <requestFocus />
-                            </EditText>
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/layImage"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:layout_weight="0.82"
-                        android:orientation="vertical" >
-
-                        <LinearLayout
-                            android:id="@+id/layImageInner"
-                            android:layout_width="fill_parent"
-                            android:layout_height="76dp"
-                            android:layout_weight="0.51"
-                            android:orientation="vertical" >
-
-                            <TextView
-                                android:id="@+id/tvImageTitle"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:text="@string/read_image"
-                                android:textAppearance="?android:attr/textAppearanceSmall"
-                                android:textStyle="bold" />
-
-                            <EditText
-                                android:id="@+id/etImage"
-                                android:layout_width="fill_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="0.20"
-                                android:background="@android:color/black"
-                                android:cursorVisible="true"
-                                android:fadingEdge="vertical"
-                                android:focusable="false"
-                                android:inputType="textMultiLine"
-                                android:scrollbarStyle="insideInset"
-                                android:scrollbars="vertical"
-                                android:textAppearance="?android:attr/textAppearanceSmall"
-                                android:textColor="@android:color/white" android:paddingLeft="5dp"/>
-                        </LinearLayout>
-                    </LinearLayout>
-
+                        <requestFocus />
+                    </EditText>
                 </LinearLayout>
+
             </LinearLayout>
 
-        </FrameLayout>
-    </LinearLayout>
-
+   		</FrameLayout>
+   	</LinearLayout>
 </TabHost>
