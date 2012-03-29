@@ -293,7 +293,7 @@ public class IChingActivity extends Activity {
     		tvHistory.setVisibility(View.GONE);
     		AlertDialog alertDialog = new AlertDialog.Builder(IChingActivity.this).create();
 			alertDialog.setMessage(Utils.s(R.string.history_unavailable));
-			alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, Utils.s(R.string.ok), new DialogInterface.OnClickListener() {
+			alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, Utils.s(android.R.string.ok), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {} 
 			});
 			alertDialog.show();
@@ -537,7 +537,7 @@ public class IChingActivity extends Activity {
 	  	tvMessage.setPadding(5, 5, 5, 5);
 	  	
 	  	alertDialog.setView(tvMessage);
-	  	alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, Utils.s(R.string.ok), new DialogInterface.OnClickListener() {
+	  	alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, Utils.s(android.R.string.ok), new DialogInterface.OnClickListener() {
 	  		public void onClick(DialogInterface dialog, int which) {
 	  			alertDialog.dismiss(); 
 	  		} 
@@ -667,16 +667,15 @@ public class IChingActivity extends Activity {
 	 * @throws IOException if the connection fails
 	 */
 	private Spanned getRemoteString(String hex, String section) throws IOException {
-				
-		InputStream is = Utils.downloadUrl(
-			ICHING_REMOTE_URL,
-			new String[] { "h", hex },
-			new String[] { "s", section }
-		);
-		
 		String key = hex + section;
 		Spanned spanned;
 		if (!remoteStringCache.containsKey(key)) {
+			InputStream is = Utils.downloadUrl(
+				ICHING_REMOTE_URL,
+				new String[] { "h", hex },
+				new String[] { "s", section }
+			);
+			
 			String text = Utils.streamToString(is);
 			if (text.equals("")) {
 				// Retry
@@ -1296,18 +1295,14 @@ public class IChingActivity extends Activity {
 		
 		OnTouchListener onTouchListener = new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
-				if (!remoteStringCache.containsKey(hexMap + ICHING_REMOTE_SECTION_DESC)) {
-					try {
-						etOutput.setText(getRemoteString(hexMap, ICHING_REMOTE_SECTION_DESC));
-					} catch (IOException e) {
-						handleNetworkException(new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int which) {
-								renderReadDesc(hexToRender);
-							} 
-						});
-					}
-				} else {
-					etOutput.setText(remoteStringCache.get(hexMap + ICHING_REMOTE_SECTION_DESC));
+				try {
+					etOutput.setText(getRemoteString(hexMap, ICHING_REMOTE_SECTION_DESC));
+				} catch (IOException e) {
+					handleNetworkException(new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							renderReadDesc(hexToRender);
+						} 
+					});
 				}
 				btReadDesc.setPressed(true);
 				btReadJudge.setPressed(false);
@@ -1320,18 +1315,14 @@ public class IChingActivity extends Activity {
 		
 		btReadJudge.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
-				if (!remoteStringCache.containsKey(hexMap + ICHING_REMOTE_SECTION_JUDGE)) {
-					try {
-						etOutput.setText(getRemoteString(hexMap, ICHING_REMOTE_SECTION_JUDGE));
-					} catch (IOException e) {
-						handleNetworkException(new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int which) {
-								renderReadDesc(hexToRender);
-							} 
-						});
-					}
-				} else {
-					etOutput.setText(remoteStringCache.get(hexMap + ICHING_REMOTE_SECTION_JUDGE));
+				try {
+					etOutput.setText(getRemoteString(hexMap, ICHING_REMOTE_SECTION_JUDGE));
+				} catch (IOException e) {
+					handleNetworkException(new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							renderReadDesc(hexToRender);
+						} 
+					});
 				}
 				btReadDesc.setPressed(false);
 				btReadJudge.setPressed(true);
@@ -1343,18 +1334,14 @@ public class IChingActivity extends Activity {
 
 		btImage.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
-				if (!remoteStringCache.containsKey(hexMap + ICHING_REMOTE_SECTION_IMAGE)) {
-					try {
-						etOutput.setText(getRemoteString(hexMap, ICHING_REMOTE_SECTION_IMAGE));
-					} catch (IOException e) {
-						handleNetworkException(new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int which) {
-								renderReadDesc(hexToRender);
-							} 
-						});
-					}
-				} else {
-					etOutput.setText(remoteStringCache.get(hexMap + ICHING_REMOTE_SECTION_IMAGE));
+				try {
+					etOutput.setText(getRemoteString(hexMap, ICHING_REMOTE_SECTION_IMAGE));
+				} catch (IOException e) {
+					handleNetworkException(new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							renderReadDesc(hexToRender);
+						} 
+					});
 				}
 				btReadDesc.setPressed(false);
 				btReadJudge.setPressed(false);

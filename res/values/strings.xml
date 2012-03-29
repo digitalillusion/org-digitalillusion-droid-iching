@@ -3,7 +3,6 @@
 
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
     <string name="retry">Retry</string>
     <string name="remoteconn_unavailable">Remote connection is unavailable at the moment.</string>
@@ -20,6 +19,7 @@
 	    &lt;p&gt;
 		    &lt;p&gt; http://wengu.tartarie.com/wg/wengu.php?l=Yijing&amp;no=0&lt;/p&gt;
 		    &lt;p&gt; http://www.ichingonline.net/instruction.php&lt;/p&gt;
+   		    &lt;p&gt; www.onlineclarity.co.uk/learn/consult/mml.php &lt;/p&gt;
 		&lt;p&gt;
 	    &lt;p&gt;
 	        This application is by no mean affiliated to the listed references.
