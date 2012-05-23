@@ -41,8 +41,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
-import android.view.ViewGroup;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -200,6 +200,7 @@ public class IChingActivity extends Activity {
      */
 	public void gotoMain() {
 		setContentView(R.layout.main);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 		
 		final EditText etQuestion = (EditText) findViewById(R.id.etQuestion);
         etQuestion.setOnEditorActionListener(new OnEditorActionListener() {
@@ -362,8 +363,8 @@ public class IChingActivity extends Activity {
 		for(int i = 0; i < tabWidget.getChildCount();i++)
 		{
 			View child = tabWidget.getChildAt(i);
-			child.getLayoutParams().height = 35;
-			child.setPadding(0, 0, 0, 10);
+			child.getLayoutParams().height = 39;
+			child.setPadding(3, 3, 3, 10);
 		}
 	}
 	
@@ -600,6 +601,7 @@ public class IChingActivity extends Activity {
 		hexRow 		= savedInstanceState.getInt("hexRow");
 		changing 	= savedInstanceState.getInt("changing");
 		hex 		= savedInstanceState.getIntArray("hex");
+		tHex 		= savedInstanceState.getIntArray("tHex");
 		
 		mode		= READ_DESC_MODE.valueOf(savedInstanceState.getString("mode"));
 		
@@ -629,6 +631,7 @@ public class IChingActivity extends Activity {
 		savedInstanceState.putInt("hexRow", hexRow);
 		savedInstanceState.putInt("changing", changing);
 		savedInstanceState.putIntArray("hex", hex);
+		savedInstanceState.putIntArray("tHex", tHex);
 
 		savedInstanceState.putString("mode", String.valueOf(mode == null ? READ_DESC_MODE.ORACLE : mode));
 		
@@ -666,17 +669,54 @@ public class IChingActivity extends Activity {
 	 * @return A string from the server
 	 * @throws IOException if the connection fails
 	 */
-	private Spanned getRemoteString(String hex, String section) throws IOException {
+	private Spanned getRemoteString(final String hex, final String section) throws IOException {
 		String key = hex + section;
 		Spanned spanned;
-		if (!remoteStringCache.containsKey(key)) {
-			InputStream is = Utils.downloadUrl(
-				ICHING_REMOTE_URL,
-				new String[] { "h", hex },
-				new String[] { "s", section }
-			);
+		
+		final class RemoteWorker extends Thread {
+			private String text;
+			private IOException ioe;
+			@Override
+			public void run() {
+				try {
+					InputStream is = Utils.downloadUrl(
+						ICHING_REMOTE_URL,
+						new String[] { "h", hex },
+						new String[] { "s", section }
+					);
+					
+					text = Utils.streamToString(is);
+				} catch (IOException ioe) {
+					this.ioe = ioe;
+				}
+			}
 			
-			String text = Utils.streamToString(is);
+			public String getText() {
+				return text;
+			}
+			
+			public IOException getIOException() {
+				return ioe;
+			}
+		};
+
+		
+		if (!remoteStringCache.containsKey(key)) {
+			// Avoid NetworkInMainThreadException
+			RemoteWorker worker = new RemoteWorker();
+			worker.start();
+			
+			while (worker.isAlive()) {
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {}
+			}
+			
+			if (worker.getIOException() != null) {
+				throw worker.getIOException();
+			}
+			String text = worker.getText();
+	
 			if (text.equals("")) {
 				// Retry
 				spanned = getRemoteString(hex, section);

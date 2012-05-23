@@ -115,7 +115,7 @@ $book['02']['line5'] =
 $book['02']['line6'] = 
 ' Six at the top means:
   Dragons fight in the meadow. 
-  Their blood is black and yellow. 
+  Their blood is black and yellow. \e
   In the top place the dark element should yield to the light. If it attempts to maintain a position to which it is not entitled and to rule instead of serving, it draws down upon itself the anger of the strong. A struggle ensues in which it is overthrown, with injury, however, to both sides. The dragon, symbol of heaven, comes to fight the false dragon that symbolized the inflation of the earth principle. Midnight blue is the color of heaven; yellow is the color of earth. Therefore, when black and yellow blood flow, it is a sign that in this unnatural contest both primal powers suffer injury.';
 $book['02']['line-3'] = 
 ' When all the lines are sixes, it means:
