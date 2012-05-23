@@ -41,8 +41,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -360,11 +360,12 @@ public class IChingActivity extends Activity {
 		renderReadDesc(hex);
 		
 		TabWidget tabWidget = tabHost.getTabWidget();
+		tabWidget.setStripEnabled(false);
 		for(int i = 0; i < tabWidget.getChildCount();i++)
 		{
 			View child = tabWidget.getChildAt(i);
-			child.getLayoutParams().height = 39;
-			child.setPadding(3, 3, 3, 10);
+			child.getLayoutParams().height = 35;
+			child.setPadding(0, 0, 0, 10);
 		}
 	}
 	
