@@ -143,7 +143,7 @@
 	                        android:layout_width="fill_parent"
 	                        android:layout_height="fill_parent"
 	                        android:layout_weight="0.33"
-	                        android:background="@android:color/black"
+	                        android:background="@android:color/transparent"
 	                        android:fadingEdge="vertical"
 	                        android:focusable="false"
 	                        android:paddingLeft="5dp"
@@ -174,15 +174,17 @@
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:layout_weight="0.33"
-                        android:background="@android:color/black"
+                        android:background="@android:color/transparent"
                         android:fadingEdge="vertical"
-                        android:fadingEdgeLength="20dp"
+                        android:fadingEdgeLength="40dp"
                         android:focusable="false"
                         android:paddingLeft="5dp"
                         android:scrollbarStyle="insideInset"
                         android:scrollbars="vertical"
                         android:textColor="@android:color/white"
-                        android:inputType="none" >
+                        android:inputType="textNoSuggestions|textMultiLine" 
+                        android:textIsSelectable="true"
+                        >
 
                         <requestFocus />
                     </EditText>
