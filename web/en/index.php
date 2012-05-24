@@ -115,7 +115,7 @@ $book['02']['line5'] =
 $book['02']['line6'] = 
 ' Six at the top means:
   Dragons fight in the meadow. 
-  Their blood is black and yellow. \e
+  Their blood is black and yellow.  \e
   In the top place the dark element should yield to the light. If it attempts to maintain a position to which it is not entitled and to rule instead of serving, it draws down upon itself the anger of the strong. A struggle ensues in which it is overthrown, with injury, however, to both sides. The dragon, symbol of heaven, comes to fight the false dragon that symbolized the inflation of the earth principle. Midnight blue is the color of heaven; yellow is the color of earth. Therefore, when black and yellow blood flow, it is a sign that in this unnatural contest both primal powers suffer injury.';
 $book['02']['line-3'] = 
 ' When all the lines are sixes, it means:
@@ -266,7 +266,7 @@ $book['05']['image'] =
   Thus the superior man eats and drinks,
   Is joyous and of good cheer. \e
   When clouds rise in the sky, it is a sign that it will rain. There is nothing to do but to wait until after the rain falls. It is the same in life when destiny is at work. We should not worry and seek to shape the future by interfering in things before the time is ripe. We should quietly fortify the body with food and drink and the mind with gladness and good cheer. Fate comes when it will, and thus we are ready.';
-$book['05']['line3'] = 
+$book['05']['line1'] = 
 ' Nine at the beginning means:
   Waiting in the meadow. 
   It furthers one to abide in what endures. 
