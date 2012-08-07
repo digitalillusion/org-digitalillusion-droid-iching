@@ -7,7 +7,9 @@
     <string name="retry">Retry</string>
     <string name="remoteconn_unavailable">Remote connection is unavailable at the moment.</string>
     <string name="history_unavailable">History cannot be restored from SD card.</string>
+    <string name="options_unavailable">Settings cannot be restored from SD card.</string>
     <string name="history_unsaveable">History cannot be stored to SD card.</string>
+    <string name="options_unsaveable">Settings cannot be stored to SD card.</string>
     <string name="history_erase">Are you sure you want to erase history completely?</string>
     <string name="options_view_hex">View Hexagram</string>
     <string name="options_references">References</string>
@@ -25,15 +27,14 @@
 	        This application is by no mean affiliated to the listed references.
         &lt;/p&gt;
     </string>
-    <string name="options_algo">Algorithm</string>
+    <string name="options_algo">Algorithms</string>
     <string name="options_algo_message">
         &lt;p&gt;
 	        The program uses the three coins method to produce hexagram lines. 
-	        Further informations about this method can be found on Wikipedia.
         &lt;/p&gt;
         &lt;p&gt;
-            Moreover, the applicable changing lines are obtained through 
-            Master Yin\'s rules.
+            The applicable changing lines are obtainable through
+            Master Yin\'s rules (default), Nanjing rules, or free interpretation.
         &lt;/p&gt;
         &lt;p&gt;
             Keep in mind, however, that as long as the algorithm can actually reach each and every
@@ -59,9 +60,14 @@
         &lt;/p&gt;
         &lt;p&gt;
         	Thanks for your feedback, &lt;br/&gt;
-        	namaste!
+        	namasté!
         &lt;/p&gt;
     </string>
+    <string name="options_settings">Settings</string>
+    <string name="settings_chlines_evaluator">Changing lines evaluator</string>
+    <string name="settings_chlines_evaluator_0">Manual</string>
+    <string name="settings_chlines_evaluator_1">Master Yin</string>
+    <string name="settings_chlines_evaluator_2">Nanjing</string>
     
     
     <string name="hex01">乾 Ch\'ien / The Creative</string>
@@ -155,9 +161,10 @@
     <string name="read_changing_one">There is one changing line</string>
     <string name="read_changing_count">There are %1$d changing lines</string>
     <string name="read_changing_apply">Line %1$d applies.</string>
-    <string name="read_changing_apply_h">Cast hexagram apply.</string>
+    <string name="read_changing_apply_n">No line reading nor hexagram apply.</string>
     <string name="read_changing_apply_ht">Both hexagrams apply.</string>
-    <string name="read_changing_apply_t">Transformed hexagram apply.</string>
+    <string name="read_changing_apply_h">Cast hexagram applies.</string>
+    <string name="read_changing_apply_t">Transformed hexagram applies.</string>
     <string name="read_changing_select">Choose any of the lines to consult:</string>
     <string name="read_changing_select_1">Bottom line</string>
     <string name="read_changing_select_2">Second line</string>
