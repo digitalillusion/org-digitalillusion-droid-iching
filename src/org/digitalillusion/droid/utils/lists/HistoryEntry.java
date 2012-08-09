@@ -1,8 +1,12 @@
-package org.digitalillusion.droid.iching;
+package org.digitalillusion.droid.utils.lists;
 
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * An entry of the history list
+ * @author digitalillusion
+ */
 public class HistoryEntry implements Serializable {
 
 	private static final long serialVersionUID = 5369219005455317857L;

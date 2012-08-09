@@ -2,13 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.digitalillusion.droid.iching"
     android:configChanges="orientation|keyboardHidden" 
-    android:versionCode="11"
-    android:versionName="1.1.2" 
-    android:installLocation="auto" >
+    android:versionCode="18"
+    android:versionName="1.2.1" >
 
-    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="14" />
+    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="7" android:maxSdkVersion="7" />
     
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> 
 
     <application
