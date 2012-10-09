@@ -1,6 +1,6 @@
-package org.digitalillusion.droid.changinglines;
+package org.digitalillusion.droid.iching.changinglines;
 
-import org.digitalillusion.droid.utils.Consts;
+import org.digitalillusion.droid.iching.utils.Consts;
 
 /**
  * Implementor of the Master Yin evaluator

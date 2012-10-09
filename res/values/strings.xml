@@ -5,13 +5,16 @@
     <string name="no">No</string>
     <string name="cancel">Cancel</string>
     <string name="retry">Retry</string>
+    <string name="update">Update</string>
     <string name="remoteconn_unavailable">Remote connection is unavailable at the moment.</string>
     <string name="history_unavailable">History cannot be restored from SD card.</string>
     <string name="options_unavailable">Settings cannot be restored from SD card.</string>
     <string name="history_unsaveable">History cannot be stored to SD card.</string>
     <string name="options_unsaveable">Settings cannot be stored to SD card.</string>
     <string name="history_erase">Are you sure you want to erase history completely?</string>
+    <string name="hex_reset_section">Are you sure you want to reset ALL this hexagram definitions?</string>
     <string name="options_view_hex">View Hexagram</string>
+    <string name="options_view_edit_hex">View/Edit Hexagram</string>
     <string name="options_references">References</string>
     <string name="options_references_message">
         &lt;p&gt;
@@ -33,7 +36,7 @@
 	        The program uses the three coins method to produce hexagram lines. 
         &lt;/p&gt;
         &lt;p&gt;
-            The applicable changing lines are obtainable through
+            The applicable changing lines are obtained through
             Master Yin\'s rules (default), Nanjing rules, or free interpretation.
         &lt;/p&gt;
         &lt;p&gt;
@@ -64,10 +67,18 @@
         &lt;/p&gt;
     </string>
     <string name="options_settings">Settings</string>
+    <string name="settings_vibration">Vibration</string>
+    <string name="settings_vibration_0">Off</string>
+    <string name="settings_vibration_1">On throw coins</string>
     <string name="settings_chlines_evaluator">Changing lines evaluator</string>
     <string name="settings_chlines_evaluator_0">Manual</string>
     <string name="settings_chlines_evaluator_1">Master Yin</string>
     <string name="settings_chlines_evaluator_2">Nanjing</string>
+    <string name="settings_lang">Language</string>
+    <string name="settings_lang_en">English</string>
+    <string name="settings_dictionary">Dictionary</string>
+    <string name="settings_dictionary_altervista">androidiching.altervista.org</string>
+    <string name="settings_dictionary_custom">Custom (local)</string>
     
     
     <string name="hex01">乾 Ch\'ien / The Creative</string>
@@ -166,13 +177,20 @@
     <string name="read_changing_apply_h">Cast hexagram applies.</string>
     <string name="read_changing_apply_t">Transformed hexagram applies.</string>
     <string name="read_changing_select">Choose any of the lines to consult:</string>
-    <string name="read_changing_select_1">Bottom line</string>
-    <string name="read_changing_select_2">Second line</string>
-    <string name="read_changing_select_3">Third line</string>
-    <string name="read_changing_select_4">Fourth line</string>
-    <string name="read_changing_select_5">Fifth line</string>
-    <string name="read_changing_select_6">Upper line</string>
+    <string name="read_changing_select_line1">Bottom line</string>
+    <string name="read_changing_select_line2">Second line</string>
+    <string name="read_changing_select_line3">Third line</string>
+    <string name="read_changing_select_line4">Fourth line</string>
+    <string name="read_changing_select_line5">Fifth line</string>
+    <string name="read_changing_select_line6">Upper line</string>
     <string name="read_changing_select_all">All lines</string>
-    
+    <string name="read_changing_edit_section">Edit reading</string>
+    <string name="read_changing_reset_section">Reset</string>
+    <string name="edit_section_quote">Quote:</string>
+    <string name="edit_section_quote_info">This text will be displayed first, emphasized. It is usually a direct citation of the I Ching.</string>
+    <string name="edit_section_reading">Reading:</string>
+    <string name="edit_section_reading_info">Write here your own interpretation for this passage.</string>
+    <string name="edit_section_update">%1s definition has been updated</string>
+    <string name="edit_section_reset">All %1s definitions has been reset</string>
 
 </resources>

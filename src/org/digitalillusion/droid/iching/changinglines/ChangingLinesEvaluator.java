@@ -1,6 +1,6 @@
-package org.digitalillusion.droid.changinglines;
+package org.digitalillusion.droid.iching.changinglines;
 
-import org.digitalillusion.droid.utils.Consts;
+import org.digitalillusion.droid.iching.utils.Consts;
 
 /**
  * Proxy class for the changing lines evaluators
@@ -9,9 +9,9 @@ import org.digitalillusion.droid.utils.Consts;
 public abstract class ChangingLinesEvaluator {
 	
 	public static ChangingLinesEvaluator produce(Integer evalType) {
-		if (evalType == Consts.SETTINGS_EVALUATOR_MASTERYIN) {
+		if (evalType == Consts.EVALUATOR_MASTERYIN) {
 			return new MasterYinEvaluator();
-		} else if (evalType == Consts.SETTINGS_EVALUATOR_NAJING) {
+		} else if (evalType == Consts.EVALUATOR_NAJING) {
 			return new NanjingEvaluator();
 		}
 		return new ChangingLinesEvaluator() {
@@ -63,7 +63,7 @@ public abstract class ChangingLinesEvaluator {
 	/** Flag to use when both cast and transformed hexagrams apply **/
 	public static final int ICHING_APPLY_BOTH = -3;
 	
-	/** Flag to use when nothing in the reading applies (Nanjing) **/
+	/** Flag to use when nothing in the reading applies (unused) **/
 	public static final int ICHING_APPLY_NONE = -4;
 	
 	/** Flag to use when the reading is manual **/

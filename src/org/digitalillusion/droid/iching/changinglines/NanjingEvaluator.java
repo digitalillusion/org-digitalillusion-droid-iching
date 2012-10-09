@@ -1,4 +1,4 @@
-package org.digitalillusion.droid.changinglines;
+package org.digitalillusion.droid.iching.changinglines;
 
 /**
  * Implementor of the Nanjing evaluator
@@ -21,10 +21,10 @@ public class NanjingEvaluator extends ChangingLinesEvaluator {
 		if (changingCount == 0) {
 			return ICHING_APPLY_CAST;
 		} else {
-			int changing = (54 - sum)%5;
+			int changing = (54 - sum)%6;
 			
 			if (!isChangingLine(hex[changing]) && changingCount == 3) {
-				return ICHING_APPLY_NONE;
+				return ICHING_APPLY_BOTH;
 			} else {
 				return changing;
 			}

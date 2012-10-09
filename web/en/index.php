@@ -266,7 +266,7 @@ $book['05']['image'] =
   Thus the superior man eats and drinks,
   Is joyous and of good cheer. \e
   When clouds rise in the sky, it is a sign that it will rain. There is nothing to do but to wait until after the rain falls. It is the same in life when destiny is at work. We should not worry and seek to shape the future by interfering in things before the time is ripe. We should quietly fortify the body with food and drink and the mind with gladness and good cheer. Fate comes when it will, and thus we are ready.';
-$book['05']['line3'] = 
+$book['05']['line1'] = 
 ' Nine at the beginning means:
   Waiting in the meadow. 
   It furthers one to abide in what endures. 
@@ -832,7 +832,7 @@ $book['15']['desc'] =
   This hexagram is made up of the trigrams Kên, Keeping Still, mountain, and K\'un. The mountain is the youngest son of the Creative, the representative of heaven and earth. It dispenses the blessings of heaven, the clouds and rain that gather round its summit, and thereafter shines forth radiant with heavenly light. This shows what modesty is and how it functions in great and strong men. K\'un, the earth, stands above. Lowliness is a quality of the earth: this is the very reason why it appears in this hexagram as exalted, by being placed above the mountain. This shows how modesty functions in lowly, simple people: they are lifted up by it.';
 $book['15']['judge'] = 
 ' MODESTY creates success. 
-  The superior man carries things through. 
+  The superior man carries things through. \e
   It is the law of heaven to make fullness empty and to make full what is modest; when the sun is at its zenith, it must, according to the law of heaven, turn toward its setting, and at its nadir it rises toward a new dawn. In obedience to the same law, the moon when it is full begins to wane, and when empty of light it waxes again. This heavenly law works itself out in the fates of men also. It is the law of earth to alter the full and to contribute to the modest. High mountains are worn down by the waters, and the valleys are filled up. It is the law of fate to undermine what is full and to prosper the modest. And men also hate fullness and love the modest.
   The destinies of men are subject to immutable laws that must fulfill themselves. But man has it in his power to shape his fate, according as his behavior exposes him to the influence of benevolent or of destructive forces. When a man holds a high position and is nevertheless modest, he shines with the light of wisdom; if he is in a lowly position and is modest, he cannot be passed by. Thus the superior man can carry out his work to the end without boasting of what he has achieved.';
 $book['15']['image'] = 
@@ -2666,7 +2666,7 @@ $book['47']['line-3'] =
 $book['48']['desc'] = 
 ' Ching / The Well 
   above K\'AN THE ABYSMAL, WATER
-  below SUN THE GENTLE, WIND, WOOD
+  below SUN THE GENTLE, WIND, WOOD\e
   Wood is below, water above. The wood goes down into the earth to bring up water. The image derives from the pole-and-bucket well of ancient China. The wood represents not the buckets, which in ancient times were made of clay, but rather the wooden poles by which the water is hauled up from the well. The image also refers to the world of plants, which lift water out of the earth by means of their fibers.
   The well from which water is drawn conveys the further idea of an inexhaustible dispensing of nourishment.';
 $book['48']['judge'] = 
@@ -3655,4 +3655,3 @@ if (empty($out)) {
   die($out);
 }
 ?>
-

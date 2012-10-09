@@ -6,6 +6,12 @@ import android.content.res.Resources;
 import android.graphics.drawable.AnimationDrawable;
 import android.widget.ImageView;
 
+/**
+ * A class to ease the animation of the coins
+ * 
+ * @author digitalillusion
+ * 
+ */
 public class AnimCoin {
    
    protected AnimationDrawable animation;

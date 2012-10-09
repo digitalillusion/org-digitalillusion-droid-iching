@@ -1,4 +1,4 @@
-package org.digitalillusion.droid.utils;
+package org.digitalillusion.droid.iching.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import org.digitalillusion.droid.iching.R;
-import org.digitalillusion.droid.utils.lists.HistoryEntry;
+import org.digitalillusion.droid.iching.utils.lists.HistoryEntry;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -76,13 +76,15 @@ public class DataPersister {
 			File historyFile = new File(path.getAbsolutePath() + ICHING_HISTORY_PATH) ;
 			if (historyFile.exists()) {
 				FileInputStream fis = new FileInputStream(historyFile);
-				ObjectInputStream stream = new ObjectInputStream(fis); 
+				ObjectInputStream stream = new BackwardCompatibleInputStream(fis); 
 				try {
 					ArrayList<HistoryEntry> persistedList = (ArrayList<HistoryEntry>) stream.readObject();
 					historyList.addAll(persistedList);
-				} catch (ClassNotFoundException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
-					Log.e("IChingActivity.loadHistory()", e.getMessage());
+					Log.e("IChingActivity.loadHistory()", "" + e.getMessage());
+					historyFile.delete();
+					throw new IOException("" + e.getMessage());
 				}
 	    		if(historyList.size() == 0) {
 	    			throw new FileNotFoundException();
