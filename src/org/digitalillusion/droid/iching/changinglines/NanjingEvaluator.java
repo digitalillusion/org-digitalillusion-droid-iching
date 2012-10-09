@@ -1,4 +1,4 @@
-package org.digitalillusion.droid.changinglines;
+package org.digitalillusion.droid.iching.changinglines;
 
 /**
  * Implementor of the Nanjing evaluator

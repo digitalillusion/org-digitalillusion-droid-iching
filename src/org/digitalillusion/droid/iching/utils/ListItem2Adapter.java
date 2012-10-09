@@ -1,4 +1,4 @@
-package org.digitalillusion.droid.utils;
+package org.digitalillusion.droid.iching.utils;
 
 import java.util.List;
 

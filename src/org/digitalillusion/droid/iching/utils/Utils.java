@@ -1,4 +1,4 @@
-package org.digitalillusion.droid.utils;
+package org.digitalillusion.droid.iching.utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -26,7 +26,11 @@ public class Utils {
 
 	private static Context context;
 
+	/** System newline character */
 	public static final String NEWLINE = System.getProperty("line.separator");
+	
+	/** Delimiter of the quote in hexagram sections definition */
+	public static final String HEX_SECTION_QUOTE_DELIMITER = "\\e";
 
 	public static void setContext(Context context) {
 		Utils.context = context;
@@ -589,5 +593,22 @@ public class Utils {
 		return hex;
 	}
 
+	public static String implode(String[] array, String sep) {
+		String out = null;
+		for (String str : array) {
+			if (out != null) {
+				out += sep;
+			} 
+			if (out == null) {
+				out = "";
+			}
+			out += str;
+		}
+		return out;
+	}
+	
+	public static boolean mask (Integer mask, Integer value) {
+		return (mask & value) > 0;
+	}
 
 }

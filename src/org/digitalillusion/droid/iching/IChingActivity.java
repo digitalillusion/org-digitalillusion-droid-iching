@@ -6,17 +6,18 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
-import org.digitalillusion.droid.changinglines.ChangingLinesEvaluator;
 import org.digitalillusion.droid.iching.anim.AnimCoin;
-import org.digitalillusion.droid.utils.Consts;
-import org.digitalillusion.droid.utils.DataPersister;
-import org.digitalillusion.droid.utils.ListItem2Adapter;
-import org.digitalillusion.droid.utils.Utils;
-import org.digitalillusion.droid.utils.lists.HistoryEntry;
-import org.digitalillusion.droid.utils.lists.SettingsEntry;
+import org.digitalillusion.droid.iching.changinglines.ChangingLinesEvaluator;
+import org.digitalillusion.droid.iching.utils.Consts;
+import org.digitalillusion.droid.iching.utils.DataPersister;
+import org.digitalillusion.droid.iching.utils.ListItem2Adapter;
+import org.digitalillusion.droid.iching.utils.RemoteResolver;
+import org.digitalillusion.droid.iching.utils.SettingsManager.SETTINGS_MAP;
+import org.digitalillusion.droid.iching.utils.Utils;
+import org.digitalillusion.droid.iching.utils.lists.HistoryEntry;
+import org.digitalillusion.droid.iching.utils.lists.SettingsEntry;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -25,6 +26,7 @@ import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.text.Html;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -38,6 +40,7 @@ import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -47,8 +50,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TabHost;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.TabHost.OnTabChangeListener;
+import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -68,12 +71,6 @@ public class IChingActivity extends IChingActivityRenderer {
 	/** Memory cache of the local history **/
 	private ArrayList<HistoryEntry> historyList = new ArrayList<HistoryEntry>();
 	
-	/** Settings map **/
-	private HashMap<String, Serializable> optionsMap = new HashMap<String, Serializable>();
-	
-	/** Unique identifier for the changing lines evaluator map option **/
-	private static final String OPTIONSMAP_CHANGING_LINES_EVALUATOR = "changingLinesEvaluator";
-	
 	/** The user question **/
 	protected String question;
 	/** The currently generated hexagram row **/
@@ -87,9 +84,9 @@ public class IChingActivity extends IChingActivityRenderer {
 	protected int[] tHex;
 	/** The current View **/
 	private Integer currentViewId;	 
-	/** Proxed changing lines evaluator */
+	/** Proxed changing lines evaluator **/
 	private ChangingLinesEvaluator changingLinesEvaluator;
-	
+		
 	/**
      * Move to the consult view
      */
@@ -151,6 +148,7 @@ public class IChingActivity extends IChingActivityRenderer {
 	public void gotoMain() {
 		setContentView(R.layout.main);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+		RemoteResolver.prepareRetryPopup();
 		
 		final EditText etQuestion = (EditText) findViewById(R.id.etQuestion);
         etQuestion.setOnEditorActionListener(new OnEditorActionListener() {
@@ -231,7 +229,7 @@ public class IChingActivity extends IChingActivityRenderer {
 	public void gotoReadDesc() {
 		
 		if (changingLinesEvaluator == null) {
-			Integer evalType = (Integer) optionsMap.get("changingLinesEvaluator");
+			Integer evalType = (Integer) settings.get(SETTINGS_MAP.CHANGING_LINES_EVALUATOR);
 			changingLinesEvaluator = ChangingLinesEvaluator.produce(evalType);
 		}
 		changing = changingLinesEvaluator.evaluate(hex, tHex);
@@ -240,21 +238,15 @@ public class IChingActivity extends IChingActivityRenderer {
 		
 		final TabHost tabHost = (TabHost) findViewById(android.R.id.tabhost);
 		tabHost.setup();
-		
-		final TextView tvDescTitle = (TextView) findViewById(R.id.tvHexName);
+
 		tabHost.setOnTabChangedListener(new OnTabChangeListener() {
 			public void onTabChanged(String tabId) {
 				if (tabId.equals("tab_consult")) {
-					String hexMap = Utils.hexMap(hex);
-					tvDescTitle.setText(Utils.getResourceByName(R.string.class, "hex" + hexMap));
-					renderReadDesc(question, hex, changing);
+					renderReadDesc(question, hex, changing, mode);
 				} else if (tabId.equals("tab_changing")) {
-					tvDescTitle.setText(Utils.s(R.string.read_changing));
 					renderReadDescChanging(question, hex, changing, mode);
 				} else if (tabId.equals("tab_future")) {
-					String hexMap = Utils.hexMap(tHex);
-					tvDescTitle.setText(Utils.getResourceByName(R.string.class, "hex" + hexMap));
-					renderReadDesc(question, tHex, changing);
+					renderReadDesc(question, tHex, changing, mode);
 				}
 			}
         });
@@ -264,25 +256,34 @@ public class IChingActivity extends IChingActivityRenderer {
 				if (changing == ChangingLinesEvaluator.ICHING_APPLY_CAST) {
 					setupTab(tabHost, "tab_consult", R.string.read_cast, R.id.layReadDesc);
 					setupTab(tabHost, "tab_changing", R.string.read_changing, R.id.layReadDesc);
-					renderReadDesc(question, hex, changing);
+					renderReadDesc(question, hex, changing, mode);
 				} else {
 					setupTab(tabHost, "tab_consult", R.string.read_cast, R.id.layReadDesc);
 					setupTab(tabHost, "tab_changing", R.string.read_changing, R.id.layReadDesc);
 					setupTab(tabHost, "tab_future", R.string.read_transformed, R.id.layReadDesc);
-					renderReadDesc(question, hex, changing);
+					renderReadDesc(question, hex, changing, mode);
 				}
 				break;
 			case VIEW_HEX :
 				setupTab(tabHost, "tab_consult", R.string.read_cast, R.id.layReadDesc);
 				setupTab(tabHost, "tab_changing", R.string.read_changing, R.id.layReadDesc);
-				renderReadDesc(question, hex, changing);
+				renderReadDesc(question, hex, changing, mode);
 				break;
 		}
 		
 		// Display current tab
 		tabHost.getCurrentView().setVisibility(View.VISIBLE);
+		final TextView tvDescTitle = (TextView) findViewById(R.id.tvHexName);
 		String hexMap = Utils.hexMap(hex);
 		tvDescTitle.setText(Utils.getResourceByName(R.string.class, "hex" + hexMap));
+		
+		TabWidget tabWidget = tabHost.getTabWidget();
+		for(int i = 0; i < tabWidget.getChildCount();i++)
+		{
+			View child = tabWidget.getChildAt(i);
+			child.getLayoutParams().height = 35;
+			child.setPadding(0, 0, 0, 10);
+		}
 	}
 	
 	/**
@@ -293,23 +294,58 @@ public class IChingActivity extends IChingActivityRenderer {
 		
 		final ListView lvSettings = (ListView) findViewById(R.id.lvSettings);
 		
-		List<SettingsEntry<Integer>> settingsList = new ArrayList<SettingsEntry<Integer>>();
-		SettingsEntry<Integer> changingLinesOption = new SettingsEntry<Integer>();
-		changingLinesOption.addOptionValue(Consts.SETTINGS_EVALUATOR_MANUAL);
-		changingLinesOption.addOptionValue(Consts.SETTINGS_EVALUATOR_MASTERYIN);
-		changingLinesOption.addOptionValue(Consts.SETTINGS_EVALUATOR_NAJING);
-		changingLinesOption.setOptionName("settings_chlines_evaluator");
-		changingLinesOption.setOptionValue((Integer) optionsMap.get(OPTIONSMAP_CHANGING_LINES_EVALUATOR));
-		settingsList.add(changingLinesOption);
+		List<SettingsEntry<?>> settingsList = new ArrayList<SettingsEntry<?>>();
 		
-		lvSettings.setAdapter(new ListItem2Adapter<SettingsEntry<Integer>>(this, settingsList) {
+		// Vibration
+		settings.createOption(
+			settingsList,
+			"settings_vibration", 
+			new Integer[] {
+				Consts.HAPTIC_FEEDBACK_OFF,
+				Consts.HAPTIC_FEEDBACK_ON_THROW_COINS
+			},
+			SETTINGS_MAP.HAPTIC_FEEDBACK
+		);
+		// Changing lines
+		settings.createOption(
+			settingsList,
+			"settings_chlines_evaluator", 
+			new Integer[] {
+				Consts.EVALUATOR_MANUAL,
+				Consts.EVALUATOR_MASTERYIN,
+				Consts.EVALUATOR_NAJING, 
+			},
+			SETTINGS_MAP.CHANGING_LINES_EVALUATOR
+		);
+		// Language
+		settings.createOption(
+			settingsList,
+			"settings_lang", 
+			new String[] {
+				Consts.LANGUAGE_EN
+			},
+			SETTINGS_MAP.LANGUAGE
+		);
+		// Dictionary
+		settings.createOption(
+			settingsList,
+			"settings_dictionary", 
+			new String[] {
+				Consts.DICTIONARY_ALTERVISTA,
+				Consts.DICTIONARY_CUSTOM,
+			},
+			SETTINGS_MAP.DICTIONARY
+		);
+		
+		
+		lvSettings.setAdapter(new ListItem2Adapter<SettingsEntry<?>>(this, settingsList) {
 			@Override
-			public String getText1(SettingsEntry<Integer> entry) {
+			public String getText1(SettingsEntry<?> entry) {
 				return Utils.s(Utils.getResourceByName(R.string.class, entry.getOptionName()));
 			}
 
 			@Override
-			public String getText2(SettingsEntry<Integer> entry) {
+			public String getText2(SettingsEntry<?> entry) {
 				return Utils.s(Utils.getResourceByName(R.string.class, entry.getOptionName() + "_" + entry.getOptionValue()));
 			}
 		});
@@ -317,12 +353,12 @@ public class IChingActivity extends IChingActivityRenderer {
 		lvSettings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			public void onItemClick(AdapterView<?> adapter, View view, final int settingIndex, long id) {
 				@SuppressWarnings("unchecked")
-				final SettingsEntry<Integer> entry = (SettingsEntry<Integer>) lvSettings.getItemAtPosition(settingIndex);
+				final SettingsEntry<Serializable> entry = (SettingsEntry<Serializable>) lvSettings.getItemAtPosition(settingIndex);
 				Spinner spinner = (Spinner) findViewById(R.id.spBacking);		
 				String[] optionsText = new String[entry.getOptionValues().size()];
 				int count = 0;
-				for (Integer value : entry.getOptionValues()) {
-					optionsText[count++] = Utils.s(Utils.getResourceByName(R.string.class, entry.getOptionName() + "_" + value));
+				for (Serializable value : entry.getOptionValues()) {
+					optionsText[count++] = Utils.s(Utils.getResourceByName(R.string.class, entry.getOptionName() + "_" + value.toString()));
 				}
 				final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
 					getApplicationContext(),  
@@ -331,24 +367,34 @@ public class IChingActivity extends IChingActivityRenderer {
 				);
 				arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 				spinner.setAdapter(arrayAdapter);
-				spinner.setSelection(entry.getOptionValue());
+				spinner.setSelection(entry.getOptionIndex());
 				spinner.setPromptId(Utils.getResourceByName(R.string.class, entry.getOptionName()));
 				spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 					public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-						String mapKey = "";
+						SETTINGS_MAP mapKey = null;
 						switch (settingIndex) {
 							case 0:
+								mapKey = SETTINGS_MAP.HAPTIC_FEEDBACK;
+								break;
+							case 1:
+								// Setting to null will reinit evaluator next time is needed
 								changingLinesEvaluator = null;
-								mapKey = OPTIONSMAP_CHANGING_LINES_EVALUATOR;
-							break;
+								mapKey = SETTINGS_MAP.CHANGING_LINES_EVALUATOR;
+								break;
+							case 2:
+								mapKey = SETTINGS_MAP.LANGUAGE;
+								break;
+							case 3:
+								mapKey = SETTINGS_MAP.DICTIONARY;
+								break;
 						}
 						entry.setOptionValue(entry.getOptionValues().get(position));
-						optionsMap.put(mapKey, entry.getOptionValue());
+						settings.put(mapKey, entry.getOptionValue());
 						
 						((BaseAdapter)lvSettings.getAdapter()).notifyDataSetChanged();
 						lvSettings.invalidateViews();
 						
-						DataPersister.saveOptions(optionsMap, IChingActivity.this);
+						settings.save(IChingActivity.this);
 					}
 
 					public void onNothingSelected(AdapterView<?> arg0) {
@@ -415,7 +461,14 @@ public class IChingActivity extends IChingActivityRenderer {
 		if (hexRow >= 6) {
 			gotoConsult();
 		}
+		
+		if (Utils.mask((Integer) settings.get(SETTINGS_MAP.HAPTIC_FEEDBACK), Consts.HAPTIC_FEEDBACK_ON_THROW_COINS)) {
+			Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+			v.vibrate(300);
+		}
 	}
+	
+
 	
 	/**
 	 * Callback for a context menu voice selection
@@ -465,18 +518,7 @@ public class IChingActivity extends IChingActivityRenderer {
         super.onCreate(savedInstanceState);     
         Utils.setContext(getApplicationContext());
         
-        try {
-        	DataPersister.loadOptions(optionsMap);
-        } catch(FileNotFoundException e) {
-        	setupDefaults();
-        } catch(IOException e) {
-        	AlertDialog alertDialog = new AlertDialog.Builder(IChingActivity.this).create();
-			alertDialog.setMessage(Utils.s(R.string.options_unavailable));
-			alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, Utils.s(android.R.string.ok), new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {} 
-			});
-			alertDialog.show();
-        }
+        loadSettings();
         
         if (currentViewId == null) {
         	gotoMain();
@@ -504,7 +546,23 @@ public class IChingActivity extends IChingActivityRenderer {
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.menu, menu);
+
 	    return true;
+	}
+	
+	/**
+	 * Update the option menu for the "About" section and other stuff
+	 */
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) { 
+		final String dictionary = (String) getSettingsManager().get(SETTINGS_MAP.DICTIONARY);
+	    final MenuItem omViewHex = menu.findItem(R.id.omViewHex);
+	    if (dictionary.equals(Consts.DICTIONARY_CUSTOM)) {
+	    	omViewHex.setTitle(R.string.options_view_edit_hex);
+	    } else {
+	    	omViewHex.setTitle(R.string.options_view_hex);
+	    }
+		return true;
 	}
 	
 	/**
@@ -624,6 +682,8 @@ public class IChingActivity extends IChingActivityRenderer {
 				gotoReadDesc();
 				break;
 		}
+		
+		loadSettings();
 	}
 	
 	/** 
@@ -673,11 +733,20 @@ public class IChingActivity extends IChingActivityRenderer {
 			);
 		
 	}
-
-	/**
-	 * Load the default settings
-	 */
-    private void setupDefaults() {
-		optionsMap.put(OPTIONSMAP_CHANGING_LINES_EVALUATOR, Consts.SETTINGS_EVALUATOR_MASTERYIN);
+	
+	private void loadSettings() {
+		try {
+        	settings.load();
+        } catch(FileNotFoundException e) {
+        	settings.resetDefaults();
+        } catch(IOException e) {
+        	settings.resetDefaults();
+        	AlertDialog alertDialog = new AlertDialog.Builder(IChingActivity.this).create();
+			alertDialog.setMessage(Utils.s(R.string.options_unavailable));
+			alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, Utils.s(android.R.string.ok), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {} 
+			});
+			alertDialog.show();
+        }
 	}
 }

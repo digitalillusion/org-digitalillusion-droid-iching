@@ -3,21 +3,29 @@ package org.digitalillusion.droid.iching;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.digitalillusion.droid.changinglines.ChangingLinesEvaluator;
-import org.digitalillusion.droid.utils.Consts;
-import org.digitalillusion.droid.utils.RemoteResolver;
-import org.digitalillusion.droid.utils.Utils;
-
+import org.digitalillusion.droid.iching.changinglines.ChangingLinesEvaluator;
+import org.digitalillusion.droid.iching.utils.Consts;
+import org.digitalillusion.droid.iching.utils.RemoteResolver;
+import org.digitalillusion.droid.iching.utils.SettingsManager;
+import org.digitalillusion.droid.iching.utils.SettingsManager.SETTINGS_MAP;
+import org.digitalillusion.droid.iching.utils.Utils;
+import org.digitalillusion.droid.iching.utils.sql.HexSection;
+import org.digitalillusion.droid.iching.utils.sql.HexSectionDataSource;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources.NotFoundException;
+import android.os.Bundle;
 import android.text.Html;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,7 +33,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Toast;
 
 /**
  * Decorator that performs the rendering duties onto the views
@@ -43,11 +51,24 @@ public class IChingActivityRenderer extends Activity {
 	/** The consultation mode **/
 	protected READ_DESC_MODE mode;
 	
-	/** Changing lines section identifier **/
-	private static final String ICHING_REMOTE_SECTION_LINE 	= "line";
-
 	/** SORTED Subset of the hexagrams set when all lines changing have a particular meaning **/
 	private static final Integer[] ICHING_ALL_LINES_DESC = new Integer[] { 1, 2, 12, 47 };
+	
+	/** Settings manager**/
+	protected SettingsManager settings;
+	
+	/** The local data source for the hexagrams sections strings **/
+	protected HexSectionDataSource dsHexSection;
+	
+	/** The currently selected section or changing line **/
+	protected String currentSection;
+	
+	/** The currently selected hexagram **/
+	protected String currentHex;
+	
+	/** The edit hexagram description dialog **/
+	protected AlertDialog editDescDialog;
+	
 	
 	/** 
 	 * Render a row of the hex
@@ -112,11 +133,15 @@ public class IChingActivityRenderer extends Activity {
 	 * @param question The posed question
 	 * @param hexToRender The hexagram to evaluate for changing lines
 	 * @param changing The changing line index
-	 * @param mode The mode used to display changing lines
+	 * @param mode The mode used to display the view
 	 */
 	protected void renderReadDescChanging(final String question, final int[] hexToRender, final int changing, READ_DESC_MODE mode) {
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+		final TextView tvDescTitle = (TextView) findViewById(R.id.tvHexName);
+		currentHex = Utils.hexMap(hexToRender);	
+		tvDescTitle.setText(Utils.s(R.string.read_changing));
+		
 		LinearLayout layButtonsAndChanging = (LinearLayout) findViewById(R.id.layButtonsAndChanging);
 		for (int i = 0; i < layButtonsAndChanging.getChildCount(); i++) {
 			layButtonsAndChanging.getChildAt(i).setVisibility(View.GONE);
@@ -139,7 +164,6 @@ public class IChingActivityRenderer extends Activity {
 		
 		final TextView etChanging = (TextView) findViewById(R.id.tvChanging);
 		final EditText etOutput = (EditText) findViewById(R.id.etOutput);
-		final String hexMap = Utils.hexMap(hexToRender);
 		
 		etChanging.setVisibility(View.VISIBLE);
 		String desc = "";
@@ -154,6 +178,7 @@ public class IChingActivityRenderer extends Activity {
 		}	
 		switch (selectedMode) {
 			case ORACLE :
+				currentSection = RemoteResolver.ICHING_REMOTE_SECTION_LINE + (changing);
 				if (changingCount == 0) {
 					desc = Utils.s(R.string.read_changing_none) + "<br/>";
 				} else {
@@ -169,10 +194,10 @@ public class IChingActivityRenderer extends Activity {
 				switch (changing) {
 					case ChangingLinesEvaluator.ICHING_APPLY_BOTH :
 						desc += "<em>" + Utils.s(R.string.read_changing_apply_ht) + "</em>";
-						int intMap = Integer.parseInt(hexMap);
+						int intMap = Integer.parseInt(currentHex);
 						for (int allLines : ICHING_ALL_LINES_DESC) {
 							if (intMap == allLines) {
-								RemoteResolver.renderRemoteString(etOutput, hexMap, ICHING_REMOTE_SECTION_LINE + changing, retryAction, this);
+								RemoteResolver.renderRemoteString(etOutput, retryAction, this);
 								break;
 							}
 						}
@@ -188,21 +213,21 @@ public class IChingActivityRenderer extends Activity {
 						break;
 					default :
 						desc += "<em>" + Utils.s(R.string.read_changing_apply, new Integer[] { changing + 1 }) + "</em>";
-						RemoteResolver.renderRemoteString(etOutput, hexMap, ICHING_REMOTE_SECTION_LINE + (changing + 1), retryAction, this);
+						RemoteResolver.renderRemoteString(etOutput, retryAction, this);
 				}
 				break;
 			case VIEW_HEX :
 				desc = Utils.s(R.string.read_changing_select) + "<br/>";
 				
 				ArrayList<String> lines = new ArrayList<String>();
-				lines.add(Utils.s(R.string.read_changing_select_1));
-				lines.add(Utils.s(R.string.read_changing_select_2));
-				lines.add(Utils.s(R.string.read_changing_select_3));
-				lines.add(Utils.s(R.string.read_changing_select_4));
-				lines.add(Utils.s(R.string.read_changing_select_5));
-				lines.add(Utils.s(R.string.read_changing_select_6));
+				lines.add(Utils.s(R.string.read_changing_select_line1));
+				lines.add(Utils.s(R.string.read_changing_select_line2));
+				lines.add(Utils.s(R.string.read_changing_select_line3));
+				lines.add(Utils.s(R.string.read_changing_select_line4));
+				lines.add(Utils.s(R.string.read_changing_select_line5));
+				lines.add(Utils.s(R.string.read_changing_select_line6));
 				
-				int hexId = Integer.parseInt(Utils.hexMap(hexToRender));
+				int hexId = Integer.parseInt(currentHex);
 				if (Arrays.binarySearch(ICHING_ALL_LINES_DESC, hexId) >= 0) {
 					lines.add(Utils.s(R.string.read_changing_select_all));
 				}
@@ -220,8 +245,9 @@ public class IChingActivityRenderer extends Activity {
 
 					public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 						position = (position + 1 > 6) ? ChangingLinesEvaluator.ICHING_APPLY_BOTH : position + 1;
+						currentSection = RemoteResolver.ICHING_REMOTE_SECTION_LINE + position;
 						RemoteResolver.renderRemoteString(
-							etOutput, hexMap, ICHING_REMOTE_SECTION_LINE + position, 
+							etOutput, 
 							new OnClickListener() {
 								public void onClick(DialogInterface dialog, int which) {
 									renderReadDescChanging(question, hexToRender, changing, selectedMode);
@@ -240,15 +266,24 @@ public class IChingActivityRenderer extends Activity {
 		}
 		
 		etChanging.setText(Html.fromHtml("<small>" + desc + "</small>"));
+		
+		renderEditDesc(mode);
 	}
 
 	/**
 	 * Renders a tab of the readDesc layout, given the associated hexagram
 	 * 
-	 * @param hexToRender The hexagram to render and describe
+	 * @param question The posed question
+	 * @param hexToRender The hexagram to evaluate for changing lines
+	 * @param changing The changing line index
+	 * @param mode The mode used to display the view
 	 */
-	protected void renderReadDesc(final String question, final int[] hexToRender, final int changing) {
+	protected void renderReadDesc(final String question, final int[] hexToRender, final int changing, final READ_DESC_MODE mode) {
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		
+		final TextView tvDescTitle = (TextView) findViewById(R.id.tvHexName);
+		currentHex = Utils.hexMap(hexToRender);
+		tvDescTitle.setText(Utils.getResourceByName(R.string.class, "hex" + currentHex));
 
 		LinearLayout layButtonsAndChanging = (LinearLayout) findViewById(R.id.layButtonsAndChanging);
 		for (int i = 0; i < layButtonsAndChanging.getChildCount(); i++) {
@@ -259,7 +294,6 @@ public class IChingActivityRenderer extends Activity {
 			renderRow(i, hexToRender[i], false);
 		} 
 		
-		final String hexMap = Utils.hexMap(hexToRender);
 		final TextView tvQuestion = (TextView) findViewById(R.id.tvQuestionReadDesc);
 		if (question != null && !question.equals("")) {
 			tvQuestion.setText(question);
@@ -277,11 +311,12 @@ public class IChingActivityRenderer extends Activity {
 		
 		OnTouchListener onTouchListener = new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
+				currentSection = RemoteResolver.ICHING_REMOTE_SECTION_DESC;
 				RemoteResolver.renderRemoteString(
-					etOutput, hexMap, RemoteResolver.ICHING_REMOTE_SECTION_DESC, 
+					etOutput,
 					new OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
-							renderReadDesc(question, hexToRender, changing);
+							renderReadDesc(question, hexToRender, changing, mode);
 						} 
 					}, 
 					IChingActivityRenderer.this
@@ -297,11 +332,12 @@ public class IChingActivityRenderer extends Activity {
 		
 		btReadJudge.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
+				currentSection = RemoteResolver.ICHING_REMOTE_SECTION_JUDGE;
 				RemoteResolver.renderRemoteString(
-					etOutput, hexMap, RemoteResolver.ICHING_REMOTE_SECTION_JUDGE,
+					etOutput,
 					new OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
-							renderReadDesc(question, hexToRender, changing);
+							renderReadDesc(question, hexToRender, changing, mode);
 						} 
 					},
 					IChingActivityRenderer.this
@@ -316,11 +352,12 @@ public class IChingActivityRenderer extends Activity {
 
 		btImage.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
+				currentSection = RemoteResolver.ICHING_REMOTE_SECTION_IMAGE;
 				RemoteResolver.renderRemoteString(
-					etOutput, hexMap, RemoteResolver.ICHING_REMOTE_SECTION_IMAGE, 
+					etOutput,
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
-							renderReadDesc(question, hexToRender, changing);
+							renderReadDesc(question, hexToRender, changing, mode);
 						} 
 					}, 
 					IChingActivityRenderer.this
@@ -331,6 +368,188 @@ public class IChingActivityRenderer extends Activity {
 				return true;
 			}
 		});
+		
+		renderEditDesc(mode);
 	}	
+	
+	/**
+	 * If editing an exagram using the custom language set of definitions, enable the edit
+	 * and reset hexagram sections buttons
+	 * 
+	 * @param mode The current reading mode
+	 */
+	private void renderEditDesc(READ_DESC_MODE mode) {
+		final String dictionary = (String) getSettingsManager().get(SETTINGS_MAP.DICTIONARY);
+		if (mode == READ_DESC_MODE.VIEW_HEX && dictionary.equals(Consts.DICTIONARY_CUSTOM)) {
+			final Button btEdit = (Button) findViewById(R.id.btReadDescEdit);
+			final Button btReset = (Button) findViewById(R.id.btReadDescReset);
+			btEdit.setVisibility(View.VISIBLE);
+			btReset.setVisibility(View.VISIBLE);
+		}
+	}
 
+	/** 
+	 * Called when the activity is first created.
+	 * 
+	 * @param savedInstanceState The saved state 
+	 */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+    	super.onCreate(savedInstanceState); 
+		settings = new SettingsManager();
+		dsHexSection = new HexSectionDataSource(getApplicationContext());
+	}
+
+	@Override
+	protected void onResume() {
+		dsHexSection.open();
+		super.onResume();
+	}
+
+	@Override
+	protected void onPause() {
+		dsHexSection.close();
+		super.onPause();
+	}
+	
+	/**
+	 * onClick handler to edit the text content of a section of an Hexagram
+	 * 
+	 * @param view Not used
+	 */
+	public void onClickEditHexSection(View view) {
+		LayoutInflater li = LayoutInflater.from(this);
+		View editDescView = li.inflate(R.layout.editdesc, null);
+
+		AlertDialog.Builder editDescDialogBuilder = new AlertDialog.Builder(this);
+		editDescDialogBuilder.setView(editDescView);
+		
+		editDescDialog = editDescDialogBuilder.show();
+		
+		final TextView tvEditSecHex = (TextView) editDescView.findViewById(R.id.tvEditSecHex);
+		String title = Utils.s(Utils.getResourceByName(R.string.class, "hex" + currentHex));
+		if (currentSection.startsWith(RemoteResolver.ICHING_REMOTE_SECTION_LINE)) {
+			title += " - " + Utils.s(Utils.getResourceByName(R.string.class, "read_changing_select_" + currentSection));
+		} else {
+			title += " - " + Utils.s(Utils.getResourceByName(R.string.class, "read_" + currentSection));
+		}
+		tvEditSecHex.setText(title);
+		
+		String dictionary = (String) settings.get(SETTINGS_MAP.DICTIONARY);
+		String lang = (String) settings.get(SETTINGS_MAP.LANGUAGE);
+		HexSection section = new HexSection("", "",  "", lang, "");
+		try {
+			section = dsHexSection.getHexSection(currentHex, dictionary, lang, currentSection);
+		} catch (NotFoundException e) {}
+		
+		final EditText etQuote = (EditText) editDescView.findViewById(R.id.etQuote);
+		etQuote.setText(section.getDefQuote());
+		final EditText etReading = (EditText) editDescView.findViewById(R.id.etReading);
+		etReading.setText(section.getDefReading());
+	}
+	
+	/**
+	 * onClick handler to reset the text content of a section of an Hexagram
+	 * 
+	 * @param view Not used
+	 */
+	public void onClickResetHexSection(View view) {
+		AlertDialog resetConfirmDialog = new AlertDialog.Builder(this).create();
+		resetConfirmDialog.setMessage(Utils.s(R.string.hex_reset_section));
+		resetConfirmDialog.setButton(DialogInterface.BUTTON_POSITIVE, Utils.s(R.string.yes), new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				RemoteResolver.resetCache(currentHex, IChingActivityRenderer.this);
+				EditText etOutput = (EditText) findViewById(R.id.etOutput);
+				etOutput.setText("");
+
+				CharSequence text = Utils.s(
+					R.string.edit_section_reset, 
+					new String[] { 
+						Utils.s(Utils.getResourceByName(R.string.class, "hex" + currentHex)) 
+					}
+				);
+				
+				Toast toast = Toast.makeText(
+					getApplicationContext(), 
+					text, 
+					Toast.LENGTH_SHORT
+				);
+				toast.show();
+			} 
+		});
+		resetConfirmDialog.setButton(DialogInterface.BUTTON_NEGATIVE, Utils.s(R.string.no), new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {} 
+		});
+		resetConfirmDialog.show();
+	}
+	
+	/**
+	 * onClick handler to update the text content of a section of an Hexagram
+	 * 
+	 * @param view Not used
+	 */
+	public void onClickUpdateHexSection(View view) {
+		
+		final TextView tvEditSecHex = (TextView) editDescDialog.findViewById(R.id.tvEditSecHex);
+		final EditText etQuote = (EditText) editDescDialog.findViewById(R.id.etQuote);
+		final EditText etReading = (EditText) editDescDialog.findViewById(R.id.etReading);
+		CharSequence text = Utils.s(
+			R.string.edit_section_update, 
+			new String[] { tvEditSecHex.getText().toString() }
+		);
+		
+		String def;
+		if (!etQuote.getText().toString().equals("")) {
+			def = etQuote.getText() + Utils.HEX_SECTION_QUOTE_DELIMITER + Utils.NEWLINE + etReading.getText();
+		} else {
+			def = etReading.getText().toString();
+		}
+			
+		String dictionary = (String) settings.get(SETTINGS_MAP.DICTIONARY);
+		String lang = (String) settings.get(SETTINGS_MAP.LANGUAGE);
+		
+		RemoteResolver.resetCache(currentHex, currentSection, this);
+		dsHexSection.updateHexSection(currentHex, dictionary, lang, currentSection, def);
+		
+		EditText etOutput = (EditText) findViewById(R.id.etOutput);
+		etOutput.setText(RemoteResolver.getSpannedFromRemoteString(def));
+		
+		Toast toast = Toast.makeText(
+			getApplicationContext(), 
+			text, 
+			Toast.LENGTH_SHORT
+		);
+		toast.show();
+		
+		editDescDialog.dismiss();
+
+	}
+
+	/** 
+	 * @return The hex section data source currently in use
+	 */
+	public HexSectionDataSource getHexSectionDataSource() {
+		return dsHexSection;
+	}
+	
+	/**
+	 * @return The settings manager currently in use
+	 */
+	public SettingsManager getSettingsManager() {
+		return settings;
+	}
+	
+	/**
+	 * @return The currently selected section or changing line
+	 */
+	public String getCurrentSection() {
+		return currentSection;
+	}
+	
+	/**
+	 * @return The currently selected hexagram
+	 */
+	public String getCurrentHex() {
+		return currentHex;
+	}
 }
