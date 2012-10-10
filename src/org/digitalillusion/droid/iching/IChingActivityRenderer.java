@@ -178,7 +178,7 @@ public class IChingActivityRenderer extends Activity {
 		}	
 		switch (selectedMode) {
 			case ORACLE :
-				currentSection = RemoteResolver.ICHING_REMOTE_SECTION_LINE + (changing);
+				currentSection = RemoteResolver.ICHING_REMOTE_SECTION_LINE + (changing + 1);
 				if (changingCount == 0) {
 					desc = Utils.s(R.string.read_changing_none) + "<br/>";
 				} else {
