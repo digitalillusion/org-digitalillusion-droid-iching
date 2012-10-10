@@ -734,6 +734,9 @@ public class IChingActivity extends IChingActivityRenderer {
 		
 	}
 	
+	/**
+	 * Load settings from sd card. If none is found, default apply
+	 */
 	private void loadSettings() {
 		try {
         	settings.load();

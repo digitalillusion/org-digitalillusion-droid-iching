@@ -70,7 +70,7 @@ public class RemoteResolver {
 	 */
 	public static Spanned getSpannedFromRemoteString(String result) {
 		Spanned spanned = null;
-		if (result.indexOf(Utils.HEX_SECTION_QUOTE_DELIMITER) > 0) {
+		if (result != null && result.indexOf(Utils.HEX_SECTION_QUOTE_DELIMITER) > 0) {
 			result = result.replaceAll(Utils.NEWLINE, "<br/>");
 			spanned = Html.fromHtml(
 				"<small><em>" + result.substring(0, result.indexOf(Utils.HEX_SECTION_QUOTE_DELIMITER)) + "</em><br/>" + 
@@ -133,25 +133,31 @@ public class RemoteResolver {
 			protected void onPostExecute(String result) {
 				super.onPostExecute(result);
 				askRetry = true;
-				Spanned spanned = getSpannedFromRemoteString(result);
-				
-				if (hex == activity.getCurrentHex() && section == activity.getCurrentSection()) {
-					// If the request is still pending, proceed with component update
-					if (result != null && !component.getText().equals(result)) {		
-						component.setText(spanned);
-					}
-				} 
-				// Store the result in cache
-				remoteStringCache.put(key, spanned);
-				dataSource.updateHexSection(hex, dictionary, lang, section, result);
+				if (result != null) {
+					Spanned spanned = getSpannedFromRemoteString(result);
+					
+					if (hex == activity.getCurrentHex() && section == activity.getCurrentSection()) {
+						// If the request is still pending, proceed with component update
+						if (!component.getText().equals(result)) {		
+							component.setText(spanned);
+						}
+					} 
+					// Store the result in cache
+					remoteStringCache.put(key, spanned);
+					dataSource.updateHexSection(hex, dictionary, lang, section, result);
+				}
 			}	
 		}
 		
 		if (!remoteStringCache.containsKey(key)) {
 			try {
 				HexSection hs = dataSource.getHexSection(hex, dictionary, lang, section);
-				Spanned spanned = getSpannedFromRemoteString(hs.getDef());
-				component.setText(spanned);
+				if (hs.getDef() == null || hs.getDef().equals("")) {
+					throw new NotFoundException();
+				} else {
+					Spanned spanned = getSpannedFromRemoteString(hs.getDef());
+					component.setText(spanned);
+				}
 			} catch (NotFoundException nfe) {
 				// Cancel any pending requests before issuing a new one
 				if (worker != null) {
