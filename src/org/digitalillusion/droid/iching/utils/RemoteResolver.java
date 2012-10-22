@@ -198,11 +198,19 @@ public class RemoteResolver {
 	}
 	
 	/**
+	 * Reset the string cache for all hexagrams. This does not clear the underlying 
+	 * data source and it is used when data source has changed (for example: language, dictionary)
+	 */
+	public static void clearCache() {
+		remoteStringCache.clear();
+	}
+	
+	/**
 	 * Reset the definitions cache for the given hexagram. They will be downloaded again
 	 * upon the first request
 	 * 
 	 * @param hex The hexagram to purge from cache
-	 * @param activity The caller activity, needed to retrieve settings
+	 * @param activity The caller activity, needed to retrieve and datasource
 	 */
 	public static void resetCache(String hex, IChingActivityRenderer activity) {
 		final HexSectionDataSource dataSource = activity.getHexSectionDataSource();
@@ -225,7 +233,7 @@ public class RemoteResolver {
 	 * 
 	 * @param hex The hexagram in question
 	 * @param section The hexagram section to purge from cache
-	 * @param activity The caller activity, needed to retrieve settings
+	 * @param activity The caller activity, needed to retrieve and datasource
 	 */
 	public static void resetCache(String hex, String section, IChingActivityRenderer activity) {
 		final HexSectionDataSource dataSource = activity.getHexSectionDataSource();

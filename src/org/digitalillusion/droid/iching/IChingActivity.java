@@ -382,9 +382,13 @@ public class IChingActivity extends IChingActivityRenderer {
 								mapKey = SETTINGS_MAP.CHANGING_LINES_EVALUATOR;
 								break;
 							case 2:
+								// Clear remote strings cache in case language changes
+								RemoteResolver.clearCache();
 								mapKey = SETTINGS_MAP.LANGUAGE;
 								break;
 							case 3:
+								// Clear remote strings cache in case dictionary changes
+								RemoteResolver.clearCache();
 								mapKey = SETTINGS_MAP.DICTIONARY;
 								break;
 						}
@@ -670,6 +674,10 @@ public class IChingActivity extends IChingActivityRenderer {
 		tHex 		= savedInstanceState.getIntArray("tHex");
 		
 		mode		= READ_DESC_MODE.valueOf(savedInstanceState.getString("mode"));
+		
+		setCurrentSection(changing);
+		setCurrentHex(hex);
+		
 		
 		switch (currentViewId) {
 			case R.layout.main :

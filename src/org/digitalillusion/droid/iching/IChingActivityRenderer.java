@@ -1,5 +1,6 @@
 package org.digitalillusion.droid.iching;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -139,7 +140,7 @@ public class IChingActivityRenderer extends Activity {
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		final TextView tvDescTitle = (TextView) findViewById(R.id.tvHexName);
-		currentHex = Utils.hexMap(hexToRender);	
+		setCurrentHex(hexToRender);	
 		tvDescTitle.setText(Utils.s(R.string.read_changing));
 		
 		LinearLayout layButtonsAndChanging = (LinearLayout) findViewById(R.id.layButtonsAndChanging);
@@ -178,7 +179,7 @@ public class IChingActivityRenderer extends Activity {
 		}	
 		switch (selectedMode) {
 			case ORACLE :
-				currentSection = RemoteResolver.ICHING_REMOTE_SECTION_LINE + (changing + 1);
+				setCurrentSection(changing);
 				if (changingCount == 0) {
 					desc = Utils.s(R.string.read_changing_none) + "<br/>";
 				} else {
@@ -245,7 +246,7 @@ public class IChingActivityRenderer extends Activity {
 
 					public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 						position = (position + 1 > 6) ? ChangingLinesEvaluator.ICHING_APPLY_BOTH : position + 1;
-						currentSection = RemoteResolver.ICHING_REMOTE_SECTION_LINE + position;
+						setCurrentSection(position);
 						RemoteResolver.renderRemoteString(
 							etOutput, 
 							new OnClickListener() {
@@ -282,7 +283,7 @@ public class IChingActivityRenderer extends Activity {
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
 		final TextView tvDescTitle = (TextView) findViewById(R.id.tvHexName);
-		currentHex = Utils.hexMap(hexToRender);
+		setCurrentHex(hexToRender);
 		tvDescTitle.setText(Utils.getResourceByName(R.string.class, "hex" + currentHex));
 
 		LinearLayout layButtonsAndChanging = (LinearLayout) findViewById(R.id.layButtonsAndChanging);
@@ -311,7 +312,7 @@ public class IChingActivityRenderer extends Activity {
 		
 		OnTouchListener onTouchListener = new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
-				currentSection = RemoteResolver.ICHING_REMOTE_SECTION_DESC;
+				IChingActivityRenderer.this.setCurrentSection(RemoteResolver.ICHING_REMOTE_SECTION_DESC);
 				RemoteResolver.renderRemoteString(
 					etOutput,
 					new OnClickListener() {
@@ -332,7 +333,7 @@ public class IChingActivityRenderer extends Activity {
 		
 		btReadJudge.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
-				currentSection = RemoteResolver.ICHING_REMOTE_SECTION_JUDGE;
+				IChingActivityRenderer.this.setCurrentSection(RemoteResolver.ICHING_REMOTE_SECTION_JUDGE);
 				RemoteResolver.renderRemoteString(
 					etOutput,
 					new OnClickListener() {
@@ -352,7 +353,7 @@ public class IChingActivityRenderer extends Activity {
 
 		btImage.setOnTouchListener(new OnTouchListener() {
 			public boolean onTouch(View v, MotionEvent event) {
-				currentSection = RemoteResolver.ICHING_REMOTE_SECTION_IMAGE;
+				IChingActivityRenderer.this.setCurrentSection(RemoteResolver.ICHING_REMOTE_SECTION_IMAGE);
 				RemoteResolver.renderRemoteString(
 					etOutput,
 					new DialogInterface.OnClickListener() {
@@ -371,6 +372,28 @@ public class IChingActivityRenderer extends Activity {
 		
 		renderEditDesc(mode);
 	}	
+	
+	/**
+	 * Setter for the selected section or changing line
+	 * 
+	 * @param changing The section or changing line
+	 */
+	protected void setCurrentSection(Serializable section) {
+		if (Utils.isNumeric(section)) {
+			currentSection = RemoteResolver.ICHING_REMOTE_SECTION_LINE + ((Integer) section + 1);
+		} else {
+			currentSection = section.toString();
+		}
+	}
+	
+	/**
+	 * Setter for the currently selected hex
+	 * 
+	 * @param hex The currently selected hex
+	 */
+	protected void setCurrentHex(int[] hex) {
+		currentHex = Utils.hexMap(hex);
+	}
 	
 	/**
 	 * If editing an exagram using the custom language set of definitions, enable the edit
