@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -609,6 +610,10 @@ public class Utils {
 	
 	public static boolean mask (Integer mask, Integer value) {
 		return (mask & value) > 0;
+	}
+
+	public static boolean isNumeric(Serializable str) {
+		return str.toString().matches("-?\\d+(\\.\\d+)?");
 	}
 
 }
