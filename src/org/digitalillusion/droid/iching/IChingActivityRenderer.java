@@ -245,7 +245,7 @@ public class IChingActivityRenderer extends Activity {
 				spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 					public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-						position = (position + 1 > 6) ? ChangingLinesEvaluator.ICHING_APPLY_BOTH : position + 1;
+						position = (position + 1 > 6) ? ChangingLinesEvaluator.ICHING_APPLY_BOTH : position;
 						setCurrentSection(position);
 						RemoteResolver.renderRemoteString(
 							etOutput, 
@@ -379,10 +379,16 @@ public class IChingActivityRenderer extends Activity {
 	 * @param changing The section or changing line
 	 */
 	protected void setCurrentSection(Serializable section) {
-		if (Utils.isNumeric(section)) {
+		if (section.equals(ChangingLinesEvaluator.ICHING_APPLY_BOTH) ||
+			section.equals(ChangingLinesEvaluator.ICHING_APPLY_CAST) ||
+			section.equals(ChangingLinesEvaluator.ICHING_APPLY_MANUAL) ||
+			section.equals(ChangingLinesEvaluator.ICHING_APPLY_NONE) ||
+			section.equals(ChangingLinesEvaluator.ICHING_APPLY_TRANSFORMED)) {
+			currentSection = RemoteResolver.ICHING_REMOTE_SECTION_LINE + ((Integer) section);
+		} else if (Utils.isNumeric(section)) {
 			currentSection = RemoteResolver.ICHING_REMOTE_SECTION_LINE + ((Integer) section + 1);
 		} else {
-			currentSection = section.toString();
+			currentSection = section.toString(); 
 		}
 	}
 	
