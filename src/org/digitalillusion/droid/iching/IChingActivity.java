@@ -677,7 +677,11 @@ public class IChingActivity extends IChingActivityRenderer {
 		
 		setCurrentSection(changing);
 		setCurrentHex(hex);
-		
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
 		
 		switch (currentViewId) {
 			case R.layout.main :
@@ -690,7 +694,6 @@ public class IChingActivity extends IChingActivityRenderer {
 				gotoReadDesc();
 				break;
 		}
-		
 		loadSettings();
 	}
 	
