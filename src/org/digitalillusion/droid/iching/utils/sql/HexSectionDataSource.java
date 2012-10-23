@@ -49,33 +49,36 @@ public class HexSectionDataSource {
 	 * @param def The new definition
 	 */
 	public void updateHexSection(String hex, String dictionary, String lang, String section, String def) {
-		ContentValues values = new ContentValues();
-		values.put(MySQLiteHelper.COLUMN_HEX, hex);
-		values.put(MySQLiteHelper.COLUMN_DICTIONARY, dictionary);
-		values.put(MySQLiteHelper.COLUMN_LANG, lang);
-		values.put(MySQLiteHelper.COLUMN_SECTION, section);
-		values.put(MySQLiteHelper.COLUMN_DEF, def);
-
-		try {
-			String whereClause = MySQLiteHelper.COLUMN_HEX + "=? and " +
-				MySQLiteHelper.COLUMN_DICTIONARY + "=? and " +
-				MySQLiteHelper.COLUMN_LANG + "=? and " +
-				MySQLiteHelper.COLUMN_SECTION + "=?";
-			String[] whereArgs = new String[] { hex, dictionary, lang, section };
-
-			getHexSection(hex, dictionary, lang, section);
-			database.update(
-					MySQLiteHelper.TABLE_DEFINITIONS, 
-					values, 
-					whereClause, 
-					whereArgs
-			);
-		} catch (NotFoundException e) {
-			database.insert(
-					MySQLiteHelper.TABLE_DEFINITIONS, 
-					null,
-					values
-			);
+		
+		if (database.isOpen()) {
+			ContentValues values = new ContentValues();
+			values.put(MySQLiteHelper.COLUMN_HEX, hex);
+			values.put(MySQLiteHelper.COLUMN_DICTIONARY, dictionary);
+			values.put(MySQLiteHelper.COLUMN_LANG, lang);
+			values.put(MySQLiteHelper.COLUMN_SECTION, section);
+			values.put(MySQLiteHelper.COLUMN_DEF, def);
+	
+			try {
+				String whereClause = MySQLiteHelper.COLUMN_HEX + "=? and " +
+					MySQLiteHelper.COLUMN_DICTIONARY + "=? and " +
+					MySQLiteHelper.COLUMN_LANG + "=? and " +
+					MySQLiteHelper.COLUMN_SECTION + "=?";
+				String[] whereArgs = new String[] { hex, dictionary, lang, section };
+	
+				getHexSection(hex, dictionary, lang, section);
+				database.update(
+						MySQLiteHelper.TABLE_DEFINITIONS, 
+						values, 
+						whereClause, 
+						whereArgs
+				);
+			} catch (NotFoundException e) {
+				database.insert(
+						MySQLiteHelper.TABLE_DEFINITIONS, 
+						null,
+						values
+				);
+			}
 		}
 	}
 	
@@ -86,12 +89,14 @@ public class HexSectionDataSource {
 	 * @param lang The language parameter
 	 */
 	public void deleteHexSections(String hex, String lang) {
-		database.delete(
-			MySQLiteHelper.TABLE_DEFINITIONS,
-			MySQLiteHelper.COLUMN_HEX + "=? and " +
-			MySQLiteHelper.COLUMN_LANG + "=?", 
-			new String[] { hex, lang } 
-		);
+		if (database.isOpen()) {
+			database.delete(
+				MySQLiteHelper.TABLE_DEFINITIONS,
+				MySQLiteHelper.COLUMN_HEX + "=? and " +
+				MySQLiteHelper.COLUMN_LANG + "=?", 
+				new String[] { hex, lang } 
+			);
+		}
 	}
 	
 	/**
@@ -102,13 +107,15 @@ public class HexSectionDataSource {
 	 * @param lang The language parameter
 	 */
 	public void deleteHexSection(String hex, String section, String lang) {
-		database.delete(
-			MySQLiteHelper.TABLE_DEFINITIONS,
-			MySQLiteHelper.COLUMN_HEX + "=? and " +
-			MySQLiteHelper.COLUMN_SECTION + "=? and " +
-			MySQLiteHelper.COLUMN_LANG + "=?", 
-			new String[] { hex, section, lang } 
-		);
+		if (database.isOpen()) {
+			database.delete(
+				MySQLiteHelper.TABLE_DEFINITIONS,
+				MySQLiteHelper.COLUMN_HEX + "=? and " +
+				MySQLiteHelper.COLUMN_SECTION + "=? and " +
+				MySQLiteHelper.COLUMN_LANG + "=?", 
+				new String[] { hex, section, lang } 
+			);
+		}
 	}
 
 	/**
@@ -126,37 +133,39 @@ public class HexSectionDataSource {
 			MySQLiteHelper.COLUMN_SECTION + "=?";
 		String[] queryParams = new String[] { hex, dictionary, lang, section };  
 
-		Cursor cursor = database.query(
-				MySQLiteHelper.TABLE_DEFINITIONS,
-				allColumns, 
-				querySelect,
-				queryParams,
-				null, null, null
-		);
-
-		cursor.moveToFirst();
-		try {
-			if (!cursor.isAfterLast()) {
-				HexSection hs = new HexSection(
-					cursor.getString(0),
-					cursor.getString(1),
-					cursor.getString(2),
-					cursor.getString(3),
-					cursor.getString(4)
-				);
-				cursor.moveToNext();
-
-				return hs;
-			} else {
-				throw new NotFoundException(
-						"HexSectionDataSource.getHexSection() returned no results for query: " +
-						querySelect + " using parameters (" +
-						Utils.implode(queryParams, ",") + ")"
-				);
+		HexSection hs = new HexSection();
+		if (database.isOpen()) {
+			Cursor cursor = database.query(
+					MySQLiteHelper.TABLE_DEFINITIONS,
+					allColumns, 
+					querySelect,
+					queryParams,
+					null, null, null
+			);
+	
+			cursor.moveToFirst();
+			try {
+				if (!cursor.isAfterLast()) {
+					hs = new HexSection(
+						cursor.getString(0),
+						cursor.getString(1),
+						cursor.getString(2),
+						cursor.getString(3),
+						cursor.getString(4)
+					);
+					cursor.moveToNext();
+				} else {
+					throw new NotFoundException(
+							"HexSectionDataSource.getHexSection() returned no results for query: " +
+							querySelect + " using parameters (" +
+							Utils.implode(queryParams, ",") + ")"
+					);
+				}
+			} finally {
+				// Make sure to close the cursor
+				cursor.close();
 			}
-		} finally {
-			// Make sure to close the cursor
-			cursor.close();
 		}
+		return hs;
 	}
 } 

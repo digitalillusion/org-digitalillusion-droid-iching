@@ -425,14 +425,14 @@ public class IChingActivityRenderer extends Activity {
 
 	@Override
 	protected void onResume() {
-		dsHexSection.open();
 		super.onResume();
+		dsHexSection.open();
 	}
 
 	@Override
 	protected void onPause() {
-		dsHexSection.close();
 		super.onPause();
+		dsHexSection.close();
 	}
 	
 	/**

@@ -27,6 +27,14 @@ public class HexSection {
 		this.def = def;
 	}
 	
+	public HexSection() {
+		this.hex = "";
+		this.dictionary = "";
+		this.section = "";
+		this.lang = "";
+		this.def = "";
+	}
+
 	public String getHex() {
 		return hex;
 	}
