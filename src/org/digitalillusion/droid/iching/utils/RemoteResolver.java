@@ -12,6 +12,7 @@ import org.digitalillusion.droid.iching.utils.sql.HexSection;
 import org.digitalillusion.droid.iching.utils.sql.HexSectionDataSource;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -19,6 +20,7 @@ import android.content.res.Resources.NotFoundException;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.text.Html;
 import android.text.Spanned;
 import android.widget.TextView;
@@ -51,6 +53,9 @@ public class RemoteResolver {
 	/** A pointer to the last remote request **/
 	private static AsyncTask<?,?,?> worker;
 	
+	/** A ponter to the dialog showing the waiting animation **/
+	private static ProgressDialog progressDialog;
+	
 	/** The dictionaries definitions */
 	@SuppressWarnings("serial")
 	private static HashMap<String, String> dictionaries = new HashMap<String, String>() {{
@@ -58,10 +63,11 @@ public class RemoteResolver {
 	}};
 	
 	/**
-	 * To be called to be sure that the "Retry network connection?" popup will be shown
+	 * Reset the string cache for all hexagrams. This does not clear the underlying 
+	 * data source and it is used when data source has changed (for example: language, dictionary)
 	 */
-	public static void prepareRetryPopup() {
-		askRetry = true;
+	public static void clearCache() {
+		remoteStringCache.clear();
 	}
 	
 	/**
@@ -83,6 +89,13 @@ public class RemoteResolver {
 	}
 	
 	/**
+	 * To be called to be sure that the "Retry network connection?" popup will be shown
+	 */
+	public static void prepareRetryPopup() {
+		askRetry = true;
+	}
+	
+	/**
 	 * Render a remote string on a TextView
 	 * 
 	 * @param component The component where to set the text
@@ -95,7 +108,12 @@ public class RemoteResolver {
 		final String hex = activity.getCurrentHex();
 		final String section = activity.getCurrentSection();
 		final String key = hex + section;
-		component.setText("");
+		component.setText(Utils.EMPTY_STRING);
+		
+		if (progressDialog == null) {
+			progressDialog = new ProgressDialog(activity);
+			progressDialog.setMessage(Utils.s(R.string.remoteconn_please_wait));
+		}
 		
 		final HexSectionDataSource dataSource = activity.getHexSectionDataSource();
 		final String dictionary = (String) activity.getSettingsManager().get(SETTINGS_MAP.DICTIONARY);
@@ -122,16 +140,22 @@ public class RemoteResolver {
 						new String[] { "s", section }
 					);
 					
+					
 					return Utils.streamToString(is);
 				} catch (IOException e) {
 					cancel(true);
 					return null;
+				} finally {
+					dismissProgressDialog();
 				}
 			}
 			
 			@Override
 			protected void onPostExecute(String result) {
 				super.onPostExecute(result);
+				
+				dismissProgressDialog();
+				
 				askRetry = true;
 				if (result != null) {
 					Spanned spanned = getSpannedFromRemoteString(result);
@@ -152,9 +176,10 @@ public class RemoteResolver {
 		if (!remoteStringCache.containsKey(key)) {
 			try {
 				HexSection hs = dataSource.getHexSection(hex, dictionary, lang, section);
-				if (hs.getDef() == null || hs.getDef().equals("")) {
+				if (hs.getDef() == null || hs.getDef().isEmpty()) {
 					throw new NotFoundException();
 				} else {
+					dismissProgressDialog();
 					Spanned spanned = getSpannedFromRemoteString(hs.getDef());
 					component.setText(spanned);
 				}
@@ -168,6 +193,17 @@ public class RemoteResolver {
 				NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 				try {
 			        if (networkInfo != null && networkInfo.isConnected()) {
+			        	if (!progressDialog.isShowing()) {
+			        		// Show loading animation after a while
+			        		Handler handler = new Handler();
+			        		handler.postDelayed(new Runnable() {
+			        		    public void run() {
+			        		    	if (!activity.isFinishing() && !activity.isChangingConfigurations() &&  progressDialog != null) {
+			        		    		progressDialog.show();
+			        		    	}
+			        		    }
+			        		}, 1000);
+			        	}
 			        	worker = new RemoteWorker().execute(hex, section);
 			        } else {
 			        	throw new ExecutionException(new Throwable());
@@ -191,18 +227,11 @@ public class RemoteResolver {
 				}
 			}
 		} else {
+			dismissProgressDialog();
 			Spanned spanned = remoteStringCache.get(key);
 			component.setText(spanned);
 		}
 		
-	}
-	
-	/**
-	 * Reset the string cache for all hexagrams. This does not clear the underlying 
-	 * data source and it is used when data source has changed (for example: language, dictionary)
-	 */
-	public static void clearCache() {
-		remoteStringCache.clear();
 	}
 	
 	/**
@@ -240,6 +269,13 @@ public class RemoteResolver {
 		final String lang = (String) activity.getSettingsManager().get(SETTINGS_MAP.LANGUAGE);
 		dataSource.deleteHexSection(hex, section, lang);
 		remoteStringCache.remove(hex + section);
+	}
+
+	private static void dismissProgressDialog() {
+		if (progressDialog != null) {
+			progressDialog.dismiss();
+			progressDialog = null;
+		}
 	}
 	
 }

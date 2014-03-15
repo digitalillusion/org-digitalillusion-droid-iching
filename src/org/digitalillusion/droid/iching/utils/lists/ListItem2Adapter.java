@@ -1,4 +1,4 @@
-package org.digitalillusion.droid.iching.utils;
+package org.digitalillusion.droid.iching.utils.lists;
 
 import java.util.List;
 
@@ -48,6 +48,9 @@ public abstract class ListItem2Adapter <T> extends BaseAdapter {
 		return position;
 	}
 
+	public abstract String getText1(T entry);
+	
+	public abstract String getText2(T entry);
 	public View getView(int position, View convertView, ViewGroup parent) {
 		TwoLineListItem row;
 		if (convertView == null) {
@@ -67,7 +70,4 @@ public abstract class ListItem2Adapter <T> extends BaseAdapter {
 
 		return row;
 	}
-	
-	public abstract String getText1(T entry);
-	public abstract String getText2(T entry);
 }

@@ -19,6 +19,14 @@ public class HexSection {
 	/** The actual definition */
 	private String def;
 	
+	public HexSection() {
+		this.hex = Utils.EMPTY_STRING;
+		this.dictionary = Utils.EMPTY_STRING;
+		this.section = Utils.EMPTY_STRING;
+		this.lang = Utils.EMPTY_STRING;
+		this.def = Utils.EMPTY_STRING;
+	}
+	
 	public HexSection(String hex, String dictionary, String lang, String section, String def) {
 		this.hex = hex;
 		this.dictionary = dictionary;
@@ -26,52 +34,16 @@ public class HexSection {
 		this.lang = lang;
 		this.def = def;
 	}
-	
-	public HexSection() {
-		this.hex = "";
-		this.dictionary = "";
-		this.section = "";
-		this.lang = "";
-		this.def = "";
-	}
 
-	public String getHex() {
-		return hex;
-	}
-	public void setHex(String hex) {
-		this.hex = hex;
-	}
-	public String getDictionary() {
-		return dictionary;
-	}
-	public String getLang() {
-		return lang;
-	}
-	public void setLang(String lang) {
-		this.lang = lang;
-	}
-	public void setDictionary(String dictionary) {
-		this.dictionary = dictionary;
-	}
-	public String getSection() {
-		return section;
-	}
-	public void setSection(String section) {
-		this.section = section;
-	}
 	public String getDef() {
 		return def;
 	}
-	public void setDef(String def) {
-		this.def = def;
-	}
-	
 	/**
 	 * @return The quote
 	 */
 	public String getDefQuote() {
-		if (def == null || def.equals("") || def.indexOf(Utils.HEX_SECTION_QUOTE_DELIMITER) < 0) {
-			return "";
+		if (def == null || def.isEmpty() || def.indexOf(Utils.HEX_SECTION_QUOTE_DELIMITER) < 0) {
+			return Utils.EMPTY_STRING;
 		}
 		while (Utils.NEWLINE.charAt(0) == def.charAt(0)) {
 			def = def.substring(1);
@@ -82,8 +54,8 @@ public class HexSection {
 	 * @return The reading
 	 */
 	public String getDefReading() {
-		if (def == null || def.equals("")) {
-			return "";
+		if (def == null || def.isEmpty()) {
+			return Utils.EMPTY_STRING;
 		} else if (def.indexOf(Utils.HEX_SECTION_QUOTE_DELIMITER) < 0) {
 			return def;
 		}
@@ -92,5 +64,33 @@ public class HexSection {
 			def = def.substring(1);
 		}
 		return def;
+	}
+	public String getDictionary() {
+		return dictionary;
+	}
+	public String getHex() {
+		return hex;
+	}
+	public String getLang() {
+		return lang;
+	}
+	public String getSection() {
+		return section;
+	}
+	public void setDef(String def) {
+		this.def = def;
+	}
+	public void setDictionary(String dictionary) {
+		this.dictionary = dictionary;
+	}
+	public void setHex(String hex) {
+		this.hex = hex;
+	}
+	
+	public void setLang(String lang) {
+		this.lang = lang;
+	}
+	public void setSection(String section) {
+		this.section = section;
 	}
 }

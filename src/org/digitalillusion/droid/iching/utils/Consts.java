@@ -32,4 +32,8 @@ public class Consts {
 	/** Dictionary settings **/
 	public static final String DICTIONARY_ALTERVISTA = "altervista";
 	public static final String DICTIONARY_CUSTOM = "custom";
+	
+	/** Storage settings **/
+	public static final String STORAGE_INTERNAL = "internal";
+	public static final String STORAGE_SDCARD = "sdcard";
 }

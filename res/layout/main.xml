@@ -8,11 +8,10 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:drawableLeft="@drawable/ic_launcher"
         android:focusable="false"
         android:text="@string/intro_header" android:gravity="center_horizontal|fill_horizontal" 
         android:paddingLeft="5dp" android:paddingRight="5dp" 
-        android:drawablePadding="5dp" android:textSize="12sp"/>
+        android:textSize="10sp"/>
 
     <LinearLayout
         android:id="@+id/layQuestion"
@@ -36,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="5dp" >
+            android:padding="0dp" >
 
             <EditText
                 android:id="@+id/etQuestion"
@@ -71,6 +70,12 @@
         android:layout_gravity="center_horizontal"
         android:orientation="vertical">
 
+        <ExpandableListView
+            android:id="@+id/elSelectHistory"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent" >
+        </ExpandableListView>
+
         <TextView
             android:id="@+id/tvHistory"
             android:layout_width="wrap_content"
@@ -81,16 +86,15 @@
         <ListView
             android:id="@+id/lvHistory"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="194dp"
             android:drawSelectorOnTop="true"
-            android:scrollbarStyle="insideInset"
-            android:scrollbars="vertical"
-            android:fadingEdge="vertical" 
-            android:padding="5dp"
+            android:fadingEdge="vertical"
             android:listSelector="@android:color/transparent"
-            >
+            android:padding="5dp"
+            android:scrollbarStyle="insideInset"
+            android:scrollbars="vertical" >
+
             <!-- Preview: listitem=@android:layout/simple_list_item_2 -->
         </ListView>
     </LinearLayout>
-
 </LinearLayout>

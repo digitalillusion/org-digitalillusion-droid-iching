@@ -3,16 +3,35 @@
 
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="create">Create</string>
     <string name="cancel">Cancel</string>
     <string name="retry">Retry</string>
     <string name="update">Update</string>
     <string name="remoteconn_unavailable">Remote connection is unavailable at the moment.</string>
+    <string name="remoteconn_please_wait">Loading...</string>
     <string name="history_unavailable">History cannot be restored from SD card.</string>
+    <string name="crypto_unavailable">Password encryption is not supported on this device.</string>
+    <string name="history_change">Click to specify where new readings will be saved</string>
+    <string name="history_create">Create a new history...</string>
+    <string name="history_create_title">Create a new history</string>
+    <string name="history_create_done">History \"%1s\" has been created</string>
+    <string name="history_name">History name</string>
+    <string name="history_name_info">Enter a descriptive name, like \"Personal\" or \"Guests\", to categorize your readings</string>
+    <string name="history_password">Password</string>
+    <string name="history_password_verify">Password verification</string>
+    <string name="history_password_info">You can optionally password protect your history. Use only alphanumeric characters, maximum length is 8. 
+       Keep your password in a safe place. If it\'s lost, you won\'t be able to access the readings saved in the history</string>
+    <string name="history_password_invalid">Password invalid</string>
+    <string name="history_default">History</string>
+    <string name="password_required">Password required</string>
     <string name="options_unavailable">Settings cannot be restored from SD card.</string>
     <string name="history_unsaveable">History cannot be stored to SD card.</string>
+    <string name="history_unremovable">History cannot be removed from SD card.</string>
     <string name="options_unsaveable">Settings cannot be stored to SD card.</string>
-    <string name="history_erase">Are you sure you want to erase history completely?</string>
+    <string name="history_no_destination">Please create a history where to move entries first</string>
     <string name="hex_reset_section">Are you sure you want to reset ALL this hexagram definitions?</string>
+    <string name="item_select_hex">Select an Hexagram</string>
+    <string name="item_select_dest_history">Select a destination history</string>
     <string name="options_view_hex">View Hexagram</string>
     <string name="options_view_edit_hex">View/Edit Hexagram</string>
     <string name="options_references">References</string>
@@ -79,6 +98,9 @@
     <string name="settings_dictionary">Dictionary</string>
     <string name="settings_dictionary_altervista">androidiching.altervista.org</string>
     <string name="settings_dictionary_custom">Custom (local)</string>
+    <string name="settings_storage">Storage</string>
+    <string name="settings_storage_sdcard">SD card</string>
+    <string name="settings_storage_internal">Phone internal storage</string>
     
     
     <string name="hex01">乾 Ch\'ien / The Creative</string>
@@ -157,8 +179,6 @@
     <string name="intro_consult">Consult</string>
     <string name="intro_history_label">Or pick a question from your history:</string>
     <string name="intro_history">View history</string>
-    <string name="intro_history_delete_entry">Delete</string>
-    <string name="intro_history_delete_all">Erase history</string>
     <string name="consult_tapcoins">Tap the coins to generate an hexagram</string>
     <string name="consult_read_desc">Read Description</string>
     <string name="read_desc">Description</string>
@@ -186,11 +206,26 @@
     <string name="read_changing_select_all">All lines</string>
     <string name="read_changing_edit_section">Edit reading</string>
     <string name="read_changing_reset_section">Reset</string>
+    <string name="read_share">Share</string>
+    <string name="read_share_using">Share using</string>
     <string name="edit_section_quote">Quote:</string>
     <string name="edit_section_quote_info">This text will be displayed first, emphasized. It is usually a direct citation of the I Ching.</string>
     <string name="edit_section_reading">Reading:</string>
     <string name="edit_section_reading_info">Write here your own interpretation for this passage.</string>
     <string name="edit_section_update">%1s definition has been updated</string>
     <string name="edit_section_reset">All %1s definitions has been reset</string>
+    <string name="contextmenu_noquestion">(No question)</string>
+    <string name="contextmenu_move_entry">Move</string>
+    <string name="contextmenu_delete_entry">Delete</string>
+    <string name="contextmenu_remove_entry">Erase and remove</string>
+    <string name="contextmenu_rename_entry">Rename</string>
+    <string name="contextmenu_delete_all">Erase history</string>
+    <string name="contextmenu_history_erase_entry">Are you sure you want to erase this entry?</string>
+    <string name="contextmenu_history_erase">Are you sure you want to erase history completely?</string>
+    <string name="contextmenu_history_rename">Please specify the new name for this history</string>
+    <string name="contextmenu_history_remove">Are you sure you want to erase history completely and remove it from the list?</string>
+    <string name="validator_error_empty">This field cannot be empty</string>
+    <string name="validator_error_non_alphanumeric">This field must contain only numbers and letters</string>
+    <string name="validator_error_password_verify">Password and Password verification fields must match</string>
 
 </resources>

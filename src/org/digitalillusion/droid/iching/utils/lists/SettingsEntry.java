@@ -18,12 +18,17 @@ public class SettingsEntry <T extends Serializable> {
 	private ArrayList<T> optionValues = new ArrayList<T>();
 	
 	/**
-	 * Set this option a name
-	 * 
-	 * @param optionName The name of this group of settings
+	 * @return Add a setting to this option
 	 */
-	public void setOptionName(String optionName) {
-		this.optionName = optionName;
+	public void addOptionValue(T value) {
+		optionValues.add(value);
+	}
+	
+	/**
+	 * @return The cardinal position of the current setting in the group
+	 */
+	public Integer getOptionIndex() {
+		return optionValues.indexOf(optionValue);
 	}
 	
 	/**
@@ -41,13 +46,6 @@ public class SettingsEntry <T extends Serializable> {
 	}
 	
 	/**
-	 * @return The cardinal position of the current setting in the group
-	 */
-	public Integer getOptionIndex() {
-		return optionValues.indexOf(optionValue);
-	}
-	
-	/**
 	 * @return All the settings values
 	 */
 	public List<T> getOptionValues() {
@@ -55,10 +53,12 @@ public class SettingsEntry <T extends Serializable> {
 	}
 	
 	/**
-	 * @return Add a setting to this option
+	 * Set this option a name
+	 * 
+	 * @param optionName The name of this group of settings
 	 */
-	public void addOptionValue(T value) {
-		optionValues.add(value);
+	public void setOptionName(String optionName) {
+		this.optionName = optionName;
 	}
 	
 	/**

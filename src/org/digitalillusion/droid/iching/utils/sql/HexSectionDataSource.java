@@ -31,74 +31,10 @@ public class HexSectionDataSource {
 		dbHelper = new MySQLiteHelper(context);
 	}
 
-	public void open() throws SQLException {
-		database = dbHelper.getWritableDatabase();
-	}
-
 	public void close() {
 		dbHelper.close();
 	}
 
-	/**
-	 * Allows to insert or update the definition of an hexagram section
-	 * 
-	 * @param hex The hexagram parameter
-	 * @param dictionary The dictionary parameter
-	 * @param lang The language parameter
-	 * @param section The section parameter
-	 * @param def The new definition
-	 */
-	public void updateHexSection(String hex, String dictionary, String lang, String section, String def) {
-		
-		if (database.isOpen()) {
-			ContentValues values = new ContentValues();
-			values.put(MySQLiteHelper.COLUMN_HEX, hex);
-			values.put(MySQLiteHelper.COLUMN_DICTIONARY, dictionary);
-			values.put(MySQLiteHelper.COLUMN_LANG, lang);
-			values.put(MySQLiteHelper.COLUMN_SECTION, section);
-			values.put(MySQLiteHelper.COLUMN_DEF, def);
-	
-			try {
-				String whereClause = MySQLiteHelper.COLUMN_HEX + "=? and " +
-					MySQLiteHelper.COLUMN_DICTIONARY + "=? and " +
-					MySQLiteHelper.COLUMN_LANG + "=? and " +
-					MySQLiteHelper.COLUMN_SECTION + "=?";
-				String[] whereArgs = new String[] { hex, dictionary, lang, section };
-	
-				getHexSection(hex, dictionary, lang, section);
-				database.update(
-						MySQLiteHelper.TABLE_DEFINITIONS, 
-						values, 
-						whereClause, 
-						whereArgs
-				);
-			} catch (NotFoundException e) {
-				database.insert(
-						MySQLiteHelper.TABLE_DEFINITIONS, 
-						null,
-						values
-				);
-			}
-		}
-	}
-	
-	/**
-	 * Allows to delete all the definitions of an hexagram
-	 * 
-	 * @param hex The hexagram parameter
-	 * @param lang The language parameter
-	 */
-	public void deleteHexSections(String hex, String lang) {
-		if (database.isOpen()) {
-			database.delete(
-				MySQLiteHelper.TABLE_DEFINITIONS,
-				MySQLiteHelper.COLUMN_HEX + "=? and " +
-				MySQLiteHelper.COLUMN_LANG + "=?", 
-				new String[] { hex, lang } 
-			);
-		}
-	}
-	
 	/**
 	 * Allows to delete a section definition for an hexagram
 	 * 
@@ -118,6 +54,23 @@ public class HexSectionDataSource {
 		}
 	}
 
+	/**
+	 * Allows to delete all the definitions of an hexagram
+	 * 
+	 * @param hex The hexagram parameter
+	 * @param lang The language parameter
+	 */
+	public void deleteHexSections(String hex, String lang) {
+		if (database.isOpen()) {
+			database.delete(
+				MySQLiteHelper.TABLE_DEFINITIONS,
+				MySQLiteHelper.COLUMN_HEX + "=? and " +
+				MySQLiteHelper.COLUMN_LANG + "=?", 
+				new String[] { hex, lang } 
+			);
+		}
+	}
+	
 	/**
 	 * @param hex The hexagram parameter
 	 * @param dictionary The dictionary parameter
@@ -167,5 +120,52 @@ public class HexSectionDataSource {
 			}
 		}
 		return hs;
+	}
+	
+	public void open() throws SQLException {
+		database = dbHelper.getWritableDatabase();
+	}
+
+	/**
+	 * Allows to insert or update the definition of an hexagram section
+	 * 
+	 * @param hex The hexagram parameter
+	 * @param dictionary The dictionary parameter
+	 * @param lang The language parameter
+	 * @param section The section parameter
+	 * @param def The new definition
+	 */
+	public void updateHexSection(String hex, String dictionary, String lang, String section, String def) {
+		
+		if (database.isOpen()) {
+			ContentValues values = new ContentValues();
+			values.put(MySQLiteHelper.COLUMN_HEX, hex);
+			values.put(MySQLiteHelper.COLUMN_DICTIONARY, dictionary);
+			values.put(MySQLiteHelper.COLUMN_LANG, lang);
+			values.put(MySQLiteHelper.COLUMN_SECTION, section);
+			values.put(MySQLiteHelper.COLUMN_DEF, def);
+	
+			try {
+				String whereClause = MySQLiteHelper.COLUMN_HEX + "=? and " +
+					MySQLiteHelper.COLUMN_DICTIONARY + "=? and " +
+					MySQLiteHelper.COLUMN_LANG + "=? and " +
+					MySQLiteHelper.COLUMN_SECTION + "=?";
+				String[] whereArgs = new String[] { hex, dictionary, lang, section };
+	
+				getHexSection(hex, dictionary, lang, section);
+				database.update(
+						MySQLiteHelper.TABLE_DEFINITIONS, 
+						values, 
+						whereClause, 
+						whereArgs
+				);
+			} catch (NotFoundException e) {
+				database.insert(
+						MySQLiteHelper.TABLE_DEFINITIONS, 
+						null,
+						values
+				);
+			}
+		}
 	}
 } 

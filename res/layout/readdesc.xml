@@ -13,7 +13,7 @@
             android:id="@android:id/tabs"
             android:layout_width="fill_parent"
             android:layout_height="31dp"
-            android:layout_gravity="" />
+            android:layout_gravity="top" />
 
         <FrameLayout
             android:id="@android:id/tabcontent"
@@ -25,25 +25,37 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:baselineAligned="false"
-                android:orientation="vertical"
-                android:padding="5dp" >
+                android:orientation="vertical">
 
-                <TextView
-		            android:id="@+id/tvQuestionReadDesc"
-		            android:layout_width="fill_parent"
-	                android:layout_height="wrap_content"
-	                android:layout_weight="0.01"
-		            android:text=""
-		            android:textAppearance="?android:attr/textAppearanceMedium" 
-		            android:textColor="@android:color/white"/>
-                    
-                <TextView
-	                android:id="@+id/tvHexName"
-	                android:layout_width="fill_parent"
-	                android:layout_height="30dp"
-	                android:layout_weight="0.01"
-	                android:textAppearance="?android:attr/textAppearanceSmall"
-	                android:textStyle="bold" />
+            	<LinearLayout
+            	    android:layout_width="fill_parent"
+            	    android:layout_height="wrap_content"
+            	    android:orientation="horizontal"
+            	    android:baselineAligned="false"
+            	    android:layout_gravity="fill_horizontal"
+        	        android:paddingLeft="5dp"
+        	        android:paddingBottom="5dp">
+            	    <LinearLayout
+            	    	android:layout_width="fill_parent"
+            	    	android:layout_height="wrap_content"
+            	    	android:orientation="vertical"
+            	    	android:layout_weight="1">
+		                <TextView
+				            android:id="@+id/tvQuestionReadDesc"
+				            android:layout_width="fill_parent"
+			                android:layout_height="wrap_content"
+				            android:text=""
+				            android:textAppearance="?android:attr/textAppearanceMedium" 
+				            android:textColor="@android:color/white"/>
+		                    
+		                <TextView
+			                android:id="@+id/tvHexName"
+			                android:layout_width="fill_parent"
+			                android:layout_height="36dp"
+			                android:textAppearance="?android:attr/textAppearanceSmall"
+			                android:textStyle="bold" />
+	                </LinearLayout>
+               	</LinearLayout> 
 
                 <LinearLayout
                     android:id="@+id/layHexAndButtons"
@@ -53,7 +65,7 @@
 
                     <TableLayout
                         android:id="@+id/tblHexagram"
-                        android:layout_width="100dp"
+                        android:layout_width="130dp"
                         android:layout_height="100dp"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
@@ -118,7 +130,7 @@
                             android:layout_height="0dp"
                             android:layout_gravity="center"
                             android:layout_weight="0.33"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textSize="14dp"
                             android:text="@string/read_desc" />
 
                         <Button
@@ -126,7 +138,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="0.33"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textSize="14dp"
                             android:text="@string/read_judge" />
 
                         <Button
@@ -134,7 +146,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="0.33"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textSize="14dp"
                             android:text="@string/read_image" />
                         
                         <!-- Interface for changing lines -->
@@ -167,7 +179,8 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:baselineAligned="true"
-                    android:orientation="vertical" >
+                    android:orientation="vertical"
+                    android:layout_gravity="top" >
 
                     <EditText
                         android:id="@+id/etOutput"
@@ -175,47 +188,22 @@
                         android:layout_height="fill_parent"
                         android:layout_weight="0.33"
                         android:background="@android:color/transparent"
-                        android:fadingEdge="vertical"
-                        android:fadingEdgeLength="40dp"
+                        android:requiresFadingEdge="vertical"
+                        android:fadingEdgeLength="20dp"
                         android:focusable="false"
                         android:paddingLeft="5dp"
                         android:scrollbarStyle="insideInset"
                         android:scrollbars="vertical"
                         android:textColor="@android:color/white"
-                        android:inputType="textNoSuggestions|textMultiLine" 
-                        android:textIsSelectable="true"
+                        android:inputType="textNoSuggestions|textMultiLine"
+                        android:freezesText="true" 
                         >
 
                         <requestFocus />
                     </EditText>
                 </LinearLayout>
                 
-                <LinearLayout
-			        android:layout_width="fill_parent"
-			        android:layout_height="wrap_content"
-			        android:orientation="horizontal" >
-                
-	                <Button
-	                    android:id="@+id/btReadDescEdit"
-	                    android:layout_width="fill_parent"
-	                    android:layout_height="wrap_content"
-	                    android:layout_gravity="center"
-	                    android:layout_weight="0.33"
-	                    android:textAppearance="?android:attr/textAppearanceSmall"
-	                    android:text="@string/read_changing_edit_section"
-	                    android:onClick="onClickEditHexSection"
-	                    android:visibility="gone" /> 
-	                <Button
-	                    android:id="@+id/btReadDescReset"
-	                    android:layout_width="fill_parent"
-	                    android:layout_height="wrap_content"
-	                    android:layout_gravity="center"
-	                    android:layout_weight="0.33"
-	                    android:textAppearance="?android:attr/textAppearanceSmall"
-	                    android:text="@string/read_changing_reset_section"
-	                    android:onClick="onClickResetHexSection" 
-	                    android:visibility="gone" />
-	             </LinearLayout>
+               
 
             </LinearLayout>
 
