@@ -2,17 +2,24 @@ package org.digitalillusion.droid.iching.utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
+import org.digitalillusion.droid.iching.utils.lists.HistoryEntry;
 
 import android.content.Context;
 import android.content.res.Resources.NotFoundException;
@@ -30,24 +37,63 @@ public class Utils {
 	/** System newline character */
 	public static final String NEWLINE = System.getProperty("line.separator");
 	
+	/** Empty String */
+	public static final String EMPTY_STRING = "";
+		
+	/** Columns */
+	public static final String COLUMNS = ":";
+	
 	/** Delimiter of the quote in hexagram sections definition */
 	public static final String HEX_SECTION_QUOTE_DELIMITER = "\\e";
 
-	public static void setContext(Context context) {
-		Utils.context = context;
+	public static HistoryEntry buildDummyHistoryEntry() {
+		HistoryEntry entry = new HistoryEntry();
+		entry.setChanging(-1);
+		return entry;
 	}
 
-	public static String s(int id) {
-		try {
-			return context.getResources().getString(id);
-		} catch (NotFoundException e) {
-			Log.w("Utils.s()", e.getMessage());
-			return "";
+	public static InputStream downloadUrl(String url, String[]... params) throws IOException {
+		HttpURLConnection con = null;
+		InputStream is = null;
+
+		List<BasicNameValuePair> pairs = new ArrayList<BasicNameValuePair>();
+		for (String[] p : params) {
+			pairs.add(new BasicNameValuePair(p[0], p[1]));
 		}
+
+		String queryString = URLEncodedUtils.format(pairs, "utf-8");
+		url += (!url.endsWith("?") ? "?" : EMPTY_STRING) + queryString;
+
+		con = (HttpURLConnection) new URL(url).openConnection();
+		con.setReadTimeout(3000);
+		con.setConnectTimeout(10000);
+		con.setRequestMethod("GET");
+		con.setDoInput(true);
+
+		con.connect();
+		is = con.getInputStream();
+		return is;
 	}
 
-	public static String s(int id, Object[] subst) {
-		return context.getResources().getString(id, subst);
+	public static byte[] getBytes(InputStream is) throws IOException {
+
+		int len;
+		int size = 1024;
+		byte[] buf;
+
+		if (is instanceof ByteArrayInputStream) {
+			size = is.available();
+			buf = new byte[size];
+			len = is.read(buf, 0, size);
+		} else {
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			buf = new byte[size];
+			while ((len = is.read(buf, 0, size)) != -1) {
+				bos.write(buf, 0, len);
+			}
+			buf = bos.toByteArray();
+		}
+		return buf;
 	}
 
 	/**
@@ -71,54 +117,6 @@ public class Utils {
 		return id;
 	}
 
-	public static InputStream downloadUrl(String url, String[]... params) throws IOException {
-		HttpURLConnection con = null;
-		InputStream is = null;
-
-		List<BasicNameValuePair> pairs = new ArrayList<BasicNameValuePair>();
-		for (String[] p : params) {
-			pairs.add(new BasicNameValuePair(p[0], p[1]));
-		}
-
-		String queryString = URLEncodedUtils.format(pairs, "utf-8");
-		url += (!url.endsWith("?") ? "?" : "") + queryString;
-
-		con = (HttpURLConnection) new URL(url).openConnection();
-		con.setReadTimeout(3000);
-		con.setConnectTimeout(10000);
-		con.setRequestMethod("GET");
-		con.setDoInput(true);
-
-		con.connect();
-		is = con.getInputStream();
-		return is;
-	}
-
-	public static String streamToString(InputStream stream) throws IOException {
-		return new String(getBytes(stream), "UTF-8").replace("\\n",  NEWLINE);
-	}
-
-	public static byte[] getBytes(InputStream is) throws IOException {
-
-		int len;
-		int size = 1024;
-		byte[] buf;
-
-		if (is instanceof ByteArrayInputStream) {
-			size = is.available();
-			buf = new byte[size];
-			len = is.read(buf, 0, size);
-		} else {
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			buf = new byte[size];
-			while ((len = is.read(buf, 0, size)) != -1) {
-				bos.write(buf, 0, len);
-			}
-			buf = bos.toByteArray();
-		}
-		return buf;
-	}
-	
 	/**
 	 * @param an hexagram
 	 * @return The map of the hex value to a cardinal index
@@ -261,6 +259,19 @@ public class Utils {
 		return "-1";
 	}
 
+	public static String implode(String[] array, String sep) {
+		String out = null;
+		for (String str : array) {
+			if (out != null) {
+				out += sep;
+			} 
+			if (out == null) {
+				out = EMPTY_STRING;
+			}
+			out += str;
+		}
+		return out;
+	}
 
 	/**
 	 * @param a cardinal index
@@ -593,27 +604,69 @@ public class Utils {
 		}
 		return hex;
 	}
-
-	public static String implode(String[] array, String sep) {
-		String out = null;
-		for (String str : array) {
-			if (out != null) {
-				out += sep;
-			} 
-			if (out == null) {
-				out = "";
-			}
-			out += str;
-		}
-		return out;
-	}
 	
-	public static boolean mask (Integer mask, Integer value) {
-		return (mask & value) > 0;
+	public static boolean isDummyHistoryEntry(HistoryEntry entry) {
+		if (entry.getChanging() == -1 &&
+			entry.getHex() == null && entry.getTHex() == null &&
+			entry.getDate() == null) {
+			return true;
+		}
+		return false;
 	}
+
 
 	public static boolean isNumeric(Serializable str) {
 		return str.toString().matches("-?\\d+(\\.\\d+)?");
+	}
+
+	public static boolean mask (Integer mask, Integer value) {
+		return (mask & value) > 0;
+	}
+	
+	public static String s(int id) {
+		try {
+			return context.getResources().getString(id);
+		} catch (NotFoundException e) {
+			Log.w("Utils.s()", e.getMessage());
+			return EMPTY_STRING;
+		}
+	}
+
+	public static String s(int id, Object[] subst) {
+		return context.getResources().getString(id, subst);
+	}
+	
+	public static void setContext(Context context) {
+		Utils.context = context;
+	}
+	
+	public static void sortHistoryList(List<HistoryEntry> historyList) {
+		Collections.sort(historyList, new Comparator<HistoryEntry>() {
+			public int compare(HistoryEntry e1, HistoryEntry e2) {
+				if (e1.getDate().getTime() > e2.getDate().getTime()) {
+					return -1;
+				}
+				return 1;
+			}
+		});
+	}
+	
+	public static String streamToString(InputStream stream) throws IOException {
+		return new String(getBytes(stream), "UTF-8").replace("\\n",  NEWLINE);
+	}
+	
+	public static void copy(File src, File dst) throws IOException {
+	    InputStream in = new FileInputStream(src);
+	    OutputStream out = new FileOutputStream(dst);
+
+	    // Transfer bytes from in to out
+	    byte[] buf = new byte[1024];
+	    int len;
+	    while ((len = in.read(buf)) > 0) {
+	        out.write(buf, 0, len);
+	    }
+	    in.close();
+	    out.close();
 	}
 
 }

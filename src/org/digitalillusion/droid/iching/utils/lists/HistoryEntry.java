@@ -22,34 +22,34 @@ public class HistoryEntry implements Serializable {
 	/** The date when the question was posed **/
 	private Date date;
 	
-	public String getQuestion() {
-		return question;
+	public int getChanging() {
+		return changing;
 	}
-	public void setQuestion(String question) {
-		this.question = question;
+	public Date getDate() {
+		return date;
 	}
 	public int[] getHex() {
 		return hex;
 	}
-	public void setHex(int[] hex) {
-		this.hex = hex;
-	}
-	public int getChanging() {
-		return changing;
-	}
-	public void setChanging(int changing) {
-		this.changing = changing;
+	public String getQuestion() {
+		return question;
 	}
 	public int[] getTHex() {
 		return tHex;
 	}
-	public void setTHex(int[] tHex) {
-		this.tHex = tHex;
+	public void setChanging(int changing) {
+		this.changing = changing;
 	}
 	public void setDate(Date date) {
 		this.date = date;
 	}
-	public Date getDate() {
-		return date;
+	public void setHex(int[] hex) {
+		this.hex = hex;
+	}
+	public void setQuestion(String question) {
+		this.question = question;
+	}
+	public void setTHex(int[] tHex) {
+		this.tHex = tHex;
 	}
 }
