@@ -539,6 +539,7 @@ public class IChingActivityRenderer extends Activity {
 		if (itemSelectDialog != null && itemSelectDialog.isShowing()) {
 			itemSelectDialog.dismiss();
 		}
+		RemoteResolver.dismissProgressDialog();
 		
 		connectionManager.cleanUp(this);
 		dsHexSection.close();
@@ -1080,6 +1081,7 @@ public class IChingActivityRenderer extends Activity {
 				final String dictionary = (String) settings.get(SETTINGS_MAP.DICTIONARY);
 				final String lang = (String) settings.get(SETTINGS_MAP.LANGUAGE);
 				RemoteResolver.resetCache(current.hex, dictionary, lang);
+				getHexSectionDataSource().deleteHexSections(current.hex, dictionary, lang);
 				EditText etOutput = (EditText) findViewById(R.id.etOutput);
 				etOutput.setText(Utils.EMPTY_STRING);
 

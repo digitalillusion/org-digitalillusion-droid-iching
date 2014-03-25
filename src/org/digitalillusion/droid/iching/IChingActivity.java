@@ -177,6 +177,8 @@ public class IChingActivity extends IChingActivityRenderer {
 				thiz.tHex = entry.getTHex();
 				thiz.current.question = entry.getQuestion();
 				thiz.current.mode = READ_DESC_MODE.ORACLE;
+				thiz.current.tabIndex = 0;
+				thiz.current.section = RemoteResolver.ICHING_REMOTE_SECTION_DESC;
 				thiz.gotoReadDesc();
 			}
 		});
