@@ -146,7 +146,7 @@ public class RemoteResolver {
 			        		Handler handler = new Handler();
 			        		handler.postDelayed(new Runnable() {
 			        		    public void run() {
-			        		    	if (!activity.isFinishing() && progressDialog != null) {
+			        		    	if (!activity.isFinishing() &&  progressDialog != null) {
 			        		    		progressDialog.show();
 			        		    	}
 			        		    }
@@ -156,8 +156,13 @@ public class RemoteResolver {
 			    			@Override
 			    			protected String doInBackground(Object... params) {
 			    				try {
-			    					return downloadRemoteString(activity, hex, section,
-			    							dictionary, lang);
+			    					String connectionMode = (String) activity.getSettingsManager().get(SETTINGS_MAP.CONNECTION_MODE);
+			    					// Download only in online mode
+			    					if (connectionMode.equals(Consts.CONNECTION_MODE_ONLINE)) {
+			    						return downloadRemoteString(activity, hex, section,
+				    							dictionary, lang);
+			    					}
+			    					return "";
 			    				} catch (IOException e) {
 			    					cancel(true);
 			    					return null;
@@ -247,7 +252,7 @@ public class RemoteResolver {
 		remoteStringCache.remove(hex + section);
 	}
 
-	private static void dismissProgressDialog() {
+	public static void dismissProgressDialog() {
 		if (progressDialog != null) {
 			progressDialog.dismiss();
 			progressDialog = null;

@@ -48,7 +48,10 @@ public class ConnectionManager {
 		SettingsManager settings = activity.getSettingsManager();
 		final String dictionary = (String) settings.get(SETTINGS_MAP.DICTIONARY);
 		final String lang = (String) settings.get(SETTINGS_MAP.LANGUAGE);
-		if (settings.get(SETTINGS_MAP.CONNECTION_MODE).equals(Consts.CONNECTION_MODE_OFFLINE)) {
+		if (dictionary.equals(Consts.DICTIONARY_CUSTOM)) {
+			// Custom dictionary is never updated from remote
+			successTask.run();
+		} else if (settings.get(SETTINGS_MAP.CONNECTION_MODE).equals(Consts.CONNECTION_MODE_OFFLINE)) {
 			AlertDialog confirmDialog = new AlertDialog.Builder(activity).create();
 			confirmDialog.setTitle(getTitle(dictionary, lang));
 			confirmDialog.setMessage(Utils.s(R.string.connection_off_to_on_confirm));
@@ -59,6 +62,7 @@ public class ConnectionManager {
 						String hex = getHexFromIndex(i + 1);
 						dataSource.deleteHexSections(hex, dictionary, lang);
 					}
+					RemoteResolver.clearCache();
 					successTask.run();
 				} 
 			});
@@ -100,15 +104,16 @@ public class ConnectionManager {
 							}
 						});
 						progressDialog.setTitle(getTitle(dictionary, lang));
-						progressDialog.setProgress(0);
+						progressDialog.setProgress(1);
 						progressDialog.show();
 					}
 					@Override
 					protected Object doInBackground(Object... params) {
 						List<Integer> specialCases = Arrays.asList(ChangingLinesEvaluator.ICHING_ALL_LINES_DESC);
+						RemoteResolver.clearCache();
 						for (int i = 0; i < Consts.HEX_COUNT && !isCancelled(); i++) {
-							progressDialog.setProgress(i);
 							int hexIndex = i+1;
+							progressDialog.setProgress(hexIndex);
 							String hex = getHexFromIndex(hexIndex);
 
 							List<String> sections = new ArrayList<String>();
@@ -170,6 +175,7 @@ public class ConnectionManager {
 			if (progressDialog.getProgress() < progressDialog.getMax() && task.cancel(true)) {
 				activity.showToast(Utils.s(R.string.connection_on_to_off_abort));
 			}
+			task = null;
 		}
 	}
 
