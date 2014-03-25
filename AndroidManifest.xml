@@ -3,7 +3,7 @@
     package="org.digitalillusion.droid.iching"
     android:configChanges="orientation|keyboardHidden" 
     android:versionCode="41"
-    android:versionName="1.4.1" 
+    android:versionName="1.4.2" 
     android:installLocation="auto" >
 
     <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="17" />

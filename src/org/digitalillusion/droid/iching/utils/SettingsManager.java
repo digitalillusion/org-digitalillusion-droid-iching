@@ -29,7 +29,8 @@ public class SettingsManager {
 		CHANGING_LINES_EVALUATOR("changingLinesEvaluator"),
 		LANGUAGE("language"),
 		DICTIONARY("dictionary"),
-		STORAGE("storage");
+		STORAGE("storage"),
+		CONNECTION_MODE("connectionMode");
 		
 		
 		private String key;
@@ -94,6 +95,8 @@ public class SettingsManager {
     		return Consts.DICTIONARY_ALTERVISTA;
     	} else if (setting.equals(SETTINGS_MAP.STORAGE)) {
     		return Consts.STORAGE_SDCARD;
+    	} else if (setting.equals(SETTINGS_MAP.CONNECTION_MODE)) {
+    		return Consts.CONNECTION_MODE_ONLINE;
     	}
     	throw new InvalidParameterException(setting.getKey() + " does not specify an option.");
     }
@@ -122,11 +125,9 @@ public class SettingsManager {
 	 * Load the default settings
 	 */
     public void resetDefaults() {
-    	settingsMap.put(SETTINGS_MAP.HAPTIC_FEEDBACK.getKey(), getDefault(SETTINGS_MAP.HAPTIC_FEEDBACK));
-		settingsMap.put(SETTINGS_MAP.CHANGING_LINES_EVALUATOR.getKey(), getDefault(SETTINGS_MAP.CHANGING_LINES_EVALUATOR));
-		settingsMap.put(SETTINGS_MAP.LANGUAGE.getKey(), getDefault(SETTINGS_MAP.LANGUAGE));
-		settingsMap.put(SETTINGS_MAP.DICTIONARY.getKey(), getDefault(SETTINGS_MAP.DICTIONARY));
-		settingsMap.put(SETTINGS_MAP.STORAGE.getKey(), getDefault(SETTINGS_MAP.STORAGE));
+    	for (SETTINGS_MAP setting : SETTINGS_MAP.values()) {
+    		settingsMap.put(setting.getKey(), getDefault(setting));
+    	}
 	}
     
     /**

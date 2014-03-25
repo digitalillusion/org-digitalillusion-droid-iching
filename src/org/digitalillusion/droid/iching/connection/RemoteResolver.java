@@ -1,4 +1,4 @@
-package org.digitalillusion.droid.iching.utils;
+package org.digitalillusion.droid.iching.connection;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,7 +7,9 @@ import java.util.concurrent.ExecutionException;
 
 import org.digitalillusion.droid.iching.IChingActivityRenderer;
 import org.digitalillusion.droid.iching.R;
+import org.digitalillusion.droid.iching.utils.Consts;
 import org.digitalillusion.droid.iching.utils.SettingsManager.SETTINGS_MAP;
+import org.digitalillusion.droid.iching.utils.Utils;
 import org.digitalillusion.droid.iching.utils.sql.HexSection;
 import org.digitalillusion.droid.iching.utils.sql.HexSectionDataSource;
 
@@ -53,7 +55,7 @@ public class RemoteResolver {
 	/** A pointer to the last remote request **/
 	private static AsyncTask<?,?,?> worker;
 	
-	/** A ponter to the dialog showing the waiting animation **/
+	/** A pointer to the dialog showing the waiting animation **/
 	private static ProgressDialog progressDialog;
 	
 	/** The dictionaries definitions */
@@ -118,60 +120,6 @@ public class RemoteResolver {
 		final HexSectionDataSource dataSource = activity.getHexSectionDataSource();
 		final String dictionary = (String) activity.getSettingsManager().get(SETTINGS_MAP.DICTIONARY);
 		final String lang = (String) activity.getSettingsManager().get(SETTINGS_MAP.LANGUAGE);
-		final class RemoteWorker extends AsyncTask<Object, Integer, String> {
-			@Override
-			protected String doInBackground(Object... params) {
-				InputStream is;
-				try {
-					// If choice of dictionary is custom and we are requesting a remote string,
-					// get the default localization on the default dictionary
-					String langCode = lang;
-					String remoteUrl;
-					if (dictionary.equals(Consts.DICTIONARY_CUSTOM)) {
-						langCode = (String) activity.getSettingsManager().getDefault(SETTINGS_MAP.LANGUAGE);
-						remoteUrl = dictionaries.get((String) activity.getSettingsManager().getDefault(SETTINGS_MAP.DICTIONARY));
-					} else {
-						remoteUrl = dictionaries.get(dictionary);
-					}
-					
-					is = Utils.downloadUrl(
-						remoteUrl + langCode + "/",
-						new String[] { "h", hex },
-						new String[] { "s", section }
-					);
-					
-					
-					return Utils.streamToString(is);
-				} catch (IOException e) {
-					cancel(true);
-					return null;
-				} finally {
-					dismissProgressDialog();
-				}
-			}
-			
-			@Override
-			protected void onPostExecute(String result) {
-				super.onPostExecute(result);
-				
-				dismissProgressDialog();
-				
-				askRetry = true;
-				if (result != null) {
-					Spanned spanned = getSpannedFromRemoteString(result);
-					
-					if (hex == activity.getCurrentHex() && section == activity.getCurrentSection()) {
-						// If the request is still pending, proceed with component update
-						if (!component.getText().equals(result)) {		
-							component.setText(spanned);
-						}
-					} 
-					// Store the result in cache
-					remoteStringCache.put(key, spanned);
-					dataSource.updateHexSection(hex, dictionary, lang, section, result);
-				}
-			}	
-		}
 		
 		if (!remoteStringCache.containsKey(key)) {
 			try {
@@ -204,7 +152,42 @@ public class RemoteResolver {
 			        		    }
 			        		}, 1000);
 			        	}
-			        	worker = new RemoteWorker().execute(hex, section);
+			        	worker = new AsyncTask<Object, Integer, String>() {
+			    			@Override
+			    			protected String doInBackground(Object... params) {
+			    				try {
+			    					return downloadRemoteString(activity, hex, section,
+			    							dictionary, lang);
+			    				} catch (IOException e) {
+			    					cancel(true);
+			    					return null;
+			    				} finally {
+			    					dismissProgressDialog();
+			    				}
+			    			}
+			    			
+			    			@Override
+			    			protected void onPostExecute(String result) {
+			    				super.onPostExecute(result);
+			    				
+			    				dismissProgressDialog();
+			    				
+			    				askRetry = true;
+			    				if (result != null) {
+			    					Spanned spanned = getSpannedFromRemoteString(result);
+			    					
+			    					if (hex == activity.getCurrentHex() && section == activity.getCurrentSection()) {
+			    						// If the request is still pending, proceed with component update
+			    						if (!component.getText().equals(result)) {		
+			    							component.setText(spanned);
+			    						}
+			    					} 
+			    					// Store the result in cache
+			    					remoteStringCache.put(key, spanned);
+			    					dataSource.updateHexSection(hex, dictionary, lang, section, result);
+			    				}
+			    			}	
+			    		}.execute(hex, section);
 			        } else {
 			        	throw new ExecutionException(new Throwable());
 			        }
@@ -235,39 +218,32 @@ public class RemoteResolver {
 	}
 	
 	/**
-	 * Reset the definitions cache for the given hexagram. They will be downloaded again
-	 * upon the first request
+	 * Reset the definitions cache for the given hexagram.
 	 * 
 	 * @param hex The hexagram to purge from cache
-	 * @param activity The caller activity, needed to retrieve and datasource
+	 * @param dictionary The dictionary to update
+	 * @param lang The language to update
 	 */
-	public static void resetCache(String hex, IChingActivityRenderer activity) {
-		final HexSectionDataSource dataSource = activity.getHexSectionDataSource();
-		final String lang = (String) activity.getSettingsManager().get(SETTINGS_MAP.LANGUAGE);
-		dataSource.deleteHexSections(hex, lang);
-		
+	public static void resetCache(String hex, String dictionary, String lang) {
 		remoteStringCache.remove(hex + ICHING_REMOTE_SECTION_DESC);
 		remoteStringCache.remove(hex + ICHING_REMOTE_SECTION_JUDGE);
 		remoteStringCache.remove(hex + ICHING_REMOTE_SECTION_IMAGE);
 		
-		for (int i = 1; i <= 6; i++) {
+		for (int i = 1; i <= Consts.HEX_LINES_COUNT; i++) {
 			remoteStringCache.remove(hex + ICHING_REMOTE_SECTION_LINE);
 		}
 		
 	}
 	
 	/**
-	 * Reset the definition cache for the given hexagram section. It will be downloaded again
-	 * upon the first request
+	 * Reset the definition cache for the given hexagram section.
 	 * 
 	 * @param hex The hexagram in question
+	 * @param dictionary The dictionary to update
+	 * @param lang The language to update
 	 * @param section The hexagram section to purge from cache
-	 * @param activity The caller activity, needed to retrieve and datasource
 	 */
-	public static void resetCache(String hex, String section, IChingActivityRenderer activity) {
-		final HexSectionDataSource dataSource = activity.getHexSectionDataSource();
-		final String lang = (String) activity.getSettingsManager().get(SETTINGS_MAP.LANGUAGE);
-		dataSource.deleteHexSection(hex, section, lang);
+	public static void resetCache(String hex, String dictionary, String lang, String section) {
 		remoteStringCache.remove(hex + section);
 	}
 
@@ -276,6 +252,31 @@ public class RemoteResolver {
 			progressDialog.dismiss();
 			progressDialog = null;
 		}
+	}
+
+	public static String downloadRemoteString(
+			final IChingActivityRenderer activity, final String hex,
+			final String section, final String dictionary, final String lang)
+			throws IOException {
+		// If choice of dictionary is custom and we are requesting a remote string,
+		// get the default localization on the default dictionary
+		String langCode = lang;
+		String remoteUrl;
+		if (dictionary.equals(Consts.DICTIONARY_CUSTOM)) {
+			langCode = (String) activity.getSettingsManager().getDefault(SETTINGS_MAP.LANGUAGE);
+			remoteUrl = dictionaries.get((String) activity.getSettingsManager().getDefault(SETTINGS_MAP.DICTIONARY));
+		} else {
+			remoteUrl = dictionaries.get(dictionary);
+		}
+		
+		InputStream is = Utils.downloadUrl(
+			remoteUrl + langCode + "/",
+			new String[] { "h", hex },
+			new String[] { "s", section }
+		);
+		
+		
+		return Utils.streamToString(is);
 	}
 	
 }

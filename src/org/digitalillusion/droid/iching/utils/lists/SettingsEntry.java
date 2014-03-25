@@ -13,6 +13,14 @@ import java.util.List;
  * @param <T> The type of the value of the selectable options
  */
 public class SettingsEntry <T extends Serializable> {
+	
+	public static final String VIBRATION = "settings_vibration";
+	public static final String CHLINES_EVALUATOR = "settings_chlines_evaluator";
+	public static final String LANGUAGE = "settings_lang";
+	public static final String DICTIONARY = "settings_dictionary";
+	public static final String STORAGE = "settings_storage";
+	public static final String CONNECTION_MODE = "settings_connection_mode";
+	
 	private String optionName;
 	private T optionValue;
 	private ArrayList<T> optionValues = new ArrayList<T>();

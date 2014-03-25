@@ -10,9 +10,9 @@ import java.util.List;
 
 import org.digitalillusion.droid.iching.anim.AnimCoin;
 import org.digitalillusion.droid.iching.changinglines.ChangingLinesEvaluator;
+import org.digitalillusion.droid.iching.connection.RemoteResolver;
 import org.digitalillusion.droid.iching.utils.Consts;
 import org.digitalillusion.droid.iching.utils.DataPersister;
-import org.digitalillusion.droid.iching.utils.RemoteResolver;
 import org.digitalillusion.droid.iching.utils.SettingsManager.SETTINGS_MAP;
 import org.digitalillusion.droid.iching.utils.Utils;
 import org.digitalillusion.droid.iching.utils.lists.HistoryEntry;
@@ -82,7 +82,7 @@ public class IChingActivity extends IChingActivityRenderer {
  
 	/** Proxed changing lines evaluator **/
 	private ChangingLinesEvaluator changingLinesEvaluator;
-		
+			
 	/**
      * Move to the consult view
      */
@@ -285,7 +285,7 @@ public class IChingActivity extends IChingActivityRenderer {
 		// Vibration
 		settings.createOption(
 			settingsList,
-			"settings_vibration", 
+			SettingsEntry.VIBRATION, 
 			new Integer[] {
 				Consts.HAPTIC_FEEDBACK_OFF,
 				Consts.HAPTIC_FEEDBACK_ON_THROW_COINS
@@ -295,7 +295,7 @@ public class IChingActivity extends IChingActivityRenderer {
 		// Changing lines
 		settings.createOption(
 			settingsList,
-			"settings_chlines_evaluator", 
+			SettingsEntry.CHLINES_EVALUATOR, 
 			new Integer[] {
 				Consts.EVALUATOR_MANUAL,
 				Consts.EVALUATOR_MASTERYIN,
@@ -306,7 +306,7 @@ public class IChingActivity extends IChingActivityRenderer {
 		// Language
 		settings.createOption(
 			settingsList,
-			"settings_lang", 
+			SettingsEntry.LANGUAGE, 
 			new String[] {
 				Consts.LANGUAGE_EN
 			},
@@ -315,7 +315,7 @@ public class IChingActivity extends IChingActivityRenderer {
 		// Dictionary
 		settings.createOption(
 			settingsList,
-			"settings_dictionary", 
+			SettingsEntry.DICTIONARY, 
 			new String[] {
 				Consts.DICTIONARY_ALTERVISTA,
 				Consts.DICTIONARY_CUSTOM,
@@ -325,12 +325,22 @@ public class IChingActivity extends IChingActivityRenderer {
 		// Storage
 		settings.createOption(
 			settingsList,
-			"settings_storage", 
+			SettingsEntry.STORAGE, 
 			new String[] {
 				Consts.STORAGE_SDCARD,
 				Consts.STORAGE_INTERNAL,
 			},
 			SETTINGS_MAP.STORAGE
+		);
+		// Connection mode
+		settings.createOption(
+			settingsList,
+			SettingsEntry.CONNECTION_MODE, 
+			new String[] {
+				Consts.CONNECTION_MODE_ONLINE,
+				Consts.CONNECTION_MODE_OFFLINE
+			},
+			SETTINGS_MAP.CONNECTION_MODE
 		);
 		
 		
@@ -342,7 +352,7 @@ public class IChingActivity extends IChingActivityRenderer {
 
 			@Override
 			public String getText2(SettingsEntry<?> entry) {
-				return Utils.s(Utils.getResourceByName(R.string.class, entry.getOptionName() + "_" + entry.getOptionValue()));
+				return Utils.s(Utils.getResourceByName(R.string.class, entry.getOptionName() + Utils.UNDERSCORE + entry.getOptionValue()));
 			}
 		});
 		
@@ -354,7 +364,7 @@ public class IChingActivity extends IChingActivityRenderer {
 				String[] optionsText = new String[entry.getOptionValues().size()];
 				int count = 0;
 				for (Serializable value : entry.getOptionValues()) {
-					optionsText[count++] = Utils.s(Utils.getResourceByName(R.string.class, entry.getOptionName() + "_" + value.toString()));
+					optionsText[count++] = Utils.s(Utils.getResourceByName(R.string.class, entry.getOptionName() + Utils.UNDERSCORE + value.toString()));
 				}
 				final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
 					getApplicationContext(),  
@@ -367,29 +377,36 @@ public class IChingActivity extends IChingActivityRenderer {
 				spinner.setPromptId(Utils.getResourceByName(R.string.class, entry.getOptionName()));
 				spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 					public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-						SETTINGS_MAP mapKey = null;
+						final SETTINGS_MAP mapKey = SETTINGS_MAP.values()[settingIndex];
+						final Serializable newValue = entry.getOptionValues().get(position);
+						final Runnable renderSettingChange = new Runnable() {
+							public void run() {
+								renderSettingChanged(lvSettings, entry, mapKey,
+										newValue);
+							}
+						};
+						
+						performOnItemSelected(mapKey, newValue, renderSettingChange);
+					}
+
+					public void onNothingSelected(AdapterView<?> arg0) {
+					}
+
+					private void performOnItemSelected(final SETTINGS_MAP mapKey,
+							final Serializable newValue,
+							final Runnable renderSettingChange) {
 						boolean changed = true;
-						Serializable newValue = entry.getOptionValues().get(position);
-						switch (settingIndex) {
-							case 0:
-								mapKey = SETTINGS_MAP.HAPTIC_FEEDBACK;
-								break;
-							case 1:
+						switch (mapKey) {
+							case CHANGING_LINES_EVALUATOR:
 								// Setting to null will reinit evaluator next time is needed
 								changingLinesEvaluator = null;
-								mapKey = SETTINGS_MAP.CHANGING_LINES_EVALUATOR;
 								break;
-							case 2:
-								// Clear remote strings cache in case language changes
+							case LANGUAGE:
+							case DICTIONARY:
+								// Clear remote strings cache in case language or dictionary change
 								RemoteResolver.clearCache();
-								mapKey = SETTINGS_MAP.LANGUAGE;
 								break;
-							case 3:
-								// Clear remote strings cache in case dictionary changes
-								RemoteResolver.clearCache();
-								mapKey = SETTINGS_MAP.DICTIONARY;
-								break;
-							case 4:
+							case STORAGE:
 								// Switch the storage
 								Context context = IChingActivity.this.getBaseContext();
 								if (newValue.equals(Consts.STORAGE_SDCARD)) {
@@ -397,22 +414,33 @@ public class IChingActivity extends IChingActivityRenderer {
 								} else if (newValue.equals(Consts.STORAGE_INTERNAL)) {
 									changed = DataPersister.useStorageInternal(settings, context);
 								}
-								mapKey = SETTINGS_MAP.STORAGE;
+								break;
+							case CONNECTION_MODE:
+								changed = false;
+								if (newValue.equals(Consts.CONNECTION_MODE_OFFLINE)) {
+									connectionManager.fromOnlineToOffline(IChingActivity.this, renderSettingChange);
+								} else if (newValue.equals(Consts.CONNECTION_MODE_ONLINE)) {
+									connectionManager.fromOfflineToOnline(IChingActivity.this, renderSettingChange);
+								}
 								break;
 						}
 						
 						if (changed) {
-							entry.setOptionValue(newValue);
-							settings.put(mapKey, newValue);
-							
-							((BaseAdapter)lvSettings.getAdapter()).notifyDataSetChanged();
-							lvSettings.invalidateViews();
-							
-							settings.save(IChingActivity.this);
+							renderSettingChange.run();
 						}
 					}
 
-					public void onNothingSelected(AdapterView<?> arg0) {
+					private void renderSettingChanged(
+							final ListView lvSettings,
+							final SettingsEntry<Serializable> entry,
+							SETTINGS_MAP mapKey, Serializable newValue) {
+						entry.setOptionValue(newValue);
+						settings.put(mapKey, newValue);
+						
+						((BaseAdapter)lvSettings.getAdapter()).notifyDataSetChanged();
+						lvSettings.invalidateViews();
+						
+						settings.save(IChingActivity.this);
 					}
 				});
 				spinner.performClick();
@@ -754,7 +782,7 @@ public class IChingActivity extends IChingActivityRenderer {
 	    		gotoSettings();
 	    		break;
 	    	case R.id.omViewHex :
-	    		String[] hexArray = new String[64];
+	    		String[] hexArray = new String[Consts.HEX_COUNT];
 	    		for (int i = 0; i < hexArray.length; i++) {
 	    			String index = (i + 1 < 10 ? "0" : Utils.EMPTY_STRING) + (i + 1);
 	    			int entry = Utils.getResourceByName(R.string.class, "hex" + index);
@@ -927,6 +955,9 @@ public class IChingActivity extends IChingActivityRenderer {
 				break;
 			case R.layout.readdesc :
 				gotoReadDesc();
+				break;
+			case R.layout.settings :
+				gotoSettings();
 				break;
 		}
 		loadSettings();

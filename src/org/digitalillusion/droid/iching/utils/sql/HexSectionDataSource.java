@@ -39,17 +39,19 @@ public class HexSectionDataSource {
 	 * Allows to delete a section definition for an hexagram
 	 * 
 	 * @param hex The hexagram parameter
+	 * @param dictionary The dictionary parameter
 	 * @param section The section parameter
 	 * @param lang The language parameter
 	 */
-	public void deleteHexSection(String hex, String section, String lang) {
+	public synchronized void deleteHexSection(String hex, String dictionary, String section, String lang) {
 		if (database.isOpen()) {
 			database.delete(
 				MySQLiteHelper.TABLE_DEFINITIONS,
 				MySQLiteHelper.COLUMN_HEX + "=? and " +
+				MySQLiteHelper.COLUMN_DICTIONARY + "=? and " +
 				MySQLiteHelper.COLUMN_SECTION + "=? and " +
 				MySQLiteHelper.COLUMN_LANG + "=?", 
-				new String[] { hex, section, lang } 
+				new String[] { hex, dictionary, section, lang } 
 			);
 		}
 	}
@@ -58,15 +60,17 @@ public class HexSectionDataSource {
 	 * Allows to delete all the definitions of an hexagram
 	 * 
 	 * @param hex The hexagram parameter
+	 * @param dictionary The dictionary parameter
 	 * @param lang The language parameter
 	 */
-	public void deleteHexSections(String hex, String lang) {
+	public synchronized void deleteHexSections(String hex, String dictionary, String lang) {
 		if (database.isOpen()) {
 			database.delete(
 				MySQLiteHelper.TABLE_DEFINITIONS,
 				MySQLiteHelper.COLUMN_HEX + "=? and " +
+				MySQLiteHelper.COLUMN_DICTIONARY + "=? and " +
 				MySQLiteHelper.COLUMN_LANG + "=?", 
-				new String[] { hex, lang } 
+				new String[] { hex, dictionary, lang } 
 			);
 		}
 	}
@@ -135,7 +139,7 @@ public class HexSectionDataSource {
 	 * @param section The section parameter
 	 * @param def The new definition
 	 */
-	public void updateHexSection(String hex, String dictionary, String lang, String section, String def) {
+	public synchronized void updateHexSection(String hex, String dictionary, String lang, String section, String def) {
 		
 		if (database.isOpen()) {
 			ContentValues values = new ContentValues();

@@ -111,106 +111,6 @@ public class DataPersister {
 	}
 	
 	/**
-	 * @return True if media is readable, false otherwise
-	 */
-	private static boolean isSDReadable() {
-		String state = Environment.getExternalStorageState();
-		if (Environment.MEDIA_MOUNTED.equals(state)) {
-		    return true;
-		} else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-		    return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * @return True if media is writable, false otherwise
-	 */
-	private static boolean isSDWritable() {
-		String state = Environment.getExternalStorageState();
-		if (Environment.MEDIA_MOUNTED.equals(state)) {
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Set the DataPersister to use the external SD card
-	 * 
-	 * @param settings The settings manager
-	 * 
-	 * @return True if storage is set to SD card, false if an error prevented the setting
-	 */
-	public static boolean useStorageSDCard(SettingsManager settings) {
-		if (!Consts.STORAGE_SDCARD.equals(settings.get(SETTINGS_MAP.STORAGE))) {
-			File currentDir = new File(storagePath.getAbsolutePath());
-			File sdCardPath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + 
-					ICHING_SDCARD_FILES_PATH);
-			if (changeStorage(currentDir, sdCardPath) &&
-				currentDir.listFiles() != null && currentDir.listFiles().length > 0) {
-				// Remove source files
-				for (File f : currentDir.listFiles()) {
-					f.delete();
-				}
-				storagePath = sdCardPath;
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	/**
-	 * Set the DataPersister to use the internal storage
-	 * 
-	 * @param settings The settings manager
-	 * @param context The basic context
-	 *  
-	 * @return True if storage is set to internal, false if an error prevented the setting
-	 */
-	public static boolean useStorageInternal(SettingsManager settings, Context context) {
-		if (!Consts.STORAGE_INTERNAL.equals(settings.get(SETTINGS_MAP.STORAGE))) {
-			File internalPath = context.getFilesDir();
-			File currentDir = new File(storagePath.getAbsolutePath());
-			if (changeStorage(currentDir, internalPath) && 
-				currentDir.listFiles() != null && currentDir.listFiles().length > 0) {
-				// Remove source files
-				for (File f : currentDir.listFiles()) {
-					f.delete();
-				}
-				storagePath = internalPath;
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private static boolean changeStorage(File srcDir, File destDir) {
-		File newStoragePath = new File(destDir.getAbsolutePath());
-		newStoragePath.mkdirs();
-		if (srcDir.listFiles() != null && srcDir.listFiles().length > 0) {
-			try {			
-				for (File f : srcDir.listFiles()) {
-					if (f.isFile() && f.exists()) {
-						File newPath = new File(newStoragePath.getAbsolutePath() + File.separatorChar + f.getName());
-						Utils.copy(f.getAbsoluteFile(), newPath);
-					}
-				}
-				return true;
-			} catch (IOException e) {
-				// Delete all files copied to destination
-				for (File f : newStoragePath.listFiles()) {
-					if (f.isFile() && f.exists()) {
-						f.delete();
-					}
-				}
-				return false;
-			}
-		}
-		return true;
-	}
-		
-	
-	/**
 	 * Load history from SD card
 	 * 
 	 * @param historyList The history list to load
@@ -352,7 +252,7 @@ public class DataPersister {
 			historyPassword = new byte[0];
 		}
 	}
-
+	
 	/**
 	 * Rename the selected history. Default history cannot be renamed
      *
@@ -379,7 +279,7 @@ public class DataPersister {
 			DataPersister.revertHistoryPassword = backupPassword;
 		}
 	}
-	
+
 	/**
 	 * Revert to the last saved history name and password, useful in case a switch has failed
 	 * 
@@ -393,6 +293,7 @@ public class DataPersister {
 		}
 		return needRevert;
 	}
+		
 	
 	/**
 	 * Save history to SD card
@@ -498,7 +399,7 @@ public class DataPersister {
 			}); 
 		}
 	}
-
+	
 	/**
 	 * Specify the name of the history to use for persistence
 	 * 
@@ -531,6 +432,81 @@ public class DataPersister {
 			throw new InvalidParameterException(e.getMessage());
 		}
 	}
+
+	/**
+	 * Set the DataPersister to use the internal storage
+	 * 
+	 * @param settings The settings manager
+	 * @param context The basic context
+	 *  
+	 * @return True if storage is set to internal, false if an error prevented the setting
+	 */
+	public static boolean useStorageInternal(SettingsManager settings, Context context) {
+		if (!Consts.STORAGE_INTERNAL.equals(settings.get(SETTINGS_MAP.STORAGE))) {
+			File internalPath = context.getFilesDir();
+			File currentDir = new File(storagePath.getAbsolutePath());
+			if (changeStorage(currentDir, internalPath) && 
+				currentDir.listFiles() != null && currentDir.listFiles().length > 0) {
+				// Remove source files
+				for (File f : currentDir.listFiles()) {
+					f.delete();
+				}
+				storagePath = internalPath;
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Set the DataPersister to use the external SD card
+	 * 
+	 * @param settings The settings manager
+	 * 
+	 * @return True if storage is set to SD card, false if an error prevented the setting
+	 */
+	public static boolean useStorageSDCard(SettingsManager settings) {
+		if (!Consts.STORAGE_SDCARD.equals(settings.get(SETTINGS_MAP.STORAGE))) {
+			File currentDir = new File(storagePath.getAbsolutePath());
+			File sdCardPath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + 
+					ICHING_SDCARD_FILES_PATH);
+			if (changeStorage(currentDir, sdCardPath) &&
+				currentDir.listFiles() != null && currentDir.listFiles().length > 0) {
+				// Remove source files
+				for (File f : currentDir.listFiles()) {
+					f.delete();
+				}
+				storagePath = sdCardPath;
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private static boolean changeStorage(File srcDir, File destDir) {
+		File newStoragePath = new File(destDir.getAbsolutePath());
+		newStoragePath.mkdirs();
+		if (srcDir.listFiles() != null && srcDir.listFiles().length > 0) {
+			try {			
+				for (File f : srcDir.listFiles()) {
+					if (f.isFile() && f.exists()) {
+						File newPath = new File(newStoragePath.getAbsolutePath() + File.separatorChar + f.getName());
+						Utils.copy(f.getAbsoluteFile(), newPath);
+					}
+				}
+				return true;
+			} catch (IOException e) {
+				// Delete all files copied to destination
+				for (File f : newStoragePath.listFiles()) {
+					if (f.isFile() && f.exists()) {
+						f.delete();
+					}
+				}
+				return false;
+			}
+		}
+		return true;
+	}
 	
 	private static String getHistoryPath() {
 		if(historyName == null || historyName.isEmpty() || historyName.equals(ICHING_HISTORY_PATH_FILENAME_DEFAULT)) {
@@ -538,6 +514,30 @@ public class DataPersister {
 		} else {
 			return File.separator + ICHING_HISTORY_PATH_FILENAME_PREFIX + ICHING_HISTORY_PATH_FILENAME_SEPARATOR + historyName + ICHING_HISTORY_PATH_FILENAME_EXT;
 		}
+	}
+
+	/**
+	 * @return True if media is readable, false otherwise
+	 */
+	private static boolean isSDReadable() {
+		String state = Environment.getExternalStorageState();
+		if (Environment.MEDIA_MOUNTED.equals(state)) {
+		    return true;
+		} else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+		    return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * @return True if media is writable, false otherwise
+	 */
+	private static boolean isSDWritable() {
+		String state = Environment.getExternalStorageState();
+		if (Environment.MEDIA_MOUNTED.equals(state)) {
+			return true;
+		}
+		return false;
 	}
 
 	

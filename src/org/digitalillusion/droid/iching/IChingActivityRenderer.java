@@ -10,9 +10,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.digitalillusion.droid.iching.changinglines.ChangingLinesEvaluator;
+import org.digitalillusion.droid.iching.connection.ConnectionManager;
+import org.digitalillusion.droid.iching.connection.RemoteResolver;
 import org.digitalillusion.droid.iching.utils.Consts;
 import org.digitalillusion.droid.iching.utils.DataPersister;
-import org.digitalillusion.droid.iching.utils.RemoteResolver;
 import org.digitalillusion.droid.iching.utils.SettingsManager;
 import org.digitalillusion.droid.iching.utils.SettingsManager.SETTINGS_MAP;
 import org.digitalillusion.droid.iching.utils.Utils;
@@ -101,9 +102,6 @@ public class IChingActivityRenderer extends Activity {
 		VIEW_HEX
 	}
 	
-	/** SORTED Subset of the hexagrams set when all lines changing have a particular meaning **/
-	private static final Integer[] ICHING_ALL_LINES_DESC = new Integer[] { 1, 2, 12, 47 };
-	
 	/** Settings manager**/
 	protected SettingsManager settings;
 	
@@ -132,6 +130,9 @@ public class IChingActivityRenderer extends Activity {
 	
 	/** Memory cache of the local history **/
 	protected ArrayList<HistoryEntry> historyList = new ArrayList<HistoryEntry>();
+	
+	/** The connection manager **/
+	protected ConnectionManager connectionManager = new ConnectionManager();
 	
 	/** The cleanup operation after history password dialog has been cancelled */
 	protected final Runnable DEFAULT_HISTORY_REVERT_TASK = new Runnable() {
@@ -351,69 +352,32 @@ public class IChingActivityRenderer extends Activity {
 	}
 	
 	/**
-	 * Render the page where to edit the text content of a section of an Hexagram
+	 * Setter for the currently selected hex
+	 * 
+	 * @param hex The currently selected hex
 	 */
-	protected void renderEditHexSection() {
-		LayoutInflater li = LayoutInflater.from(this);
-		View editDescView = li.inflate(R.layout.editdesc, null);
-
-		AlertDialog.Builder editDescDialogBuilder = new AlertDialog.Builder(this);
-		editDescDialogBuilder.setView(editDescView);
-		editDescDialogBuilder.setPositiveButton(R.string.update, new OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				final TextView tvEditSecHex = (TextView) editDescDialog.findViewById(R.id.tvEditSecHex);
-				final EditText etQuote = (EditText) editDescDialog.findViewById(R.id.etQuote);
-				final EditText etReading = (EditText) editDescDialog.findViewById(R.id.etReading);
-				CharSequence text = Utils.s(
-					R.string.edit_section_update, 
-					new String[] { tvEditSecHex.getText().toString() }
-				);
-				
-				String def;
-				if (!etQuote.getText().toString().isEmpty()) {
-					def = etQuote.getText() + Utils.HEX_SECTION_QUOTE_DELIMITER + Utils.NEWLINE + etReading.getText();
-				} else {
-					def = etReading.getText().toString();
-				}
-					
-				String dictionary = (String) settings.get(SETTINGS_MAP.DICTIONARY);
-				String lang = (String) settings.get(SETTINGS_MAP.LANGUAGE);
-				
-				RemoteResolver.resetCache(current.hex, current.section, IChingActivityRenderer.this);
-				dsHexSection.updateHexSection(current.hex, dictionary, lang, current.section, def);
-				
-				EditText etOutput = (EditText) findViewById(R.id.etOutput);
-				etOutput.setText(RemoteResolver.getSpannedFromRemoteString(def));
-				
-				showToast(text);
-				
-				editDescDialog.dismiss();
-
-			}
-		});
-		
-		editDescDialog = editDescDialogBuilder.show();
-		
-		final TextView tvEditSecHex = (TextView) editDescView.findViewById(R.id.tvEditSecHex);
-		String title = Utils.s(Utils.getResourceByName(R.string.class, "hex" + current.hex));
-		if (current.section.startsWith(RemoteResolver.ICHING_REMOTE_SECTION_LINE)) {
-			title += " - " + Utils.s(Utils.getResourceByName(R.string.class, "read_changing_select_" + current.section));
+	public void setCurrentHex(int[] hex) {
+		current.hex = Utils.hexMap(hex);
+	}
+	
+	/**
+	 * Setter for the selected section or changing line
+	 * 
+	 * @param current.changing The section or changing line
+	 */
+	public void setCurrentSection(Serializable section) {
+		if (section.equals(ChangingLinesEvaluator.ICHING_APPLY_BOTH) ||
+			section.equals(ChangingLinesEvaluator.ICHING_APPLY_CAST) ||
+			section.equals(ChangingLinesEvaluator.ICHING_APPLY_MANUAL) ||
+			section.equals(ChangingLinesEvaluator.ICHING_APPLY_NONE) ||
+			section.equals(ChangingLinesEvaluator.ICHING_APPLY_TRANSFORMED)) {
+			current.section = RemoteResolver.ICHING_REMOTE_SECTION_LINE + ((Integer) section);
+		} else if (Utils.isNumeric(section)) {
+			current.changing = (Integer) section;
+			current.section = RemoteResolver.ICHING_REMOTE_SECTION_LINE + ((Integer) section + 1);
 		} else {
-			title += " - " + Utils.s(Utils.getResourceByName(R.string.class, "read_" + current.section));
+			current.section = section.toString(); 
 		}
-		tvEditSecHex.setText(title);
-		
-		String dictionary = (String) settings.get(SETTINGS_MAP.DICTIONARY);
-		String lang = (String) settings.get(SETTINGS_MAP.LANGUAGE);
-		HexSection section = new HexSection(Utils.EMPTY_STRING, Utils.EMPTY_STRING,  Utils.EMPTY_STRING, lang, Utils.EMPTY_STRING);
-		try {
-			section = dsHexSection.getHexSection(current.hex, dictionary, lang, current.section);
-		} catch (NotFoundException e) {}
-		
-		final EditText etQuote = (EditText) editDescView.findViewById(R.id.etQuote);
-		etQuote.setText(section.getDefQuote());
-		final EditText etReading = (EditText) editDescView.findViewById(R.id.etReading);
-		etReading.setText(section.getDefReading());
 	}
 	
 	private String getChangingLinesDescription(READ_DESC_MODE mode) {
@@ -458,12 +422,12 @@ public class IChingActivityRenderer extends Activity {
 		}
 		return desc;
 	}
-	
+
 	private void prepareReadingDescription(final EditText etOutput,
 			OnClickListener retryAction) {
 		if (current.changing == ChangingLinesEvaluator.ICHING_APPLY_BOTH) {
 			int intMap = Integer.parseInt(current.hex);
-			for (int allLines : ICHING_ALL_LINES_DESC) {
+			for (int allLines : ChangingLinesEvaluator.ICHING_ALL_LINES_DESC) {
 				if (intMap == allLines) {
 					RemoteResolver.renderRemoteString(etOutput, retryAction, this);
 					break;
@@ -523,38 +487,6 @@ public class IChingActivityRenderer extends Activity {
 		}
 	}
 
-	/**
-	 * Render the action buttons
-	 * 
-	 * If editing an hexagram using the custom language set of definitions, enable the edit
-	 * and reset hexagram sections action buttons
-	 * Else, while viewing a reading, show action button to share content
-	 */
-	protected void renderOptionsMenu() {
-		if (optionsMenu != null) {
-			final MenuItem omEdit = optionsMenu.findItem(R.id.omReadDescEdit);
-			final MenuItem omUndo = optionsMenu.findItem(R.id.omReadDescUndo);
-			final MenuItem omShare = optionsMenu.findItem(R.id.omReadDescShare);
-			
-			final String dictionary = (String) getSettingsManager().get(SETTINGS_MAP.DICTIONARY);
-			if (current.viewId == R.layout.readdesc || current.viewId == R.layout.editdesc) {
-				if (current.mode == READ_DESC_MODE.VIEW_HEX && dictionary.equals(Consts.DICTIONARY_CUSTOM)) {
-					omEdit.setVisible(true);
-					omUndo.setVisible(true);
-					omShare.setVisible(true);
-				} else {
-					omEdit.setVisible(false);
-					omUndo.setVisible(false);
-					omShare.setVisible(true);
-				}
-			} else {
-				omEdit.setVisible(false);
-				omUndo.setVisible(false);
-				omShare.setVisible(false);
-			}
-		}
-	}
-
 	private void renderQuestion() {
 		final TextView tvQuestion = (TextView) findViewById(R.id.tvQuestionReadDesc);
 		if (current.question != null && !current.question.isEmpty()) {
@@ -593,6 +525,22 @@ public class IChingActivityRenderer extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
+		
+		// Dismiss dialogs
+		if (newHistoryDialog != null && newHistoryDialog.isShowing()) {
+			newHistoryDialog.dismiss();
+		}
+		if (passwordDialog != null && passwordDialog.isShowing()) {
+			passwordDialog.dismiss();
+		}
+		if (editDescDialog != null && editDescDialog.isShowing()) {
+			editDescDialog.dismiss();
+		}
+		if (itemSelectDialog != null && itemSelectDialog.isShowing()) {
+			itemSelectDialog.dismiss();
+		}
+		
+		connectionManager.cleanUp(this);
 		dsHexSection.close();
 	}
 	
@@ -676,6 +624,72 @@ public class IChingActivityRenderer extends Activity {
 		final String shareContent = title + hexagram + section + content;
 		sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, Html.fromHtml(shareContent));
 		startActivity(Intent.createChooser(sharingIntent,Utils.s(R.string.read_share_using)));
+	}
+	
+	/**
+	 * Render the page where to edit the text content of a section of an Hexagram
+	 */
+	protected void renderEditHexSection() {
+		LayoutInflater li = LayoutInflater.from(this);
+		View editDescView = li.inflate(R.layout.editdesc, null);
+
+		AlertDialog.Builder editDescDialogBuilder = new AlertDialog.Builder(this);
+		editDescDialogBuilder.setView(editDescView);
+		editDescDialogBuilder.setPositiveButton(R.string.update, new OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				final TextView tvEditSecHex = (TextView) editDescDialog.findViewById(R.id.tvEditSecHex);
+				final EditText etQuote = (EditText) editDescDialog.findViewById(R.id.etQuote);
+				final EditText etReading = (EditText) editDescDialog.findViewById(R.id.etReading);
+				CharSequence text = Utils.s(
+					R.string.edit_section_update, 
+					new String[] { tvEditSecHex.getText().toString() }
+				);
+				
+				String def;
+				if (!etQuote.getText().toString().isEmpty()) {
+					def = etQuote.getText() + Utils.HEX_SECTION_QUOTE_DELIMITER + Utils.NEWLINE + etReading.getText();
+				} else {
+					def = etReading.getText().toString();
+				}
+					
+				String dictionary = (String) settings.get(SETTINGS_MAP.DICTIONARY);
+				String lang = (String) settings.get(SETTINGS_MAP.LANGUAGE);
+				
+				RemoteResolver.resetCache(current.hex, dictionary, lang, current.section);
+				dsHexSection.updateHexSection(current.hex, dictionary, lang, current.section, def);
+				
+				EditText etOutput = (EditText) findViewById(R.id.etOutput);
+				etOutput.setText(RemoteResolver.getSpannedFromRemoteString(def));
+				
+				showToast(text);
+				
+				editDescDialog.dismiss();
+
+			}
+		});
+		
+		editDescDialog = editDescDialogBuilder.show();
+		
+		final TextView tvEditSecHex = (TextView) editDescView.findViewById(R.id.tvEditSecHex);
+		String title = Utils.s(Utils.getResourceByName(R.string.class, "hex" + current.hex));
+		if (current.section.startsWith(RemoteResolver.ICHING_REMOTE_SECTION_LINE)) {
+			title += " - " + Utils.s(Utils.getResourceByName(R.string.class, "read_changing_select_" + current.section));
+		} else {
+			title += " - " + Utils.s(Utils.getResourceByName(R.string.class, "read_" + current.section));
+		}
+		tvEditSecHex.setText(title);
+		
+		String dictionary = (String) settings.get(SETTINGS_MAP.DICTIONARY);
+		String lang = (String) settings.get(SETTINGS_MAP.LANGUAGE);
+		HexSection section = new HexSection(Utils.EMPTY_STRING, Utils.EMPTY_STRING,  Utils.EMPTY_STRING, lang, Utils.EMPTY_STRING);
+		try {
+			section = dsHexSection.getHexSection(current.hex, dictionary, lang, current.section);
+		} catch (NotFoundException e) {}
+		
+		final EditText etQuote = (EditText) editDescView.findViewById(R.id.etQuote);
+		etQuote.setText(section.getDefQuote());
+		final EditText etReading = (EditText) editDescView.findViewById(R.id.etReading);
+		etReading.setText(section.getDefReading());
 	}
 	
 	protected void renderLoadHistory(final Runnable successTask, final Runnable failureTask) {
@@ -814,6 +828,39 @@ public class IChingActivityRenderer extends Activity {
 	}
 	
 	/**
+	 * Render the action buttons
+	 * 
+	 * If editing an hexagram using the custom language set of definitions, enable the edit
+	 * and reset hexagram sections action buttons
+	 * Else, while viewing a reading, show action button to share content
+	 */
+	protected void renderOptionsMenu() {
+		if (optionsMenu != null) {
+			final MenuItem omEdit = optionsMenu.findItem(R.id.omReadDescEdit);
+			final MenuItem omUndo = optionsMenu.findItem(R.id.omReadDescUndo);
+			final MenuItem omShare = optionsMenu.findItem(R.id.omReadDescShare);
+			
+			final String dictionary = (String) getSettingsManager().get(SETTINGS_MAP.DICTIONARY);
+			if (current.viewId == R.layout.readdesc || current.viewId == R.layout.editdesc) {
+				if (current.mode == READ_DESC_MODE.VIEW_HEX && dictionary.equals(Consts.DICTIONARY_CUSTOM)) {
+					omEdit.setVisible(true);
+					omUndo.setVisible(true);
+					omShare.setVisible(true);
+				} else {
+					omEdit.setVisible(false);
+					omUndo.setVisible(false);
+					omShare.setVisible(true);
+				}
+			} else {
+				omEdit.setVisible(false);
+				omUndo.setVisible(false);
+				omShare.setVisible(false);
+			}
+		}
+	}
+
+
+	/**
 	 * Renders a tab of the readDesc layout, given the associated hexagram
 	 * 
 	 * @param hexToRender The hexagram to evaluate for changing lines
@@ -830,7 +877,7 @@ public class IChingActivityRenderer extends Activity {
 			layButtonsAndChanging.getChildAt(i).setVisibility(View.GONE);
 		}
 		
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < Consts.HEX_LINES_COUNT; i++) {
 			renderRow(i, hexToRender[i], false);
 		} 
 		
@@ -939,7 +986,7 @@ public class IChingActivityRenderer extends Activity {
 		// Update changing count and consultation mode before getting changing lines
 		// description
 		current.changingCount = 0;
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < Consts.HEX_LINES_COUNT; i++) {
 			if (ChangingLinesEvaluator.isChangingLine(hexToRender[i])) {
 				current.changingCount++;
 			}
@@ -975,7 +1022,7 @@ public class IChingActivityRenderer extends Activity {
 				lines.add(Utils.s(R.string.read_changing_select_line6));
 				
 				int hexId = Integer.parseInt(current.hex);
-				if (Arrays.binarySearch(ICHING_ALL_LINES_DESC, hexId) >= 0) {
+				if (Arrays.binarySearch(ChangingLinesEvaluator.ICHING_ALL_LINES_DESC, hexId) >= 0) {
 					lines.add(Utils.s(R.string.read_changing_select_all));
 				}
 				
@@ -1020,8 +1067,7 @@ public class IChingActivityRenderer extends Activity {
 		
 		renderOptionsMenu();
 	}
-
-
+	
 	/**
 	 * Render page to reset the text content of a section of an Hexagram
 	 */
@@ -1030,7 +1076,10 @@ public class IChingActivityRenderer extends Activity {
 		resetConfirmDialog.setMessage(Utils.s(R.string.hex_reset_section));
 		resetConfirmDialog.setButton(DialogInterface.BUTTON_POSITIVE, Utils.s(R.string.yes), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				RemoteResolver.resetCache(current.hex, IChingActivityRenderer.this);
+				SettingsManager settings = IChingActivityRenderer.this.getSettingsManager();
+				final String dictionary = (String) settings.get(SETTINGS_MAP.DICTIONARY);
+				final String lang = (String) settings.get(SETTINGS_MAP.LANGUAGE);
+				RemoteResolver.resetCache(current.hex, dictionary, lang);
 				EditText etOutput = (EditText) findViewById(R.id.etOutput);
 				etOutput.setText(Utils.EMPTY_STRING);
 
@@ -1106,7 +1155,7 @@ public class IChingActivityRenderer extends Activity {
 		
 		row.setBackgroundResource(lineRes);
 	}
-	
+
 	protected void renderTabs(final TabHost tabHost) {
 		// Restyle tabs
 		TabWidget tabWidget = tabHost.getTabWidget();
@@ -1123,36 +1172,7 @@ public class IChingActivityRenderer extends Activity {
 		}
 	}
 	
-	/**
-	 * Setter for the currently selected hex
-	 * 
-	 * @param hex The currently selected hex
-	 */
-	protected void setCurrentHex(int[] hex) {
-		current.hex = Utils.hexMap(hex);
-	}
-
-	/**
-	 * Setter for the selected section or changing line
-	 * 
-	 * @param current.changing The section or changing line
-	 */
-	protected void setCurrentSection(Serializable section) {
-		if (section.equals(ChangingLinesEvaluator.ICHING_APPLY_BOTH) ||
-			section.equals(ChangingLinesEvaluator.ICHING_APPLY_CAST) ||
-			section.equals(ChangingLinesEvaluator.ICHING_APPLY_MANUAL) ||
-			section.equals(ChangingLinesEvaluator.ICHING_APPLY_NONE) ||
-			section.equals(ChangingLinesEvaluator.ICHING_APPLY_TRANSFORMED)) {
-			current.section = RemoteResolver.ICHING_REMOTE_SECTION_LINE + ((Integer) section);
-		} else if (Utils.isNumeric(section)) {
-			current.changing = (Integer) section;
-			current.section = RemoteResolver.ICHING_REMOTE_SECTION_LINE + ((Integer) section + 1);
-		} else {
-			current.section = section.toString(); 
-		}
-	}
-	
-	protected void showToast(CharSequence text) {
+	public void showToast(CharSequence text) {
 		Toast toast = Toast.makeText(
 				getApplicationContext(), 
 				text, 

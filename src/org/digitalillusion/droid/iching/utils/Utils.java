@@ -34,22 +34,39 @@ public class Utils {
 
 	private static Context context;
 
-	/** System newline character */
+	/** System newline character **/
 	public static final String NEWLINE = System.getProperty("line.separator");
 	
-	/** Empty String */
+	/** Empty String **/
 	public static final String EMPTY_STRING = "";
 		
-	/** Columns */
+	/** Columns **/
 	public static final String COLUMNS = ":";
 	
-	/** Delimiter of the quote in hexagram sections definition */
+	/** Underscore **/
+	public static final String UNDERSCORE = "_";
+	
+	/** Delimiter of the quote in hexagram sections definition **/
 	public static final String HEX_SECTION_QUOTE_DELIMITER = "\\e";
-
+	
 	public static HistoryEntry buildDummyHistoryEntry() {
 		HistoryEntry entry = new HistoryEntry();
 		entry.setChanging(-1);
 		return entry;
+	}
+
+	public static void copy(File src, File dst) throws IOException {
+	    InputStream in = new FileInputStream(src);
+	    OutputStream out = new FileOutputStream(dst);
+
+	    // Transfer bytes from in to out
+	    byte[] buf = new byte[1024];
+	    int len;
+	    while ((len = in.read(buf)) > 0) {
+	        out.write(buf, 0, len);
+	    }
+	    in.close();
+	    out.close();
 	}
 
 	public static InputStream downloadUrl(String url, String[]... params) throws IOException {
@@ -123,7 +140,7 @@ public class Utils {
 	 */
 	public static String hexMap(int[] hex) {
 		int value = 0;
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < Consts.HEX_LINES_COUNT; i++) {
 			value += (Math.pow(2, i))*(hex[i]%2);
 		}
 		switch (value) {
@@ -272,7 +289,7 @@ public class Utils {
 		}
 		return out;
 	}
-
+	
 	/**
 	 * @param a cardinal index
 	 * @return The map of the cardinal index to the hex value;
@@ -604,7 +621,8 @@ public class Utils {
 		}
 		return hex;
 	}
-	
+
+
 	public static boolean isDummyHistoryEntry(HistoryEntry entry) {
 		if (entry.getChanging() == -1 &&
 			entry.getHex() == null && entry.getTHex() == null &&
@@ -614,15 +632,14 @@ public class Utils {
 		return false;
 	}
 
-
 	public static boolean isNumeric(Serializable str) {
 		return str.toString().matches("-?\\d+(\\.\\d+)?");
 	}
-
+	
 	public static boolean mask (Integer mask, Integer value) {
 		return (mask & value) > 0;
 	}
-	
+
 	public static String s(int id) {
 		try {
 			return context.getResources().getString(id);
@@ -631,7 +648,7 @@ public class Utils {
 			return EMPTY_STRING;
 		}
 	}
-
+	
 	public static String s(int id, Object[] subst) {
 		return context.getResources().getString(id, subst);
 	}
@@ -653,20 +670,6 @@ public class Utils {
 	
 	public static String streamToString(InputStream stream) throws IOException {
 		return new String(getBytes(stream), "UTF-8").replace("\\n",  NEWLINE);
-	}
-	
-	public static void copy(File src, File dst) throws IOException {
-	    InputStream in = new FileInputStream(src);
-	    OutputStream out = new FileOutputStream(dst);
-
-	    // Transfer bytes from in to out
-	    byte[] buf = new byte[1024];
-	    int len;
-	    while ((len = in.read(buf)) > 0) {
-	        out.write(buf, 0, len);
-	    }
-	    in.close();
-	    out.close();
 	}
 
 }

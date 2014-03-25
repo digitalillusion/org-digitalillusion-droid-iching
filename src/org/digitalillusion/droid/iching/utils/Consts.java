@@ -1,11 +1,17 @@
 package org.digitalillusion.droid.iching.utils;
 
+
 /**
  * Commonly used constants
  *
  * @author digitalillusion
  */
 public class Consts {
+	/** The number of hexagrams in the I Ching **/
+	public static final int HEX_COUNT = 64;
+	/** The number of lines in an hexagram **/
+	public static final int HEX_LINES_COUNT = 6;
+	
 	/** Old Yin coin value **/
 	public static final int ICHING_OLD_YIN = 6;
 	/** Young Yang coin value **/
@@ -36,4 +42,9 @@ public class Consts {
 	/** Storage settings **/
 	public static final String STORAGE_INTERNAL = "internal";
 	public static final String STORAGE_SDCARD = "sdcard";
+	
+	/** Connection mode settings **/
+	public static final String CONNECTION_MODE_ONLINE = "online";
+	public static final String CONNECTION_MODE_OFFLINE = "offline";
+	
 }
