@@ -23,6 +23,9 @@ public abstract class ChangingLinesEvaluator {
 	/** Flag to use when the reading is manual **/
 	public static final int ICHING_APPLY_MANUAL = -5;
 	
+	/** SORTED Subset of the hexagrams set when all lines changing have a particular meaning **/
+	public static final Integer[] ICHING_ALL_LINES_DESC = new Integer[] { 1, 2, 12, 47 };
+	
 	/**
 	 * @param lineVal The line to evaluate
 	 * @return The changed line if the line is changing, the same line otherwise
@@ -55,7 +58,7 @@ public abstract class ChangingLinesEvaluator {
 			@Override
 			public int evaluate(int[] hex, int[] tHex) {
 				int changingCount = 0;
-				for (int i = 0; i < 6; i++) {
+				for (int i = 0; i < Consts.HEX_LINES_COUNT; i++) {
 					if (isChangingLine(hex[i])) {
 						changingCount++;
 					}

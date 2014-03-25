@@ -101,6 +101,9 @@
     <string name="settings_storage">Storage</string>
     <string name="settings_storage_sdcard">SD card</string>
     <string name="settings_storage_internal">Phone internal storage</string>
+    <string name="settings_connection_mode">Connection mode</string>
+    <string name="settings_connection_mode_online">Online</string>
+    <string name="settings_connection_mode_offline">Offline</string>
     
     
     <string name="hex01">乾 Ch\'ien / The Creative</string>
@@ -227,5 +230,9 @@
     <string name="validator_error_empty">This field cannot be empty</string>
     <string name="validator_error_non_alphanumeric">This field must contain only numbers and letters</string>
     <string name="validator_error_password_verify">Password and Password verification fields must match</string>
+    <string name="connection_off_to_on_confirm_title" formatted="false">%1s (%2s)</string>
+    <string name="connection_off_to_on_confirm">Chosing online mode, the dictionary will be cleared. Another complete download will be required to switch back to offline mode. Do you want to continue?</string>
+    <string name="connection_on_to_off_download">Downloading definitions, please wait...</string>
+    <string name="connection_on_to_off_abort">Download aborted</string>
 
 </resources>
