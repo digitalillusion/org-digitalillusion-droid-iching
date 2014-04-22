@@ -173,6 +173,7 @@ public class IChingActivity extends IChingActivityRenderer {
 				HistoryEntry entry = (HistoryEntry) lvHistory.getItemAtPosition(position);
 				IChingActivity thiz = IChingActivity.this;
 				thiz.current.changing = entry.getChanging();
+				thiz.current.changingManualIndex = 0;
 				thiz.hex = entry.getHex();
 				thiz.tHex = entry.getTHex();
 				thiz.current.question = entry.getQuestion();
@@ -749,6 +750,7 @@ public class IChingActivity extends IChingActivityRenderer {
 	    if(keyCode == KeyEvent.KEYCODE_BACK) {
             if (current.viewId == R.layout.main) {
             	onBackPressed();
+            	System.exit(0);
             	return true;
             } else {
             	current.question = Utils.EMPTY_STRING;
@@ -801,6 +803,7 @@ public class IChingActivity extends IChingActivityRenderer {
 					    	current = new CurrentState();
 					    	current.question = Utils.EMPTY_STRING;
 					    	current.mode = READ_DESC_MODE.VIEW_HEX;
+					    	current.changingManualIndex = 0;
 					    	
 					    	gotoReadDesc();
 					    	dialog.dismiss();

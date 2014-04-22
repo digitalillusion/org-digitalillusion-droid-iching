@@ -373,7 +373,9 @@ public class IChingActivityRenderer extends Activity {
 			section.equals(ChangingLinesEvaluator.ICHING_APPLY_TRANSFORMED)) {
 			current.section = RemoteResolver.ICHING_REMOTE_SECTION_LINE + ((Integer) section);
 		} else if (Utils.isNumeric(section)) {
-			current.changing = (Integer) section;
+			if (current.changing != ChangingLinesEvaluator.ICHING_APPLY_MANUAL) {
+				current.changing = (Integer) section;
+			}
 			current.section = RemoteResolver.ICHING_REMOTE_SECTION_LINE + ((Integer) section + 1);
 		} else {
 			current.section = section.toString(); 
@@ -548,6 +550,9 @@ public class IChingActivityRenderer extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if (current == null) {
+			current = new CurrentState();
+		}
 		dsHexSection.open();
 	}
 	
