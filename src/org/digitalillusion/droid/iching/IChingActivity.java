@@ -200,6 +200,7 @@ public class IChingActivity extends IChingActivityRenderer {
         hexRow = 0;
 		hex = new int[6];
 		tHex = new int[6];
+		current = new CurrentState();
 	}
 
 	/**
@@ -799,11 +800,7 @@ public class IChingActivity extends IChingActivityRenderer {
 	    			new OnClickListener() {
 					    public void onClick(DialogInterface dialog, int index) {
 					    	hex = Utils.invHexMap(index+1);
-					    	
 					    	current = new CurrentState();
-					    	current.question = Utils.EMPTY_STRING;
-					    	current.mode = READ_DESC_MODE.VIEW_HEX;
-					    	current.changingManualIndex = 0;
 					    	
 					    	gotoReadDesc();
 					    	dialog.dismiss();

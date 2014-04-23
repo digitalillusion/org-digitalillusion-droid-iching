@@ -93,6 +93,10 @@ public class IChingActivityRenderer extends Activity {
 		
 		public CurrentState() {
 			tabIndex = 0;
+	    	question = Utils.EMPTY_STRING;
+	    	mode = READ_DESC_MODE.VIEW_HEX;
+	    	changingManualIndex = 0;
+	    	viewId = R.layout.main;
 		}
 	}
 
@@ -1173,7 +1177,7 @@ public class IChingActivityRenderer extends Activity {
 			title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
 			title.setText(title.getText().toString().toUpperCase(settings.getLocale()));
 
-			child.getLayoutParams().height = 39;
+			child.getLayoutParams().height = 50;
 			
 			child.setPadding(3, 3, 3, 10);
 		}
