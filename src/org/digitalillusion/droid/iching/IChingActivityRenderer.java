@@ -793,7 +793,10 @@ public class IChingActivityRenderer extends Activity {
 				public String getText2(HistoryEntry entry) {
 					String template = "yyyy/MM/dd HH:mm:ss";
 					SimpleDateFormat dateFormat = new SimpleDateFormat(template, settings.getLocale());
-					return dateFormat.format(entry.getDate());
+					if (entry.getDate() != null) {
+						return dateFormat.format(entry.getDate());
+					}
+					return null;
 				}
     		});
     		if (historyList.size() > 0) {

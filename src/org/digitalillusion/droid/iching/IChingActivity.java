@@ -129,6 +129,10 @@ public class IChingActivity extends IChingActivityRenderer {
 						historyList.add(0, historyEntry);
 						DataPersister.saveHistory(historyList, IChingActivity.this);
 						
+						// Save all pending settings changes now that a new entry
+						// has been added to the history
+				    	settings.save(IChingActivity.this);
+						
 						return true;
 					}
 					return false;
@@ -191,9 +195,10 @@ public class IChingActivity extends IChingActivityRenderer {
 			public void run() {
 				if (historyList.size() == 0) {
 					historyList.add(Utils.buildDummyHistoryEntry());
+					// If default history file does not exist, create it 
+					DataPersister.saveHistory(historyList, IChingActivity.this);
+					historyList.clear();
 				}
-				// If default history file does not exist, create it 
-				DataPersister.saveHistory(historyList, IChingActivity.this);
 			}
 		});
         
@@ -271,7 +276,6 @@ public class IChingActivity extends IChingActivityRenderer {
 		tabHost.setOnTabChangedListener(onTabChange);
 		onTabChange.onTabChanged(listTabId.get(current.tabIndex));
 		tabHost.getTabWidget().getChildAt(current.tabIndex).performClick();
-
 	}
 	
 	/**
@@ -915,9 +919,9 @@ public class IChingActivity extends IChingActivityRenderer {
 		try {
         	settings.load(getBaseContext());
         } catch(FileNotFoundException e) {
-        	settings.resetDefaults();
+        	settings.resetDefaults(false);
         } catch(IOException e) {
-        	settings.resetDefaults();
+        	settings.resetDefaults(true);
         	AlertDialog alertDialog = new AlertDialog.Builder(IChingActivity.this).create();
 			alertDialog.setMessage(Utils.s(R.string.options_unavailable));
 			alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, Utils.s(android.R.string.ok), new OnClickListener() {
