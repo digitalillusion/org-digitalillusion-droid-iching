@@ -72,6 +72,13 @@ public class DataPersister {
 	
 	private static String revertHistoryName;
 	private static byte[] revertHistoryPassword;
+
+	private static boolean forceSwitchStorage;
+	
+	/** Used to throw exception only once on fail load history **/
+	private static boolean failLoadHistory = false;
+	/** Used to throw exception only once on fail load options **/
+	private static boolean failLoadOptions = false;
 	
     /**
 	 * @return The list of history names that the user has created, plus the default one
@@ -80,17 +87,19 @@ public class DataPersister {
 		ArrayList<String> historyNames = new ArrayList<String>();
 		historyNames.add(ICHING_HISTORY_PATH_FILENAME_DEFAULT);
 
-		File[] files = storagePath.listFiles();
-
-		for (int i = 0; files != null && i < files.length; i++) {
-			File file = files[i];
-		    if (file.isFile() && file.getName().startsWith(ICHING_HISTORY_PATH_FILENAME_PREFIX)) {
-		        String name = file.getName().replace(ICHING_HISTORY_PATH_FILENAME_PREFIX, Utils.EMPTY_STRING);
-		        name = name.substring(0, name.lastIndexOf('.'));
-		        if (!name.isEmpty() && !name.equals(ICHING_HISTORY_PATH_FILENAME_SEPARATOR)) {
-		        	historyNames.add(name.substring(ICHING_HISTORY_PATH_FILENAME_SEPARATOR.length()));
-		        }
-		    }
+		if (storagePath != null) {
+			File[] files = storagePath.listFiles();
+	
+			for (int i = 0; files != null && i < files.length; i++) {
+				File file = files[i];
+			    if (file.isFile() && file.getName().startsWith(ICHING_HISTORY_PATH_FILENAME_PREFIX)) {
+			        String name = file.getName().replace(ICHING_HISTORY_PATH_FILENAME_PREFIX, Utils.EMPTY_STRING);
+			        name = name.substring(0, name.lastIndexOf('.'));
+			        if (!name.isEmpty() && !name.equals(ICHING_HISTORY_PATH_FILENAME_SEPARATOR)) {
+			        	historyNames.add(name.substring(ICHING_HISTORY_PATH_FILENAME_SEPARATOR.length()));
+			        }
+			    }
+			}
 		}
 		
 		// Set selected history first
@@ -111,22 +120,24 @@ public class DataPersister {
 	}
 	
 	/**
-	 * Load history from SD card
+	 * Load history
 	 * 
 	 * @param historyList The history list to load
 	 * @param attempt The number of attempt done to load the history
 	 * 
-	 * @throws IOException if SD is not readable
+	 * @throws IOException if path is not readable
 	 * @throws FileNotFoundException if no history was saved;
 	 * @throws InvalidKeyException if the password is wrong 
 	 * @throws GeneralSecurityException if cryptography failed
 	 */
 	@SuppressWarnings("unchecked")
 	public static void loadHistory(final List<HistoryEntry> historyList) throws IOException, FileNotFoundException, InvalidKeyException, GeneralSecurityException {
-		historyList.clear();
-		if (!isSDReadable()) {
-			throw new IOException();
+		if (forceSwitchStorage && !failLoadHistory) {
+			failLoadHistory = true;
+			throw new IOException("Switched storage due to I/O error");
 		}
+		
+		historyList.clear();
 		File historyFile = new File(storagePath.getAbsolutePath() + getHistoryPath()) ;
 		if (historyFile.exists()) {
 			
@@ -173,28 +184,22 @@ public class DataPersister {
 	}
 	
 	/**
-	 * Load options from SD card
+	 * Load options
 	 * 
 	 * @param context The base context
 	 * @param optionsMap The options map to load
 	 * 
-	 * @throws IOException if SD is not readable
+	 * @throws IOException if load fails due to an IO error
 	 * @throws FileNotFoundException if no options were saved;
 	 */
 	@SuppressWarnings("unchecked")
 	public static void loadOptions(Context context, HashMap<String, Serializable> optionsMap) throws IOException, FileNotFoundException {
-		if (optionsMap.size() == 0) {
-			if (!isSDReadable()) {
-				throw new IOException();
-			}
-
-			if (storagePath == null) {
-				// Search options file on internal storage first, then default to sd card
-				storagePath = context.getFilesDir();
-				File testFile = new File(storagePath.getAbsolutePath() + File.separator + ICHING_OPTIONS_FILENAME);
-				if (!testFile.exists()) {
-					storagePath = new File(Environment.getExternalStorageDirectory() + ICHING_SDCARD_FILES_PATH);
-				}
+		initStoragePath(context, optionsMap);
+		// Storage option has been created at this point
+		if (optionsMap.size() == 1) {
+			if (forceSwitchStorage && !failLoadOptions) {
+				failLoadOptions = true;
+				throw new IOException("Switched storage due to I/O error");
 			}
 			
 			File optionsFile = new File(storagePath + File.separator + ICHING_OPTIONS_FILENAME) ;
@@ -204,7 +209,10 @@ public class DataPersister {
 				try {
 					HashMap<String, Serializable> persistedMap = (HashMap<String, Serializable>) stream.readObject();
 					for (Entry<String, Serializable> entry : persistedMap.entrySet()) {
-						optionsMap.put(entry.getKey(), entry.getValue());
+						// Do not override the storage setting set above
+						if (!SettingsManager.SETTINGS_MAP.STORAGE.getKey().equals(entry.getKey())) {
+							optionsMap.put(entry.getKey(), entry.getValue());
+						}
 					}
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
@@ -218,7 +226,7 @@ public class DataPersister {
 			}
 		}
 	}
-	
+
 	/**
 	 * Remove an existing history from SD card. Default history cannot be removed
      *
@@ -279,7 +287,7 @@ public class DataPersister {
 			DataPersister.revertHistoryPassword = backupPassword;
 		}
 	}
-
+	
 	/**
 	 * Revert to the last saved history name and password, useful in case a switch has failed
 	 * 
@@ -293,24 +301,19 @@ public class DataPersister {
 		}
 		return needRevert;
 	}
-		
-	
+
 	/**
-	 * Save history to SD card
+	 * Save history
 	 * 
 	 * @param historyList The history list to save
 	 * @param activity The caller activity, needed to display popups (eventually)
 	 * 
 	 * @return True if history was saved successfully, false otherwise
 	 * 
-	 * @throws IOException if SD is not writable
+	 * @throws IOException if input stream is not writable
 	 */
 	public static boolean saveHistory(final List<HistoryEntry> historyList, final Activity activity) {
 		try {
-			if (!isSDWritable()) {
-				throw new IOException();
-			}
-
 			File historyFile = new File(storagePath.getAbsolutePath() + getHistoryPath());
 			if(!historyFile.exists()) {
 				String absPath = historyFile.getAbsolutePath();
@@ -359,20 +362,17 @@ public class DataPersister {
 		}
 		return false;
 	}
+		
 	
 	/**
-	 * Save options to SD card
+	 * Save options
 	 * 
 	 * @param optionsMap The options map to save
 	 * @param activity The caller activity, needed to display popups (eventually)
 	 * 
-	 * @throws IOException if SD is not writable
 	 */
 	public static void saveOptions(final HashMap<String, Serializable> optionsMap, final Activity activity) {
 		try {
-			if (!isSDWritable()) {
-				throw new IOException();
-			}
 
 			File optionsFile = new File(storagePath.getAbsolutePath() + File.separator + ICHING_OPTIONS_FILENAME);
 			if(!optionsFile.exists()) {
@@ -432,7 +432,7 @@ public class DataPersister {
 			throw new InvalidParameterException(e.getMessage());
 		}
 	}
-
+	
 	/**
 	 * Set the DataPersister to use the internal storage
 	 * 
@@ -457,7 +457,7 @@ public class DataPersister {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Set the DataPersister to use the external SD card
 	 * 
@@ -470,7 +470,7 @@ public class DataPersister {
 			File currentDir = new File(storagePath.getAbsolutePath());
 			File sdCardPath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + 
 					ICHING_SDCARD_FILES_PATH);
-			if (changeStorage(currentDir, sdCardPath) &&
+			if (isSDWritable() && changeStorage(currentDir, sdCardPath) &&
 				currentDir.listFiles() != null && currentDir.listFiles().length > 0) {
 				// Remove source files
 				for (File f : currentDir.listFiles()) {
@@ -497,9 +497,11 @@ public class DataPersister {
 				return true;
 			} catch (IOException e) {
 				// Delete all files copied to destination
-				for (File f : newStoragePath.listFiles()) {
-					if (f.isFile() && f.exists()) {
-						f.delete();
+				if (newStoragePath.listFiles() != null) {
+					for (File f : newStoragePath.listFiles()) {
+						if (f.isFile() && f.exists()) {
+							f.delete();
+						}
 					}
 				}
 				return false;
@@ -515,20 +517,27 @@ public class DataPersister {
 			return File.separator + ICHING_HISTORY_PATH_FILENAME_PREFIX + ICHING_HISTORY_PATH_FILENAME_SEPARATOR + historyName + ICHING_HISTORY_PATH_FILENAME_EXT;
 		}
 	}
-
-	/**
-	 * @return True if media is readable, false otherwise
-	 */
-	private static boolean isSDReadable() {
-		String state = Environment.getExternalStorageState();
-		if (Environment.MEDIA_MOUNTED.equals(state)) {
-		    return true;
-		} else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-		    return true;
-		}
-		return false;
-	}
 	
+	private static void initStoragePath(Context context,
+			HashMap<String, Serializable> optionsMap) {
+		// Search options file on internal storage first.
+		// Otherwise default to sd card if mounted and chosen
+		storagePath = context.getFilesDir();
+		String storageOptionKey = SettingsManager.SETTINGS_MAP.STORAGE.getKey();
+		Serializable storageOptionValue = optionsMap.get(storageOptionKey);
+		File testFile = new File(storagePath.getAbsolutePath() + File.separator + ICHING_OPTIONS_FILENAME);
+		forceSwitchStorage = false;
+		if (!testFile.exists() && isSDWritable() && !Consts.STORAGE_INTERNAL.equals(storageOptionValue)) {
+			optionsMap.put(storageOptionKey, Consts.STORAGE_SDCARD);
+			storagePath = new File(Environment.getExternalStorageDirectory() + ICHING_SDCARD_FILES_PATH);
+		} else {
+			if (!testFile.exists()) {
+				forceSwitchStorage = true;
+			}
+			optionsMap.put(storageOptionKey, Consts.STORAGE_INTERNAL);
+		}
+	}
+
 	/**
 	 * @return True if media is writable, false otherwise
 	 */

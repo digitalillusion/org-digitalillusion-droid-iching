@@ -123,10 +123,15 @@ public class SettingsManager {
     
     /**
 	 * Load the default settings
+	 * 
+	 * @param uninitializedOnly specify if to load default values only for settings
+	 * that has not been yet initialized
 	 */
-    public void resetDefaults() {
+    public void resetDefaults(boolean uninitializedOnly) {
     	for (SETTINGS_MAP setting : SETTINGS_MAP.values()) {
-    		settingsMap.put(setting.getKey(), getDefault(setting));
+    		if (!uninitializedOnly || !settingsMap.containsKey(setting.getKey())) {
+    			settingsMap.put(setting.getKey(), getDefault(setting));
+    		}
     	}
 	}
     

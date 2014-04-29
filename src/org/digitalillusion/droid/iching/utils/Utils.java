@@ -48,7 +48,7 @@ public class Utils {
 	
 	/** Delimiter of the quote in hexagram sections definition **/
 	public static final String HEX_SECTION_QUOTE_DELIMITER = "\\e";
-	
+
 	public static HistoryEntry buildDummyHistoryEntry() {
 		HistoryEntry entry = new HistoryEntry();
 		entry.setChanging(-1);
