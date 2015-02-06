@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent"
-  android:layout_height="wrap_content"
-  android:orientation="vertical"
-  android:padding="5dp" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:padding="5dp">
 
     <TextView
         android:id="@+id/tvNewHistoryTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/history_create_title"
-        android:textAppearance="?android:attr/textAppearanceMedium"  />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="@dimen/text_size_medium"/>
 
     <TextView
         android:id="@+id/tvHistoryName"
@@ -19,7 +19,8 @@
         android:layout_height="wrap_content"
         android:text="@string/history_name"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textStyle="bold" />
+        android:textSize="@dimen/text_size_small"
+        android:textStyle="bold"/>
 
     <EditText
         android:id="@+id/etHistoryName"
@@ -28,31 +29,34 @@
         android:ems="10"
         android:inputType="textCapSentences"
         android:lines="@integer/singleLine"
-        android:maxLines="@integer/singleLine" >
+        android:maxLines="@integer/singleLine"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="@dimen/text_size_medium">
 
-        <requestFocus />
+        <requestFocus/>
     </EditText>
-    
+
     <TextView
         android:id="@+id/tvHistoryNameInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/history_name_info"
-        android:textSize="12sp"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="@dimen/text_size_smaller"/>
 
     <CheckBox
         android:id="@+id/cbHistoryPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/password_required" />
+        android:text="@string/password_required"
+        android:textSize="@dimen/text_size_medium"/>
 
     <LinearLayout
         android:id="@+id/layHistoryPasswordSection"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone" >
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/tvHistoryPassword"
@@ -60,7 +64,8 @@
             android:layout_height="wrap_content"
             android:text="@string/history_password"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textStyle="bold" />
+            android:textSize="@dimen/text_size_small"
+            android:textStyle="bold"/>
 
         <EditText
             android:id="@+id/etHistoryPassword"
@@ -68,9 +73,11 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPassword"
-            android:maxLength="8"
             android:lines="@integer/singleLine"
-            android:maxLines="@integer/singleLine" />
+            android:maxLength="8"
+            android:maxLines="@integer/singleLine"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/text_size_medium"/>
 
         <TextView
             android:id="@+id/tvHistoryPasswordVerify"
@@ -78,24 +85,27 @@
             android:layout_height="wrap_content"
             android:text="@string/history_password_verify"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textStyle="bold" />
+            android:textSize="@dimen/text_size_small"
+            android:textStyle="bold"/>
 
         <EditText
             android:id="@+id/etHistoryPasswordVerify"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:maxLength="8"
             android:inputType="textPassword"
             android:lines="@integer/singleLine"
-            android:maxLines="@integer/singleLine" />
-        
+            android:maxLength="8"
+            android:maxLines="@integer/singleLine"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/text_size_medium"/>
+
         <TextView
             android:id="@+id/tvHistoryPasswordInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/history_password_info"
-            android:textSize="12sp"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="@dimen/text_size_smaller"/>
     </LinearLayout>
 </LinearLayout>

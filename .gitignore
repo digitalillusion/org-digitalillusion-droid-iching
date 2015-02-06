@@ -1,3 +1,6 @@
-/gen
-/bin
-/out
+/gen/*
+/gradle/*
+.*
+*.iml
+gradle*
+project.properties

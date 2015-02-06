@@ -4,81 +4,108 @@ import org.digitalillusion.droid.iching.utils.Consts;
 
 /**
  * Proxy class for the changing lines evaluators
+ *
  * @author digitalillusion
  */
 public abstract class ChangingLinesEvaluator {
-	
-	/** Flag to use when cast hexagram applies **/
-	public static final int ICHING_APPLY_CAST = -1;
-	
-	/** Flag to use when transformed hexagram applies **/
-	public static final int ICHING_APPLY_TRANSFORMED = -2;
-	
-	/** Flag to use when both cast and transformed hexagrams apply **/
-	public static final int ICHING_APPLY_BOTH = -3;
 
-	/** Flag to use when nothing in the reading applies (unused) **/
-	public static final int ICHING_APPLY_NONE = -4;
-	
-	/** Flag to use when the reading is manual **/
-	public static final int ICHING_APPLY_MANUAL = -5;
-	
-	/** SORTED Subset of the hexagrams set when all lines changing have a particular meaning **/
-	public static final Integer[] ICHING_ALL_LINES_DESC = new Integer[] { 1, 2, 12, 47 };
-	
-	/**
-	 * @param lineVal The line to evaluate
-	 * @return The changed line if the line is changing, the same line otherwise
-	 */
-	public static int getChangedLine(int lineVal) {
-		if (lineVal == Consts.ICHING_OLD_YANG) {
-			return Consts.ICHING_YOUNG_YIN;
-		} else if (lineVal == Consts.ICHING_OLD_YIN) {
-			return Consts.ICHING_YOUNG_YANG;
-		} else {
-			return lineVal;
-		}
-	}
-	
-	/**
-	 * @param lineVal The line to evaluate
-	 * @return True if the line is changing, false otherwise
-	 */
-	public static boolean isChangingLine(int lineVal) {
-		return lineVal == Consts.ICHING_OLD_YANG || lineVal == Consts.ICHING_OLD_YIN;
-	}
-	
-	public static ChangingLinesEvaluator produce(Integer evalType) {
-		if (evalType == Consts.EVALUATOR_MASTERYIN) {
-			return new MasterYinEvaluator();
-		} else if (evalType == Consts.EVALUATOR_NAJING) {
-			return new NanjingEvaluator();
-		}
-		return new ChangingLinesEvaluator() {
-			@Override
-			public int evaluate(int[] hex, int[] tHex) {
-				int changingCount = 0;
-				for (int i = 0; i < Consts.HEX_LINES_COUNT; i++) {
-					if (isChangingLine(hex[i])) {
-						changingCount++;
-					}
-					tHex[i] = getChangedLine(hex[i]);
-				}
-				if (changingCount == 0) {
-					return ICHING_APPLY_CAST;
-				}
-				return ICHING_APPLY_MANUAL;
-			}			
-		};
-	}
-	
-	/**
-	 * Evaluate the cast and transformed hexagrams to find the most important
-	 * changing line
-	 * 
-	 * @param hex The cast hexagram
-	 * @param tHex The transformed hexagrams
-	 * @return The position of the most important changing line
-	 */
-	public abstract int evaluate(int[] hex, int[] tHex);
+  /**
+   * Flag to use when cast hexagram applies *
+   */
+  public static final int ICHING_APPLY_CAST = -1;
+
+  /**
+   * Flag to use when transformed hexagram applies *
+   */
+  public static final int ICHING_APPLY_TRANSFORMED = -2;
+
+  /**
+   * Flag to use when both cast and transformed hexagrams apply *
+   */
+  public static final int ICHING_APPLY_BOTH = -3;
+
+  /**
+   * Flag to use when nothing in the reading applies (unused) *
+   */
+  public static final int ICHING_APPLY_NONE = -4;
+
+  /**
+   * Flag to use when the reading is manual *
+   */
+  public static final int ICHING_APPLY_MANUAL = -5;
+
+  /**
+   * SORTED Subset of the hexagrams set when all lines changing have a particular meaning *
+   */
+  public static final Integer[] ICHING_ALL_LINES_DESC = new Integer[]{1, 2};
+
+  /**
+   * @param lineVal The line to evaluate
+   * @return The changed line if the line is changing, the same line otherwise
+   */
+  public static int getChangedLine(int lineVal) {
+    if (lineVal == Consts.ICHING_OLD_YANG) {
+      return Consts.ICHING_YOUNG_YIN;
+    } else if (lineVal == Consts.ICHING_OLD_YIN) {
+      return Consts.ICHING_YOUNG_YANG;
+    } else {
+      return lineVal;
+    }
+  }
+
+  /**
+   * @param lineVal The line to evaluate
+   * @return The changing value of the given line
+   */
+  public static int getChangingLineOf(int lineVal) {
+    if (lineVal == Consts.ICHING_YOUNG_YANG) {
+      return Consts.ICHING_OLD_YANG;
+    } else if (lineVal == Consts.ICHING_YOUNG_YIN) {
+      return Consts.ICHING_OLD_YIN;
+    } else {
+      return lineVal;
+    }
+  }
+
+  /**
+   * @param lineVal The line to evaluate
+   * @return True if the line is changing, false otherwise
+   */
+  public static boolean isChangingLine(int lineVal) {
+    return lineVal == Consts.ICHING_OLD_YANG || lineVal == Consts.ICHING_OLD_YIN;
+  }
+
+  public static ChangingLinesEvaluator produce(Integer evalType) {
+    if (evalType == Consts.EVALUATOR_MASTERYIN) {
+      return new MasterYinEvaluator();
+    } else if (evalType == Consts.EVALUATOR_NAJING) {
+      return new NanjingEvaluator();
+    }
+    return new ChangingLinesEvaluator() {
+      @Override
+      public int evaluate(int[] hex, int[] tHex) {
+        int changingCount = 0;
+        for (int i = 0; i < Consts.HEX_LINES_COUNT; i++) {
+          if (isChangingLine(hex[i])) {
+            changingCount++;
+          }
+          tHex[i] = getChangedLine(hex[i]);
+        }
+        if (changingCount == 0) {
+          return ICHING_APPLY_CAST;
+        }
+        return ICHING_APPLY_MANUAL;
+      }
+    };
+  }
+
+  /**
+   * Evaluate the cast and transformed hexagrams to find the most important
+   * changing line
+   *
+   * @param hex  The cast hexagram
+   * @param tHex The transformed hexagrams
+   * @return The position of the most important changing line
+   */
+  public abstract int evaluate(int[] hex, int[] tHex);
 }
