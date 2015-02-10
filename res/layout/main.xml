@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" android:padding="2dp">
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical"
+              android:padding="2dp">
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
         android:focusable="false"
-        android:text="@string/intro_header" android:gravity="center_horizontal|fill_horizontal" 
-        android:paddingLeft="5dp" android:paddingRight="5dp" 
+        android:gravity="center_horizontal|fill_horizontal"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:text="@string/intro_header"
         android:textSize="11sp"/>
 
     <LinearLayout
@@ -18,7 +21,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tvQuestion"
@@ -27,7 +30,7 @@
             android:saveEnabled="true"
             android:text="@string/intro_question_label"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
         <LinearLayout
             android:id="@+id/layQuestionGroup"
@@ -35,19 +38,19 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="0dp" >
+            android:padding="0dp">
 
             <EditText
                 android:id="@+id/etQuestion"
                 android:layout_width="122dp"
-				android:layout_height="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="0.52"
                 android:imeOptions="actionSend"
                 android:inputType="text"
                 android:lines="1"
                 android:minHeight="20dp"
-                android:minLines="2" >
+                android:minLines="2">
             </EditText>
 
             <Button
@@ -56,9 +59,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="0.40"
+                android:focusable="true"
                 android:onClick="onClickConsultBtn"
-                android:text="@string/intro_consult"
-                android:focusable="true" />
+                android:text="@string/intro_consult"/>
         </LinearLayout>
 
     </LinearLayout>
@@ -73,7 +76,7 @@
         <ExpandableListView
             android:id="@+id/elSelectHistory"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
+            android:layout_height="fill_parent">
         </ExpandableListView>
 
         <TextView
@@ -81,7 +84,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/intro_history_label"
-            android:textAppearance="?android:attr/textAppearanceSmall" android:textStyle="bold"/>
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textStyle="bold"/>
 
         <ListView
             android:id="@+id/lvHistory"
@@ -92,7 +96,7 @@
             android:listSelector="@android:color/transparent"
             android:padding="5dp"
             android:scrollbarStyle="insideInset"
-            android:scrollbars="vertical" >
+            android:scrollbars="vertical">
 
             <!-- Preview: listitem=@android:layout/simple_list_item_2 -->
         </ListView>

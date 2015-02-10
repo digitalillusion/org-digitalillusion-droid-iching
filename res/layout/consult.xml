@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:gravity="center_vertical|center_horizontal" >
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:gravity="center_vertical|center_horizontal"
+              android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/layConsult"
@@ -13,14 +13,14 @@
         android:layout_weight="0.10"
         android:orientation="vertical"
         android:paddingLeft="5dp"
-        android:paddingRight="5dp" >
+        android:paddingRight="5dp">
 
         <TextView
             android:id="@+id/tvQuestionConsult"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:text=""
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
     </LinearLayout>
 
     <TableLayout
@@ -28,18 +28,18 @@
         android:layout_width="160dp"
         android:layout_height="109dp"
         android:layout_weight="0.09"
-        android:gravity="bottom" >
+        android:gravity="bottom">
 
-		<TableRow
+        <TableRow
             android:id="@+id/hexRow6"
             android:layout_width="fill_parent"
             android:layout_height="15dp">
         </TableRow>
-        
+
         <TableRow
             android:id="@+id/hexRow5"
-            android:layout_width="fill_parent" 
-            android:layout_height="15dp"> 
+            android:layout_width="fill_parent"
+            android:layout_height="15dp">
         </TableRow>
 
         <TableRow
@@ -57,41 +57,41 @@
         <TableRow
             android:id="@+id/hexRow2"
             android:layout_width="fill_parent"
-            android:layout_height="15dp"> 
+            android:layout_height="15dp">
         </TableRow>
 
         <TableRow
             android:id="@+id/hexRow1"
             android:layout_width="fill_parent"
-            android:layout_height="15dp"> 
+            android:layout_height="15dp">
         </TableRow>
     </TableLayout>
 
- 	<LinearLayout
- 	    android:id="@+id/layInstructions"
- 	    android:layout_width="fill_parent"
- 	    android:layout_height="wrap_content"
- 	    android:layout_gravity="bottom"
- 	    android:layout_weight="0.09"
- 	    android:gravity="center_vertical|center_horizontal" >
-        
+    <LinearLayout
+        android:id="@+id/layInstructions"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_weight="0.09"
+        android:gravity="center_vertical|center_horizontal">
+
         <TextView
             android:id="@+id/tvInstructions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:text="@string/consult_tapcoins"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
 
     </LinearLayout>
-    
+
     <LinearLayout
         android:id="@+id/layCoins"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:layout_weight="0.00"
-        android:gravity="fill_vertical|center_horizontal" >
+        android:gravity="fill_vertical|center_horizontal">
 
         <ImageView
             android:id="@+id/picCoin01"
@@ -99,7 +99,7 @@
             android:layout_height="48px"
             android:layout_gravity="bottom"
             android:contentDescription="@string/consult_coin_alt"
-            android:onClick="onClickGenerateRow" />
+            android:onClick="onClickGenerateRow"/>
 
         <ImageView
             android:id="@+id/picCoin02"
@@ -107,16 +107,16 @@
             android:layout_height="48px"
             android:layout_gravity="bottom"
             android:contentDescription="@string/consult_coin_alt"
-            android:onClick="onClickGenerateRow" />
-        
+            android:onClick="onClickGenerateRow"/>
+
         <ImageView
             android:id="@+id/picCoin03"
             android:layout_width="48px"
             android:layout_height="48px"
             android:layout_gravity="bottom"
             android:contentDescription="@string/consult_coin_alt"
-            android:onClick="onClickGenerateRow" />
+            android:onClick="onClickGenerateRow"/>
 
-     </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

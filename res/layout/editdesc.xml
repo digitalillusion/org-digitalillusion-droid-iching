@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent"
-  android:layout_height="wrap_content"
-  android:orientation="vertical"
-  android:padding="5dp" >
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="5dp">
+
     <TextView
         android:id="@+id/tvEditSecHex"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text=""
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <TextView
         android:id="@+id/tvEditSecQuote"
@@ -18,46 +19,47 @@
         android:layout_height="wrap_content"
         android:text="@string/edit_section_quote"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <EditText
-	    android:id="@+id/etQuote"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:ems="10"
-	    android:lines="3"
-	    android:inputType="textMultiLine" >
-	    <requestFocus />
-	</EditText>
-    
+        android:id="@+id/etQuote"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:lines="3">
+
+        <requestFocus/>
+    </EditText>
+
     <TextView
         android:id="@+id/tvEditSecQuoteInfo"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/edit_section_quote_info"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-    
-	<TextView
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+    <TextView
         android:id="@+id/tvEditSecReading"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/edit_section_reading"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textStyle="bold" />
-	
-	<EditText
-	    android:id="@+id/etReading"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:ems="10"
-	    android:lines="3"
-	    android:inputType="textMultiLine" >
-	</EditText>
-	
-	<TextView
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/etReading"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:lines="3">
+    </EditText>
+
+    <TextView
         android:id="@+id/tvEditSecReadingInfo"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/edit_section_reading_info"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
 </LinearLayout>

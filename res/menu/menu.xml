@@ -1,32 +1,40 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/omSettings" 
-          android:title="@string/options_settings"/>
-    
-    <item android:id="@+id/omViewHex" 
-       	  android:title="@string/options_view_hex"/>
-    
-    <item android:id="@+id/omReferences" 
-          android:title="@string/options_references"/>
-    
-    <item android:id="@+id/omAlgo" 
-          android:title="@string/options_algo"/>
-    
-    <item android:id="@+id/omAbout" 
-          android:title="@string/options_about"/>
+    <item
+        android:id="@+id/omSettings"
+        android:title="@string/options_settings"/>
 
-    <item android:id="@+id/omReadDescEdit"
-          android:title="@string/read_changing_edit_section"
-          android:icon="@drawable/ic_action_edit"
-          android:visible="false"/>
-    
-    <item android:id="@+id/omReadDescUndo" 
-          android:title="@string/read_changing_reset_section" 
-          android:icon="@drawable/ic_action_undo"
-          android:visible="false"/>
-    
-    <item android:id="@+id/omReadDescShare"
-          android:title="@string/read_share"
-          android:icon="@drawable/ic_action_share"
-          android:visible="false"/>
+    <item
+        android:id="@+id/omViewHex"
+        android:title="@string/options_view_hex"/>
+
+    <item
+        android:id="@+id/omReferences"
+        android:title="@string/options_references"/>
+
+    <item
+        android:id="@+id/omAlgo"
+        android:title="@string/options_algo"/>
+
+    <item
+        android:id="@+id/omAbout"
+        android:title="@string/options_about"/>
+
+    <item
+        android:id="@+id/omReadDescEdit"
+        android:icon="@drawable/ic_action_edit"
+        android:title="@string/read_changing_edit_section"
+        android:visible="false"/>
+
+    <item
+        android:id="@+id/omReadDescUndo"
+        android:icon="@drawable/ic_action_undo"
+        android:title="@string/read_changing_reset_section"
+        android:visible="false"/>
+
+    <item
+        android:id="@+id/omReadDescShare"
+        android:icon="@drawable/ic_action_share"
+        android:title="@string/read_share"
+        android:visible="false"/>
 
 </menu>
