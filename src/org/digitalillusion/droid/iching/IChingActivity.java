@@ -102,7 +102,9 @@ public class IChingActivity extends IChingActivityRenderer {
       ((ImageView) findViewById(R.id.picCoin03)).setVisibility(View.GONE);
 
       TextView tvInstructions = (TextView) findViewById(R.id.tvInstructions);
-      tvInstructions.setText(Utils.getResourceByName(R.string.class, "hex" + Utils.hexMap(hex)));
+      String hexMap = Utils.hexMap(hex);
+      tvInstructions.setText(Utils.getResourceByName(R.string.class, "hex" + hexMap));
+      tvInstructions.setText(hexMap + " " + tvInstructions.getText());
 
       final Button btnReadDesc = new Button(getApplicationContext());
       final LinearLayout layout = (LinearLayout) findViewById(R.id.layCoins);
@@ -243,6 +245,7 @@ public class IChingActivity extends IChingActivityRenderer {
     final TextView tvDescTitle = (TextView) findViewById(R.id.tvHexName);
     String hexMap = Utils.hexMap(hex);
     tvDescTitle.setText(Utils.getResourceByName(R.string.class, "hex" + hexMap));
+    tvDescTitle.setText(hexMap + " " + tvDescTitle.getText());
 
     renderTabs(tabHost);
 

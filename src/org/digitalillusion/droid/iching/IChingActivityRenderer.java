@@ -596,6 +596,7 @@ public class IChingActivityRenderer extends Activity {
 
     // Hexagram
     final String hexagram = "<h3>" + reading +
+        current.hex + " " +
         Utils.s(Utils.getResourceByName(R.string.class, "hex" + current.hex)) +
         "</h3>";
 
@@ -672,7 +673,7 @@ public class IChingActivityRenderer extends Activity {
     editDescDialog = editDescDialogBuilder.show();
 
     final TextView tvEditSecHex = (TextView) editDescView.findViewById(R.id.tvEditSecHex);
-    String title = Utils.s(Utils.getResourceByName(R.string.class, "hex" + current.hex));
+    String title = current.hex + " " + Utils.s(Utils.getResourceByName(R.string.class, "hex" + current.hex));
     if (current.section.startsWith(RemoteResolver.ICHING_REMOTE_SECTION_LINE)) {
       title += " - " + Utils.s(Utils.getResourceByName(R.string.class, "read_changing_select_" + current.section));
     } else {
@@ -877,6 +878,7 @@ public class IChingActivityRenderer extends Activity {
     final TextView tvDescTitle = (TextView) findViewById(R.id.tvHexName);
     setCurrentHex(hexToRender);
     tvDescTitle.setText(Utils.getResourceByName(R.string.class, "hex" + current.hex));
+    tvDescTitle.setText(current.hex + " " + tvDescTitle.getText());
 
     LinearLayout layButtonsAndChanging = (LinearLayout) findViewById(R.id.layButtonsAndChanging);
     for (int i = 0; i < layButtonsAndChanging.getChildCount(); i++) {
