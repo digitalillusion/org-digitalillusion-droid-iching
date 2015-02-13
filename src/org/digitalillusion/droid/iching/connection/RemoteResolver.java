@@ -35,7 +35,7 @@ import java.util.concurrent.ExecutionException;
  *
  * @author digitalillusion
  */
-public class RemoteResolver {
+public abstract class RemoteResolver {
 
   /**
    * Description section identifier *
@@ -141,7 +141,7 @@ public class RemoteResolver {
     if (!remoteStringCache.containsKey(key)) {
       try {
         HexSection hs = dataSource.getHexSection(hex, dictionary, lang, section);
-        if (hs.getDef() == null || hs.getDef().equals(Utils.EMPTY_STRING)) {
+        if (hs.getDef() == null || hs.getDef().isEmpty()) {
           throw new NotFoundException();
         } else {
           dismissProgressDialog();
@@ -163,7 +163,7 @@ public class RemoteResolver {
               Handler handler = new Handler();
               handler.postDelayed(new Runnable() {
                 public void run() {
-                  if (!activity.isFinishing() && progressDialog != null) {
+                  if (!activity.isFinishing() && !activity.isChangingConfigurations() && progressDialog != null) {
                     progressDialog.show();
                   }
                 }

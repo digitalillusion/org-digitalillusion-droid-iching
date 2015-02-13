@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TwoLineListItem;
 
+import org.digitalillusion.droid.iching.R;
+
 import java.util.List;
 
 /**
@@ -20,12 +22,16 @@ public abstract class ListItem2Adapter<T> extends BaseAdapter {
   LayoutInflater inflater;
   List<T> list;
   Context context;
+  private float textSizeMedium;
+  private float textSizeSmall;
 
   public ListItem2Adapter(Activity activity, List<T> list) {
     this.inflater = (LayoutInflater) activity
         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     this.list = list;
     this.context = activity.getApplicationContext();
+    this.textSizeMedium = activity.getResources().getDimension(R.dimen.text_size_medium);
+    this.textSizeSmall = activity.getResources().getDimension(R.dimen.text_size_small);
   }
 
   public int getCount() {
@@ -59,6 +65,10 @@ public abstract class ListItem2Adapter<T> extends BaseAdapter {
           android.R.layout.simple_list_item_2, null);
       row.getText1().setTextAppearance(context,
           android.R.style.TextAppearance_Medium);
+      row.getText1().setTextSize(textSizeMedium);
+      row.getText2().setTextAppearance(context,
+          android.R.style.TextAppearance_Small);
+      row.getText2().setTextSize(textSizeSmall);
     } else {
       row = (TwoLineListItem) convertView;
     }

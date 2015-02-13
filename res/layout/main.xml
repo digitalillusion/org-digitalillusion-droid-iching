@@ -14,7 +14,7 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:text="@string/intro_header"
-        android:textSize="11sp"/>
+        android:textSize="@dimen/text_size_smaller"/>
 
     <LinearLayout
         android:id="@+id/layQuestion"
@@ -30,6 +30,7 @@
             android:saveEnabled="true"
             android:text="@string/intro_question_label"
             android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="@dimen/text_size_small"
             android:textStyle="bold"/>
 
         <LinearLayout
@@ -50,8 +51,9 @@
                 android:inputType="text"
                 android:lines="1"
                 android:minHeight="20dp"
-                android:minLines="2">
-            </EditText>
+                android:minLines="2"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="@dimen/text_size_medium"></EditText>
 
             <Button
                 android:id="@+id/btnQuestion"
@@ -75,9 +77,8 @@
 
         <ExpandableListView
             android:id="@+id/elSelectHistory"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-        </ExpandableListView>
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"></ExpandableListView>
 
         <TextView
             android:id="@+id/tvHistory"
@@ -85,6 +86,7 @@
             android:layout_height="wrap_content"
             android:text="@string/intro_history_label"
             android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="@dimen/text_size_small"
             android:textStyle="bold"/>
 
         <ListView
