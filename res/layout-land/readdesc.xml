@@ -12,7 +12,7 @@
 
         <TabWidget
             android:id="@android:id/tabs"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="31dp"
             android:layout_gravity="top"/>
 
@@ -38,6 +38,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:baselineAligned="false"
+                        android:onClick="onClickSwitchReadDescScreen"
                         android:orientation="vertical">
 
                         <TableLayout
@@ -50,40 +51,88 @@
                             android:gravity="center_vertical|center_horizontal">
 
                             <TableRow
-                                android:id="@+id/hexRow6"
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="@dimen/hex_small_row_height"
-                                android:layout_weight="1"></TableRow>
+                                android:layout_weight="1">
+                                <TextView android:id="@+id/hexRow6"
+                                          android:layout_width="fill_parent"
+                                          android:layout_height="@dimen/hex_small_row_height"
+                                          android:minWidth="@dimen/text_size_small"
+                                          android:textAppearance="?android:attr/textAppearanceSmall"
+                                          android:textColor="@android:color/white"
+                                          android:textSize="@dimen/text_size_small"
+                                          android:textStyle="bold"/>
+                            </TableRow>
 
                             <TableRow
-                                android:id="@+id/hexRow5"
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="@dimen/hex_small_row_height"
-                                android:layout_weight="1"></TableRow>
+                                android:layout_weight="1">
+                                <TextView android:id="@+id/hexRow5"
+                                          android:layout_width="fill_parent"
+                                          android:layout_height="@dimen/hex_small_row_height"
+                                          android:minWidth="@dimen/text_size_small"
+                                          android:textAppearance="?android:attr/textAppearanceSmall"
+                                          android:textColor="@android:color/white"
+                                          android:textSize="@dimen/text_size_small"
+                                          android:textStyle="bold"/>
+                            </TableRow>
 
                             <TableRow
-                                android:id="@+id/hexRow4"
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="@dimen/hex_small_row_height"
-                                android:layout_weight="1"></TableRow>
+                                android:layout_weight="1">
+                                <TextView android:id="@+id/hexRow4"
+                                          android:layout_width="fill_parent"
+                                          android:layout_height="@dimen/hex_small_row_height"
+                                          android:minWidth="@dimen/text_size_small"
+                                          android:textAppearance="?android:attr/textAppearanceSmall"
+                                          android:textColor="@android:color/white"
+                                          android:textSize="@dimen/text_size_small"
+                                          android:textStyle="bold"/>
+                            </TableRow>
 
                             <TableRow
-                                android:id="@+id/hexRow3"
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="@dimen/hex_small_row_height"
-                                android:layout_weight="1"></TableRow>
+                                android:layout_weight="1">
+                                <TextView android:id="@+id/hexRow3"
+                                          android:layout_width="fill_parent"
+                                          android:layout_height="@dimen/hex_small_row_height"
+                                          android:minWidth="@dimen/text_size_small"
+                                          android:textAppearance="?android:attr/textAppearanceSmall"
+                                          android:textColor="@android:color/white"
+                                          android:textSize="@dimen/text_size_small"
+                                          android:textStyle="bold"/>
+                            </TableRow>
 
                             <TableRow
-                                android:id="@+id/hexRow2"
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="@dimen/hex_small_row_height"
-                                android:layout_weight="1"></TableRow>
+                                android:layout_weight="1">
+                                <TextView android:id="@+id/hexRow2"
+                                          android:layout_width="fill_parent"
+                                          android:layout_height="@dimen/hex_small_row_height"
+                                          android:minWidth="@dimen/text_size_small"
+                                          android:textAppearance="?android:attr/textAppearanceSmall"
+                                          android:textColor="@android:color/white"
+                                          android:textSize="@dimen/text_size_small"
+                                          android:textStyle="bold"/>
+                            </TableRow>
 
                             <TableRow
-                                android:id="@+id/hexRow1"
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="@dimen/hex_small_row_height"
-                                android:layout_weight="1"></TableRow>
+                                android:layout_weight="1">
+                                <TextView android:id="@+id/hexRow1"
+                                          android:layout_width="fill_parent"
+                                          android:layout_height="@dimen/hex_small_row_height"
+                                          android:minWidth="@dimen/text_size_small"
+                                          android:textAppearance="?android:attr/textAppearanceSmall"
+                                          android:textColor="@android:color/white"
+                                          android:textSize="@dimen/text_size_small"
+                                          android:textStyle="bold"/>
+                            </TableRow>
                         </TableLayout>
 
                         <LinearLayout
@@ -143,6 +192,17 @@
                                 android:textSize="@dimen/text_size_small"
                                 android:visibility="gone"></Spinner>
                         </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvFurtherReadDesc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal|top"
+                            android:layout_marginBottom="3dp"
+                            android:layout_marginLeft="5dp"
+                            android:text="@string/view_hex_line_further_analysis"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textSize="@dimen/text_size_small"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -202,6 +262,7 @@
                                 android:fadingEdgeLength="20dp"
                                 android:focusable="false"
                                 android:freezesText="true"
+                                android:gravity="top"
                                 android:inputType="textNoSuggestions|textMultiLine"
                                 android:paddingLeft="5dp"
                                 android:requiresFadingEdge="vertical"

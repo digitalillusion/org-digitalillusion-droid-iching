@@ -240,13 +240,18 @@
     <string name="connection_on_to_off_abort">Download aborted</string>
     <string name="view_hex_filter_instr">Filter trigrams (above, below):</string>
     <string name="view_hex_filter_none"> - </string>
-    <string name="view_hex_filter_heaven">☰ Heaven</string>
-    <string name="view_hex_filter_lake">☱ Lake</string>
-    <string name="view_hex_filter_fire">☲ Fire</string>
-    <string name="view_hex_filter_thunder">☳ Thunder</string>
-    <string name="view_hex_filter_wind">☴ Wind</string>
-    <string name="view_hex_filter_water">☵ Water</string>
-    <string name="view_hex_filter_mountain">☶ Mountain</string>
-    <string name="view_hex_filter_earth">☷ Earth</string>
+    <string name="view_hex_filter_heaven">Heaven</string>
+    <string name="view_hex_filter_lake">Lake</string>
+    <string name="view_hex_filter_fire">Fire</string>
+    <string name="view_hex_filter_thunder">Thunder</string>
+    <string name="view_hex_filter_wind">Wind</string>
+    <string name="view_hex_filter_water">Water</string>
+    <string name="view_hex_filter_mountain">Mountain</string>
+    <string name="view_hex_filter_earth">Earth</string>
+    <string name="view_hex_line_governing">o</string>
+    <string name="view_hex_line_constituent">◊</string>
+    <string name="view_hex_line_further_analysis">Tap the hexagram for further analysis</string>
+    <string name="view_hex_line_gov_legend">o: Governing lines</string>
+    <string name="view_hex_line_const_legend">◊: Constituent lines</string>
 
 </resources>

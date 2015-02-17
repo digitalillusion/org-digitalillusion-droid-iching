@@ -8,6 +8,10 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.res.Resources.NotFoundException;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
@@ -63,6 +67,7 @@ import java.security.GeneralSecurityException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -72,6 +77,18 @@ import java.util.List;
  */
 public class IChingActivityRenderer extends Activity {
 
+  /**
+   * The id of the cast hexagram tab
+   */
+  protected static final int TAB_READ_DESC_CAST_HEXAGRAM = 0;
+  /**
+   * The id of the cast hexagram tab
+   */
+  protected static final int TAB_READ_DESC_CHANGING_LINES = 1;
+  /**
+   * The id of the cast hexagram tab
+   */
+  protected static final int TAB_READ_DESC_TRANSFORMED_HEXAGRAM = 2;
   /**
    * The cleanup operation after history password dialog has been cancelled
    */
@@ -94,57 +111,46 @@ public class IChingActivityRenderer extends Activity {
    * Settings manager*
    */
   protected SettingsManager settings;
-
   /**
    * The local data source for the hexagrams sections strings *
    */
   protected HexSectionDataSource dsHexSection;
-
   /**
    * The current state *
    */
   protected CurrentState current;
-
   /**
    * The edit hexagram description dialog *
    */
   protected AlertDialog editDescDialog;
-
   /**
    * The history creation dialog *
    */
   protected AlertDialog newHistoryDialog;
-
   /**
    * The history password insertion dialog
    */
   protected AlertDialog passwordDialog;
-
   /**
    * The context menu selection dialog
    */
   protected AlertDialog contextSelectDialog;
-
   /**
    * The history password insertion dialog on cancel listener
    */
   protected OnCancelListener passwordDialogOnCancel;
-
   /**
    * A dialog that allows to select an item from a list
    */
   protected Dialog itemSelectDialog;
-
   /**
    * The options menu *
    */
   protected Menu optionsMenu;
-
   /**
    * Memory cache of the local history *
    */
   protected ArrayList<HistoryEntry> historyList = new ArrayList<HistoryEntry>();
-
   /**
    * The connection manager *
    */
@@ -186,7 +192,8 @@ public class IChingActivityRenderer extends Activity {
         section.equals(ChangingLinesEvaluator.ICHING_APPLY_TRANSFORMED)) {
       current.section = RemoteResolver.ICHING_REMOTE_SECTION_LINE + ((Integer) section);
     } else if (Utils.isNumeric(section)) {
-      if (current.changing != ChangingLinesEvaluator.ICHING_APPLY_MANUAL) {
+      if (current.changing != ChangingLinesEvaluator.ICHING_APPLY_MANUAL &&
+          current.screen != READ_DESC_SCREEN.LINES) {
         current.changing = (Integer) section;
       }
       current.section = RemoteResolver.ICHING_REMOTE_SECTION_LINE + ((Integer) section + 1);
@@ -367,6 +374,24 @@ public class IChingActivityRenderer extends Activity {
   }
 
   /**
+   * onClick handler to change read hexagram description screen
+   *
+   * @param view Not used
+   */
+  public void onClickSwitchReadDescScreen(View view) {
+    if (current.tabIndex == TAB_READ_DESC_CHANGING_LINES) {
+      return;
+    }
+
+    if (current.screen == READ_DESC_SCREEN.DEFAULT) {
+      current.screen = READ_DESC_SCREEN.LINES;
+    } else {
+      current.screen = READ_DESC_SCREEN.DEFAULT;
+    }
+    renderReadDesc(Utils.invHexMap(Integer.parseInt(current.hex)));
+  }
+
+  /**
    * Called when the activity is first created.
    *
    * @param savedInstanceState The saved state
@@ -424,7 +449,7 @@ public class IChingActivityRenderer extends Activity {
 
       LinearLayout lPickers = new LinearLayout(this);
       lPickers.setOrientation(LinearLayout.HORIZONTAL);
-      lPickers.setGravity(Gravity.CENTER);
+      lPickers.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
       lFilter.addView(lPickers);
 
       final NumberPicker npHiTri = buildTrigramFilter(true);
@@ -604,7 +629,7 @@ public class IChingActivityRenderer extends Activity {
     String changingText = Utils.EMPTY_STRING;
     if (current.section.startsWith(RemoteResolver.ICHING_REMOTE_SECTION_LINE)) {
       if (current.mode == READ_DESC_MODE.ORACLE) {
-        changingText = getChangingLinesDescription(current.mode);
+        changingText = getChangingLinesDescription(current.mode, current.screen);
       } else {
         changingText = getChangingLinesDescriptionApply();
       }
@@ -885,88 +910,138 @@ public class IChingActivityRenderer extends Activity {
       layButtonsAndChanging.getChildAt(i).setVisibility(View.GONE);
     }
 
-    for (int i = 0; i < Consts.HEX_LINES_COUNT; i++) {
-      renderRow(i, hexToRender[i], false);
-    }
-
     renderQuestion();
 
     final EditText etOutput = (EditText) findViewById(R.id.etOutput);
     final Button btReadDesc = (Button) findViewById(R.id.btReadDesc);
-    btReadDesc.setVisibility(View.VISIBLE);
-    final Button btReadJudge = (Button) findViewById(R.id.btReadJudge);
-    btReadJudge.setVisibility(View.VISIBLE);
     final Button btReadImage = (Button) findViewById(R.id.btReadImage);
-    btReadImage.setVisibility(View.VISIBLE);
+    final Button btReadJudge = (Button) findViewById(R.id.btReadJudge);
+    final Spinner spinner = (Spinner) findViewById(R.id.spChanging);
+    final TextView tvFurtherReadDesc = (TextView) findViewById(R.id.tvFurtherReadDesc);
 
-    final OnTouchListener lisReadDesc = new OnTouchListener() {
-      public boolean onTouch(View v, MotionEvent event) {
-        IChingActivityRenderer.this.setCurrentSection(RemoteResolver.ICHING_REMOTE_SECTION_DESC);
-        RemoteResolver.renderRemoteString(
-            etOutput,
-            new OnClickListener() {
-              public void onClick(DialogInterface dialog, int which) {
-                renderReadDesc(hexToRender);
-              }
-            },
-            IChingActivityRenderer.this
-        );
-        btReadDesc.setPressed(true);
-        btReadJudge.setPressed(false);
-        btReadImage.setPressed(false);
-        return true;
-      }
-    };
-    btReadDesc.setOnTouchListener(lisReadDesc);
+    switch (current.screen) {
+      case LINES:
+        final List<String> lines = new ArrayList<String>();
+        for (int i = 0; i < Consts.HEX_LINES_COUNT; i++) {
+          boolean isGoverning = Arrays.binarySearch(ChangingLinesEvaluator.ICHING_GOVERNING_LINE[i], Integer.parseInt(current.hex)) >= 0;
+          boolean isConstituent = Arrays.binarySearch(ChangingLinesEvaluator.ICHING_CONSTITUENT_LINE[i], Integer.parseInt(current.hex)) >= 0;
+          if (isGoverning || isConstituent) {
+            lines.add(Utils.s(Utils.getResourceByName(R.string.class, ChangingLinesEvaluator.READ_CHANGING_SELECT_LINE + (i + 1))));
+          } else {
+            lines.add(Utils.EMPTY_STRING);
+          }
+          renderRow(i, hexToRender[i], false, isGoverning, isConstituent);
+        }
 
-    final OnTouchListener lisReadJudge = new OnTouchListener() {
-      public boolean onTouch(View v, MotionEvent event) {
-        IChingActivityRenderer.this.setCurrentSection(RemoteResolver.ICHING_REMOTE_SECTION_JUDGE);
-        RemoteResolver.renderRemoteString(
-            etOutput,
-            new OnClickListener() {
-              public void onClick(DialogInterface dialog, int which) {
-                renderReadDesc(hexToRender);
-              }
-            },
-            IChingActivityRenderer.this
-        );
-        btReadDesc.setPressed(false);
-        btReadJudge.setPressed(true);
-        btReadImage.setPressed(false);
-        return true;
-      }
+        btReadDesc.setVisibility(View.GONE);
+        btReadJudge.setVisibility(View.GONE);
+        btReadImage.setVisibility(View.GONE);
+        spinner.setVisibility(View.VISIBLE);
+        tvFurtherReadDesc.setVisibility(View.VISIBLE);
+        final OnItemSelectedListener onItemSelect = new OnItemSelectedListener() {
+          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            current.changingManualIndex = position;
+            setCurrentSection(current.changingManualIndex);
+            RemoteResolver.renderRemoteString(
+                etOutput,
+                new OnClickListener() {
+                  public void onClick(DialogInterface dialog, int which) {
+                    renderReadDesc(hexToRender);
+                  }
+                },
+                IChingActivityRenderer.this
+            );
+          }
 
-    };
-    btReadJudge.setOnTouchListener(lisReadJudge);
+          public void onNothingSelected(AdapterView<?> arg0) {
+            etOutput.setText(Utils.EMPTY_STRING);
+          }
+        };
+        buildChangingLineSelector(spinner, lines, onItemSelect);
+        final TextView tvChanging = (TextView) findViewById(R.id.tvChanging);
+        tvChanging.setVisibility(View.VISIBLE);
+        tvChanging.setText(Html.fromHtml("<small>" + getChangingLinesDescription(current.mode, current.screen) + "</small>"));
+        break;
+      default:
+        for (int i = 0; i < Consts.HEX_LINES_COUNT; i++) {
+          renderRow(i, hexToRender[i], false, null, null);
+        }
 
-    OnTouchListener lisReadImage = new OnTouchListener() {
-      public boolean onTouch(View v, MotionEvent event) {
-        IChingActivityRenderer.this.setCurrentSection(RemoteResolver.ICHING_REMOTE_SECTION_IMAGE);
-        RemoteResolver.renderRemoteString(
-            etOutput,
-            new DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int which) {
-                renderReadDesc(hexToRender);
-              }
-            },
-            IChingActivityRenderer.this
-        );
-        btReadDesc.setPressed(false);
-        btReadJudge.setPressed(false);
-        btReadImage.setPressed(true);
-        return true;
-      }
-    };
-    btReadImage.setOnTouchListener(lisReadImage);
+        btReadDesc.setVisibility(View.VISIBLE);
+        btReadJudge.setVisibility(View.VISIBLE);
+        btReadImage.setVisibility(View.VISIBLE);
+        tvFurtherReadDesc.setVisibility(View.VISIBLE);
+        spinner.setVisibility(View.GONE);
 
-    // Actionate the selected section button
-    if (RemoteResolver.ICHING_REMOTE_SECTION_JUDGE.equals(current.section)) {
-      lisReadJudge.onTouch(btReadJudge, null);
-    } else if (RemoteResolver.ICHING_REMOTE_SECTION_IMAGE.equals(current.section)) {
-      lisReadImage.onTouch(btReadImage, null);
-    } else {
-      lisReadDesc.onTouch(btReadDesc, null);
+        final OnTouchListener lisReadDesc = new OnTouchListener() {
+          public boolean onTouch(View v, MotionEvent event) {
+            IChingActivityRenderer.this.setCurrentSection(RemoteResolver.ICHING_REMOTE_SECTION_DESC);
+            RemoteResolver.renderRemoteString(
+                etOutput,
+                new OnClickListener() {
+                  public void onClick(DialogInterface dialog, int which) {
+                    renderReadDesc(hexToRender);
+                  }
+                },
+                IChingActivityRenderer.this
+            );
+            btReadDesc.setPressed(true);
+            btReadJudge.setPressed(false);
+            btReadImage.setPressed(false);
+            return true;
+          }
+        };
+        btReadDesc.setOnTouchListener(lisReadDesc);
+
+        final OnTouchListener lisReadJudge = new OnTouchListener() {
+          public boolean onTouch(View v, MotionEvent event) {
+            IChingActivityRenderer.this.setCurrentSection(RemoteResolver.ICHING_REMOTE_SECTION_JUDGE);
+            RemoteResolver.renderRemoteString(
+                etOutput,
+                new OnClickListener() {
+                  public void onClick(DialogInterface dialog, int which) {
+                    renderReadDesc(hexToRender);
+                  }
+                },
+                IChingActivityRenderer.this
+            );
+            btReadDesc.setPressed(false);
+            btReadJudge.setPressed(true);
+            btReadImage.setPressed(false);
+            return true;
+          }
+
+        };
+        btReadJudge.setOnTouchListener(lisReadJudge);
+
+        OnTouchListener lisReadImage = new OnTouchListener() {
+          public boolean onTouch(View v, MotionEvent event) {
+            IChingActivityRenderer.this.setCurrentSection(RemoteResolver.ICHING_REMOTE_SECTION_IMAGE);
+            RemoteResolver.renderRemoteString(
+                etOutput,
+                new DialogInterface.OnClickListener() {
+                  public void onClick(DialogInterface dialog, int which) {
+                    renderReadDesc(hexToRender);
+                  }
+                },
+                IChingActivityRenderer.this
+            );
+            btReadDesc.setPressed(false);
+            btReadJudge.setPressed(false);
+            btReadImage.setPressed(true);
+            return true;
+          }
+        };
+        btReadImage.setOnTouchListener(lisReadImage);
+
+        // Actionate the selected section button
+        if (RemoteResolver.ICHING_REMOTE_SECTION_JUDGE.equals(current.section)) {
+          lisReadJudge.onTouch(btReadJudge, null);
+        } else if (RemoteResolver.ICHING_REMOTE_SECTION_IMAGE.equals(current.section)) {
+          lisReadImage.onTouch(btReadImage, null);
+        } else {
+          lisReadDesc.onTouch(btReadDesc, null);
+        }
     }
 
     renderOptionsMenu();
@@ -986,6 +1061,8 @@ public class IChingActivityRenderer extends Activity {
     for (int i = 0; i < layButtonsAndChanging.getChildCount(); i++) {
       layButtonsAndChanging.getChildAt(i).setVisibility(View.GONE);
     }
+    final TextView tvFurtherReadDesc = (TextView) findViewById(R.id.tvFurtherReadDesc);
+    tvFurtherReadDesc.setVisibility(View.GONE);
 
     renderQuestion();
 
@@ -998,6 +1075,7 @@ public class IChingActivityRenderer extends Activity {
 
 
     final EditText etOutput = (EditText) findViewById(R.id.etOutput);
+    final Spinner spinner = (Spinner) findViewById(R.id.spChanging);
     etOutput.setText(Utils.EMPTY_STRING);
     switch (mode) {
       case ORACLE:
@@ -1018,22 +1096,7 @@ public class IChingActivityRenderer extends Activity {
         lines.add(Utils.s(R.string.read_changing_select_line4));
         lines.add(Utils.s(R.string.read_changing_select_line5));
         lines.add(Utils.s(R.string.read_changing_select_line6));
-
-        int hexId = Integer.parseInt(current.hex);
-        if (Arrays.binarySearch(ChangingLinesEvaluator.ICHING_ALL_LINES_DESC, hexId) >= 0) {
-          lines.add(Utils.s(R.string.read_changing_select_all));
-        }
-
-        Spinner spinner = (Spinner) findViewById(R.id.spChanging);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-            getApplicationContext(),
-            android.R.layout.simple_spinner_item,
-            lines.toArray(new String[lines.size()])
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setVisibility(View.VISIBLE);
-        spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+        final OnItemSelectedListener onItemSelect = new OnItemSelectedListener() {
           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             current.changingManualIndex = (position + 1 > Consts.HEX_LINES_COUNT) ? ChangingLinesEvaluator.ICHING_APPLY_BOTH : position;
             setCurrentSection(current.changingManualIndex);
@@ -1052,17 +1115,20 @@ public class IChingActivityRenderer extends Activity {
           public void onNothingSelected(AdapterView<?> arg0) {
             etOutput.setText(Utils.EMPTY_STRING);
           }
-        });
-        if (current.changingManualIndex >= 0 && current.changingManualIndex < 6) {
-          spinner.setSelection(current.changingManualIndex);
+        };
+
+        int hexId = Integer.parseInt(current.hex);
+        if (Arrays.binarySearch(ChangingLinesEvaluator.ICHING_ALL_LINES_DESC, hexId) >= 0) {
+          lines.add(Utils.s(R.string.read_changing_select_all));
         }
+        buildChangingLineSelector(spinner, lines, onItemSelect);
 
         break;
     }
 
     final TextView tvChanging = (TextView) findViewById(R.id.tvChanging);
     tvChanging.setVisibility(View.VISIBLE);
-    tvChanging.setText(Html.fromHtml("<small>" + getChangingLinesDescription(mode) + "</small>"));
+    tvChanging.setText(Html.fromHtml("<small>" + getChangingLinesDescription(mode, null) + "</small>"));
 
     renderOptionsMenu();
   }
@@ -1106,27 +1172,29 @@ public class IChingActivityRenderer extends Activity {
    * @param index             the row index from 0 (first) to 6 (last)
    * @param coinsValue        The value of the coins for this row
    * @param renderMobileLines True to show mobile lines, false to render them fixed
+   * @param governingLine     True to render as governing line
+   * @param constituentLine   True to render as constituent line
    */
-  protected void renderRow(int index, int coinsValue, boolean renderMobileLines) {
-    TableRow row = null;
+  protected void renderRow(int index, int coinsValue, boolean renderMobileLines, Boolean governingLine, Boolean constituentLine) {
+    View row = null;
     switch (index) {
       case 0:
-        row = (TableRow) findViewById(R.id.hexRow1);
+        row = findViewById(R.id.hexRow1);
         break;
       case 1:
-        row = (TableRow) findViewById(R.id.hexRow2);
+        row = findViewById(R.id.hexRow2);
         break;
       case 2:
-        row = (TableRow) findViewById(R.id.hexRow3);
+        row = findViewById(R.id.hexRow3);
         break;
       case 3:
-        row = (TableRow) findViewById(R.id.hexRow4);
+        row = findViewById(R.id.hexRow4);
         break;
       case 4:
-        row = (TableRow) findViewById(R.id.hexRow5);
+        row = findViewById(R.id.hexRow5);
         break;
       case 5:
-        row = (TableRow) findViewById(R.id.hexRow6);
+        row = findViewById(R.id.hexRow6);
         break;
     }
 
@@ -1156,7 +1224,31 @@ public class IChingActivityRenderer extends Activity {
       }
     }
 
-    row.setBackgroundResource(lineRes);
+    if (row instanceof TableRow) {
+      ((TableRow) row).setBackgroundResource(lineRes);
+    } else if (row instanceof TextView) {
+      TextView tvRow = (TextView) row;
+      int padding = (int) getResources().getDimension(R.dimen.text_size_medium);
+      int width = (int) getResources().getDimension(R.dimen.hex_small_width) - padding;
+      int height = (int) getResources().getDimension(R.dimen.hex_small_row_height);
+      Bitmap bMap = BitmapFactory.decodeResource(getResources(), lineRes);
+      Bitmap bMapScaled = Bitmap.createScaledBitmap(bMap, width, height, true);
+      Drawable drawable = new BitmapDrawable(getResources(), bMapScaled);
+      tvRow.setCompoundDrawablesWithIntrinsicBounds(
+          null, null, drawable, null
+      );
+      tvRow.setAlpha(1f);
+      tvRow.setText(" ");
+      if (governingLine != null || constituentLine != null) {
+        if (governingLine) {
+          tvRow.setText(Utils.s(R.string.view_hex_line_governing));
+        } else if (constituentLine) {
+          tvRow.setText(Utils.s(R.string.view_hex_line_constituent));
+        } else {
+          tvRow.setAlpha(0.8f);
+        }
+      }
+    }
   }
 
   protected void renderTabs(final TabHost tabHost) {
@@ -1170,30 +1262,63 @@ public class IChingActivityRenderer extends Activity {
       title.setText(title.getText().toString().toUpperCase(settings.getLocale()));
       title.setSingleLine();
 
-      child.getLayoutParams().height = (int) (textSizeTabs * 2);
+      child.getLayoutParams().height = (int) (textSizeTabs * 3);
 
       child.setPadding(3, 0, 3, 0);
     }
   }
 
-  private String getChangingLinesDescription(READ_DESC_MODE mode) {
+  private void buildChangingLineSelector(Spinner spinner, final List<String> lines, final OnItemSelectedListener onItemSelect) {
+    List<String> adapterLines = new ArrayList<String>(lines);
+    adapterLines.removeAll(Collections.singleton(null));
+    adapterLines.removeAll(Collections.singleton(Utils.EMPTY_STRING));
+    final ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+        getApplicationContext(),
+        android.R.layout.simple_spinner_item,
+        adapterLines.toArray(new String[adapterLines.size()])
+    );
+    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    spinner.setAdapter(adapter);
+    spinner.setVisibility(View.VISIBLE);
+    spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        position = lines.indexOf(adapter.getItem(position));
+        onItemSelect.onItemSelected(parent, view, position, id);
+      }
+
+      public void onNothingSelected(AdapterView<?> parent) {
+        onItemSelect.onNothingSelected(parent);
+      }
+    });
+    if (current.changingManualIndex >= 0 && current.changingManualIndex < adapterLines.size()) {
+      spinner.setSelection(current.changingManualIndex);
+    }
+  }
+
+  private String getChangingLinesDescription(READ_DESC_MODE mode, READ_DESC_SCREEN screen) {
     String desc = Utils.EMPTY_STRING;
 
-    switch (mode) {
-      case VIEW_HEX:
-        desc = Utils.s(R.string.read_changing_select) + "<br/>";
-        break;
-      case ORACLE:
-        if (current.changingCount == 0) {
-          desc = Utils.s(R.string.read_changing_none) + "<br/>";
-        } else {
-          int resId = current.changingCount == 1 ? R.string.read_changing_one : R.string.read_changing_count;
-          desc = Utils.s(resId, new Integer[]{current.changingCount}) + Utils.COLUMNS + "<br/>";
-        }
+    if (READ_DESC_SCREEN.LINES == screen) {
+      desc = Utils.s(R.string.view_hex_line_gov_legend) + "<br/>" +
+          Utils.s(R.string.view_hex_line_const_legend) + "<br/>" +
+          Utils.s(R.string.read_changing_select) + "<br/>";
+    } else {
+      switch (mode) {
+        case VIEW_HEX:
+          desc = Utils.s(R.string.read_changing_select) + "<br/>";
+          break;
+        case ORACLE:
+          if (current.changingCount == 0) {
+            desc = Utils.s(R.string.read_changing_none) + "<br/>";
+          } else {
+            int resId = current.changingCount == 1 ? R.string.read_changing_one : R.string.read_changing_count;
+            desc = Utils.s(resId, new Integer[]{current.changingCount}) + Utils.COLUMNS + "<br/>";
+          }
 
 
-        desc += getChangingLinesDescriptionApply();
-        break;
+          desc += getChangingLinesDescriptionApply();
+          break;
+      }
     }
     return desc;
   }
@@ -1309,9 +1434,9 @@ public class IChingActivityRenderer extends Activity {
   }
 
   private NumberPicker buildTrigramFilter(boolean lowHiFlag) {
-    int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics());
+    int size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 85, getResources().getDisplayMetrics());
     LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(
-        LinearLayout.LayoutParams.WRAP_CONTENT, height
+        LinearLayout.LayoutParams.WRAP_CONTENT, size
     );
 
     String[] filters = new String[]{
@@ -1333,6 +1458,9 @@ public class IChingActivityRenderer extends Activity {
     triFilter.setLayoutParams(lParams);
     triFilter.setDisplayedValues(filters);
     triFilter.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+    triFilter.setGravity(Gravity.BOTTOM);
+    triFilter.setMinimumWidth(size);
+    triFilter.setMinimumHeight(size);
     return triFilter;
   }
 
@@ -1347,7 +1475,7 @@ public class IChingActivityRenderer extends Activity {
     if (newHistoryDialog != null && newHistoryDialog.isShowing()) {
       newHistoryDialog.dismiss();
     }
-    if (editDescDialog != null && itemSelectDialog.isShowing()) {
+    if (editDescDialog != null && editDescDialog.isShowing()) {
       editDescDialog.dismiss();
     }
     if (itemSelectDialog != null && itemSelectDialog.isShowing()) {
@@ -1370,9 +1498,9 @@ public class IChingActivityRenderer extends Activity {
       if (current.mode == READ_DESC_MODE.VIEW_HEX &&
           (current.changingManualIndex == i || current.changingManualIndex == ChangingLinesEvaluator.ICHING_APPLY_BOTH)) {
         // Draw the manually selected line as changing
-        renderRow(i, ChangingLinesEvaluator.getChangingLineOf(hexToRender[i]), true);
+        renderRow(i, ChangingLinesEvaluator.getChangingLineOf(hexToRender[i]), true, null, null);
       } else {
-        renderRow(i, hexToRender[i], true);
+        renderRow(i, hexToRender[i], true, null, null);
       }
     }
   }
@@ -1383,6 +1511,14 @@ public class IChingActivityRenderer extends Activity {
   protected enum READ_DESC_MODE {
     ORACLE,
     VIEW_HEX
+  }
+
+  /**
+   * The read hexagram description screens
+   */
+  protected enum READ_DESC_SCREEN {
+    DEFAULT,
+    LINES
   }
 
   /**
@@ -1410,6 +1546,10 @@ public class IChingActivityRenderer extends Activity {
      */
     public READ_DESC_MODE mode;
     /**
+     * The currently selected consultation screen
+     */
+    public READ_DESC_SCREEN screen;
+    /**
      * The currently selected tab index*
      */
     public int tabIndex;
@@ -1426,10 +1566,12 @@ public class IChingActivityRenderer extends Activity {
      */
     public Integer viewId;
 
+
     public CurrentState() {
       tabIndex = 0;
       question = Utils.EMPTY_STRING;
       mode = READ_DESC_MODE.VIEW_HEX;
+      screen = READ_DESC_SCREEN.DEFAULT;
       changingManualIndex = 0;
       viewId = R.layout.main;
     }

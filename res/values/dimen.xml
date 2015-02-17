@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="text_size_smaller">12sp</dimen>
-    <dimen name="text_size_small">14sp</dimen>
-    <dimen name="text_size_medium">18sp</dimen>
-    <dimen name="text_size_tabs">12sp</dimen>
+    <dimen name="text_size_smaller">10sp</dimen>
+    <dimen name="text_size_small">13sp</dimen>
+    <dimen name="text_size_medium">15sp</dimen>
+    <dimen name="text_size_tabs">13sp</dimen>
 
     <dimen name="coins_size">50dp</dimen>
 
     <dimen name="hex_small_width">130dp</dimen>
     <dimen name="hex_small_height">100dp</dimen>
-    <dimen name="hex_small_row_height">8dp</dimen>
+    <dimen name="hex_small_row_height">16dp</dimen>
 
     <dimen name="hex_big_width">140dp</dimen>
     <dimen name="hex_big_height">120dp</dimen>

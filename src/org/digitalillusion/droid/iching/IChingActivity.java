@@ -91,7 +91,7 @@ public class IChingActivity extends IChingActivityRenderer {
     tvQuestionShow.setText(current.question);
 
     for (int i = 0; i < hexRow; i++) {
-      renderRow(i, hex[i], true);
+      renderRow(i, hex[i], true, null, null);
     }
 
     if (hexRow < 6) {
@@ -216,6 +216,7 @@ public class IChingActivity extends IChingActivityRenderer {
       changingLinesEvaluator = ChangingLinesEvaluator.produce(evalType);
     }
     current.changing = changingLinesEvaluator.evaluate(hex, tHex);
+    current.screen = READ_DESC_SCREEN.DEFAULT;
 
     setContentView(R.layout.readdesc);
 
@@ -259,13 +260,13 @@ public class IChingActivity extends IChingActivityRenderer {
           current.tabIndex = listTabId.indexOf(tabId);
         }
         switch (current.tabIndex) {
-          case 0:
+          case TAB_READ_DESC_CAST_HEXAGRAM:
             renderReadDesc(hex);
             break;
-          case 1:
+          case TAB_READ_DESC_CHANGING_LINES:
             renderReadDescChanging(hex);
             break;
-          case 2:
+          case TAB_READ_DESC_TRANSFORMED_HEXAGRAM:
             renderReadDesc(tHex);
             break;
         }
@@ -944,7 +945,7 @@ public class IChingActivity extends IChingActivityRenderer {
         OnTouchListener coinTouchListener = new OnTouchListener() {
           public boolean onTouch(View v, MotionEvent event) {
             hex[hexRow] = coin1.getCoinValue() + coin2.getCoinValue() + coin3.getCoinValue();
-            renderRow(hexRow, hex[hexRow], true);
+            renderRow(hexRow, hex[hexRow], true, null, null);
             return true;
           }
         };
@@ -970,7 +971,7 @@ public class IChingActivity extends IChingActivityRenderer {
               generateRow(coinSum);
               if (hexRow < Consts.HEX_LINES_COUNT) {
                 hex[hexRow] = coinSum;
-                renderRow(hexRow, hex[hexRow], true);
+                renderRow(hexRow, hex[hexRow], true, null, null);
               }
             } else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
               eraseRow(coinSum);
@@ -1002,7 +1003,7 @@ public class IChingActivity extends IChingActivityRenderer {
       hex[hexRow] = coinSum;
     }
     for (int i = 0; i < Consts.HEX_LINES_COUNT; i++) {
-      renderRow(i, hex[i], true);
+      renderRow(i, hex[i], true, null, null);
     }
     if (Utils.mask((Integer) settings.get(SETTINGS_MAP.HAPTIC_FEEDBACK), Consts.HAPTIC_FEEDBACK_ON_THROW_COINS)) {
       Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -1012,7 +1013,7 @@ public class IChingActivity extends IChingActivityRenderer {
 
   private void generateRow(int coinsValue) {
     hex[hexRow] = coinsValue;
-    renderRow(hexRow++, coinsValue, true);
+    renderRow(hexRow++, coinsValue, true, null, null);
 
     if (hexRow >= Consts.HEX_LINES_COUNT) {
       gotoConsult();
