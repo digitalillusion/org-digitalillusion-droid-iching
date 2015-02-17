@@ -111,10 +111,11 @@
             android:layout_gravity="bottom"
             android:contentDescription="@string/consult_coin_alt"
             android:onClick="onClickGenerateRow"
-            android:paddingBottom="0dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="5dp"/>
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="0dp"
+            android:padding="5dp"/>
 
         <ImageView
             android:id="@+id/picCoin02"
@@ -123,10 +124,11 @@
             android:layout_gravity="bottom"
             android:contentDescription="@string/consult_coin_alt"
             android:onClick="onClickGenerateRow"
-            android:paddingBottom="0dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="5dp"/>
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="0dp"
+            android:padding="5dp"/>
 
         <ImageView
             android:id="@+id/picCoin03"
@@ -135,10 +137,11 @@
             android:layout_gravity="bottom"
             android:contentDescription="@string/consult_coin_alt"
             android:onClick="onClickGenerateRow"
-            android:paddingBottom="0dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="5dp"/>
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="0dp"
+            android:padding="5dp"/>
 
     </LinearLayout>
 
