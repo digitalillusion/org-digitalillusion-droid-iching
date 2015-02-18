@@ -192,17 +192,6 @@
                                 android:textSize="@dimen/text_size_small"
                                 android:visibility="gone"></Spinner>
                         </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/tvFurtherReadDesc"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal|top"
-                            android:layout_marginBottom="3dp"
-                            android:layout_marginLeft="5dp"
-                            android:text="@string/view_hex_line_further_analysis"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:textSize="@dimen/text_size_small"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -252,6 +241,17 @@
                                         android:textStyle="bold"/>
                                 </LinearLayout>
                             </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/tvFurtherReadDesc"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal|top"
+                                android:layout_marginBottom="3dp"
+                                android:layout_marginLeft="5dp"
+                                android:text="@string/view_hex_line_further_analysis"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:textSize="@dimen/text_size_small"/>
 
                             <EditText
                                 android:id="@+id/etOutput"
