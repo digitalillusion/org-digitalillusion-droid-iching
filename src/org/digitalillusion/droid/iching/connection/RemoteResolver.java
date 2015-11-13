@@ -205,8 +205,10 @@ public abstract class RemoteResolver {
                     }
                   }
                   // Store the result in cache
-                  remoteStringCache.put(key, spanned);
-                  dataSource.updateHexSection(hex, dictionary, lang, section, result);
+                  if (!result.isEmpty()) {
+                    remoteStringCache.put(key, spanned);
+                    dataSource.updateHexSection(hex, dictionary, lang, section, result);
+                  }
                 }
               }
             }.execute(hex, section);
@@ -282,11 +284,10 @@ public abstract class RemoteResolver {
       final String section, final String dictionary, final String lang)
       throws IOException {
     // If choice of dictionary is custom and we are requesting a remote string,
-    // get the default localization on the default dictionary
+    // get the current localization on the default dictionary
     String langCode = lang;
     String remoteUrl;
     if (dictionary.equals(Consts.DICTIONARY_CUSTOM)) {
-      langCode = (String) activity.getSettingsManager().getDefault(SETTINGS_MAP.LANGUAGE);
       remoteUrl = dictionaries.get((String) activity.getSettingsManager().getDefault(SETTINGS_MAP.DICTIONARY));
     } else {
       remoteUrl = dictionaries.get(dictionary);

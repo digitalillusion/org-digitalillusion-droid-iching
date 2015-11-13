@@ -46,7 +46,7 @@
                 android:layout_width="122dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="0.52"
+                android:layout_weight="0.44"
                 android:imeOptions="actionSend"
                 android:inputType="text"
                 android:lines="1"

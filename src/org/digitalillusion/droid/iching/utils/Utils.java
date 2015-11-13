@@ -1,11 +1,14 @@
 package org.digitalillusion.droid.iching.utils;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
 import android.util.Log;
 
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
+import org.digitalillusion.droid.iching.changinglines.ChangingLinesEvaluator;
 import org.digitalillusion.droid.iching.utils.lists.HistoryEntry;
 
 import java.io.ByteArrayInputStream;
@@ -21,9 +24,11 @@ import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Commonly used functions
@@ -655,7 +660,7 @@ public class Utils {
     }
   }
 
-  public static String s(int id, Object[] subst) {
+  public static String s(int id, Object... subst) {
     return context.getResources().getString(id, subst);
   }
 
@@ -678,4 +683,11 @@ public class Utils {
     return new String(getBytes(stream), "UTF-8").replace("\\n", NEWLINE);
   }
 
+  public static boolean isGoverning(String hex, int line) {
+    return Arrays.binarySearch(ChangingLinesEvaluator.ICHING_GOVERNING_LINE[line], Integer.parseInt(hex)) >= 0;
+  }
+
+  public static boolean isConstituent(String hex, int line) {
+    return Arrays.binarySearch(ChangingLinesEvaluator.ICHING_CONSTITUENT_LINE[line], Integer.parseInt(hex)) >= 0;
+  }
 }

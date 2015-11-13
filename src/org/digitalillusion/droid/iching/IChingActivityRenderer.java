@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -90,24 +91,6 @@ public class IChingActivityRenderer extends Activity {
    */
   protected static final int TAB_READ_DESC_TRANSFORMED_HEXAGRAM = 2;
   /**
-   * The cleanup operation after history password dialog has been cancelled
-   */
-  protected final Runnable DEFAULT_HISTORY_REVERT_TASK = new Runnable() {
-    public void run() {
-      if (DataPersister.revertSelectedHistory()) {
-        renderLoadHistory(null, null);
-      }
-    }
-  };
-  /**
-   * The operation for the button that cancel history password dialog
-   */
-  protected final OnClickListener DEFAULT_HISTORY_REVERT_DIALOG_BUTTON = new OnClickListener() {
-    public void onClick(DialogInterface dialog, int which) {
-      DEFAULT_HISTORY_REVERT_TASK.run();
-    }
-  };
-  /**
    * Settings manager*
    */
   protected SettingsManager settings;
@@ -151,6 +134,24 @@ public class IChingActivityRenderer extends Activity {
    * Memory cache of the local history *
    */
   protected ArrayList<HistoryEntry> historyList = new ArrayList<HistoryEntry>();
+  /**
+   * The cleanup operation after history password dialog has been cancelled
+   */
+  protected final Runnable DEFAULT_HISTORY_REVERT_TASK = new Runnable() {
+    public void run() {
+      if (DataPersister.revertSelectedHistory()) {
+        renderLoadHistory(null, null);
+      }
+    }
+  };
+  /**
+   * The operation for the button that cancel history password dialog
+   */
+  protected final OnClickListener DEFAULT_HISTORY_REVERT_DIALOG_BUTTON = new OnClickListener() {
+    public void onClick(DialogInterface dialog, int which) {
+      DEFAULT_HISTORY_REVERT_TASK.run();
+    }
+  };
   /**
    * The connection manager *
    */
@@ -250,7 +251,7 @@ public class IChingActivityRenderer extends Activity {
         if (DataPersister.saveHistory(dummyList, IChingActivityRenderer.this)) {
           CharSequence text = Utils.s(
               R.string.history_create_done,
-              new String[]{historyName}
+              historyName
           );
 
           showToast(text);
@@ -274,6 +275,8 @@ public class IChingActivityRenderer extends Activity {
       public void afterTextChanged(Editable s) {
         if (s.toString().isEmpty()) {
           etHistoryName.setError(Utils.s(R.string.validator_error_empty));
+        } else if (s.toString().matches(".*[:\\\\/*?|<>\\.]+.*")) {
+          etHistoryName.setError(Utils.s(R.string.validator_error_invalid_chars));
         } else {
           etHistoryName.setError(null);
         }
@@ -438,18 +441,30 @@ public class IChingActivityRenderer extends Activity {
     if (itemSelectDialog == null || !itemSelectDialog.isShowing()) {
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
+      float textSizeSmall = getResources().getDimension(R.dimen.text_size_small);
       LinearLayout lFilter = new LinearLayout(this);
       lFilter.setOrientation(LinearLayout.VERTICAL);
+
+      LinearLayout lFilterList = new LinearLayout(this);
+      lFilterList.setOrientation(LinearLayout.HORIZONTAL);
+      lFilterList.setGravity(Gravity.CENTER);
+      final TextView tvHexPreview = new TextView(this);
+      tvHexPreview.setTypeface(Typeface.createFromAsset(getAssets(), "font/DejaVuSans.ttf"));
+      tvHexPreview.setTextSize(textSizeSmall);
+      tvHexPreview.setText(Utils.s(R.string.view_hex_filter_tri_all) + Utils.NEWLINE + Utils.s(R.string.view_hex_filter_tri_all));
+      tvHexPreview.setLineSpacing(0, 0.85f);
       TextView tvFilterInstr = new TextView(this);
       tvFilterInstr.setText(Utils.s(R.string.view_hex_filter_instr));
-      float textSizeSmall = getResources().getDimension(R.dimen.text_size_tabs);
+      tvFilterInstr.setPadding(0, 0, 10, 0);
       tvFilterInstr.setTextSize(textSizeSmall);
-      tvFilterInstr.setPadding(5, 0, 0, 0);
-      lFilter.addView(tvFilterInstr);
+      lFilterList.addView(tvFilterInstr);
+      lFilterList.addView(tvHexPreview);
+      lFilter.addView(lFilterList);
+
 
       LinearLayout lPickers = new LinearLayout(this);
       lPickers.setOrientation(LinearLayout.HORIZONTAL);
-      lPickers.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
+      lPickers.setGravity(Gravity.CENTER);
       lFilter.addView(lPickers);
 
       final NumberPicker npHiTri = buildTrigramFilter(true);
@@ -458,31 +473,8 @@ public class IChingActivityRenderer extends Activity {
       listItems.addAll(Arrays.asList(items));
       final ArrayAdapter<CharSequence> laItems = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_list_item_1, listItems) {
         private final ArrayAdapter<CharSequence> adapter = this;
-
+        private final CharSequence[] arrayItems = items;
         private final Filter triFilter = new Filter() {
-
-          private int[] getTriFilter(int index) {
-            switch (index) {
-              case 1:
-                return new int[]{Consts.ICHING_YOUNG_YANG, Consts.ICHING_YOUNG_YANG, Consts.ICHING_YOUNG_YANG};
-              case 2:
-                return new int[]{Consts.ICHING_YOUNG_YANG, Consts.ICHING_YOUNG_YANG, Consts.ICHING_YOUNG_YIN};
-              case 3:
-                return new int[]{Consts.ICHING_YOUNG_YANG, Consts.ICHING_YOUNG_YIN, Consts.ICHING_YOUNG_YANG};
-              case 4:
-                return new int[]{Consts.ICHING_YOUNG_YANG, Consts.ICHING_YOUNG_YIN, Consts.ICHING_YOUNG_YIN};
-              case 5:
-                return new int[]{Consts.ICHING_YOUNG_YIN, Consts.ICHING_YOUNG_YANG, Consts.ICHING_YOUNG_YANG};
-              case 6:
-                return new int[]{Consts.ICHING_YOUNG_YIN, Consts.ICHING_YOUNG_YANG, Consts.ICHING_YOUNG_YIN};
-              case 7:
-                return new int[]{Consts.ICHING_YOUNG_YIN, Consts.ICHING_YOUNG_YIN, Consts.ICHING_YOUNG_YANG};
-              case 8:
-                return new int[]{Consts.ICHING_YOUNG_YIN, Consts.ICHING_YOUNG_YIN, Consts.ICHING_YOUNG_YIN};
-              default:
-                return null;
-            }
-          }
 
           @Override
           protected FilterResults performFiltering(CharSequence constraint) {
@@ -518,9 +510,30 @@ public class IChingActivityRenderer extends Activity {
               notifyDataSetInvalidated();
             }
           }
-        };
 
-        private final CharSequence[] arrayItems = items;
+          private int[] getTriFilter(int index) {
+            switch (index) {
+              case 1:
+                return new int[]{Consts.ICHING_YOUNG_YANG, Consts.ICHING_YOUNG_YANG, Consts.ICHING_YOUNG_YANG};
+              case 2:
+                return new int[]{Consts.ICHING_YOUNG_YANG, Consts.ICHING_YOUNG_YANG, Consts.ICHING_YOUNG_YIN};
+              case 3:
+                return new int[]{Consts.ICHING_YOUNG_YANG, Consts.ICHING_YOUNG_YIN, Consts.ICHING_YOUNG_YANG};
+              case 4:
+                return new int[]{Consts.ICHING_YOUNG_YANG, Consts.ICHING_YOUNG_YIN, Consts.ICHING_YOUNG_YIN};
+              case 5:
+                return new int[]{Consts.ICHING_YOUNG_YIN, Consts.ICHING_YOUNG_YANG, Consts.ICHING_YOUNG_YANG};
+              case 6:
+                return new int[]{Consts.ICHING_YOUNG_YIN, Consts.ICHING_YOUNG_YANG, Consts.ICHING_YOUNG_YIN};
+              case 7:
+                return new int[]{Consts.ICHING_YOUNG_YIN, Consts.ICHING_YOUNG_YIN, Consts.ICHING_YOUNG_YANG};
+              case 8:
+                return new int[]{Consts.ICHING_YOUNG_YIN, Consts.ICHING_YOUNG_YIN, Consts.ICHING_YOUNG_YIN};
+              default:
+                return null;
+            }
+          }
+        };
 
         @Override
         public Filter getFilter() {
@@ -530,6 +543,17 @@ public class IChingActivityRenderer extends Activity {
       NumberPicker.OnValueChangeListener lisValueChange = new NumberPicker.OnValueChangeListener() {
         @Override
         public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+          String upperTri = Utils.s(R.string.view_hex_filter_tri_all);
+          int hiTri = picker == npHiTri ? newVal : npHiTri.getValue();
+          int loTri = picker == npLoTri ? newVal : npLoTri.getValue();
+          if (hiTri > 0) {
+            upperTri = Utils.s(Utils.getResourceByName(R.string.class, "view_hex_filter_tri_" + (hiTri - 1)));
+          }
+          String lowerTri = Utils.s(R.string.view_hex_filter_tri_all);
+          if (loTri > 0) {
+            lowerTri = Utils.s(Utils.getResourceByName(R.string.class, "view_hex_filter_tri_" + (loTri - 1)));
+          }
+          tvHexPreview.setText(upperTri + Utils.NEWLINE + lowerTri);
           laItems.getFilter().filter("");
         }
       };
@@ -628,10 +652,18 @@ public class IChingActivityRenderer extends Activity {
     // Section
     String changingText = Utils.EMPTY_STRING;
     if (current.section.startsWith(RemoteResolver.ICHING_REMOTE_SECTION_LINE)) {
-      if (current.mode == READ_DESC_MODE.ORACLE) {
-        changingText = getChangingLinesDescription(current.mode, current.screen);
+      if (current.screen == READ_DESC_SCREEN.LINES) {
+        if (Utils.isConstituent(current.hex, current.changingManualIndex)) {
+          changingText = Utils.s(R.string.read_share_constituent_line);
+        } else if (Utils.isGoverning(current.hex, current.changingManualIndex)) {
+          changingText = Utils.s(R.string.read_share_governing_line);
+        }
       } else {
-        changingText = getChangingLinesDescriptionApply();
+        if (current.mode == READ_DESC_MODE.ORACLE) {
+          changingText = getChangingLinesDescription(current.mode, current.screen);
+        } else {
+          changingText = getChangingLinesDescriptionApply();
+        }
       }
     } else if (current.section.equals(RemoteResolver.ICHING_REMOTE_SECTION_DESC)) {
       final Button button = (Button) findViewById(R.id.btReadDesc);
@@ -669,7 +701,7 @@ public class IChingActivityRenderer extends Activity {
         final EditText etReading = (EditText) editDescDialog.findViewById(R.id.etReading);
         CharSequence text = Utils.s(
             R.string.edit_section_update,
-            new String[]{tvEditSecHex.getText().toString()}
+            tvEditSecHex.getText().toString()
         );
 
         String def;
@@ -923,8 +955,8 @@ public class IChingActivityRenderer extends Activity {
       case LINES:
         final List<String> lines = new ArrayList<String>();
         for (int i = 0; i < Consts.HEX_LINES_COUNT; i++) {
-          boolean isGoverning = Arrays.binarySearch(ChangingLinesEvaluator.ICHING_GOVERNING_LINE[i], Integer.parseInt(current.hex)) >= 0;
-          boolean isConstituent = Arrays.binarySearch(ChangingLinesEvaluator.ICHING_CONSTITUENT_LINE[i], Integer.parseInt(current.hex)) >= 0;
+          boolean isGoverning = Utils.isGoverning(current.hex, i);
+          boolean isConstituent = Utils.isConstituent(current.hex, i);
           if (isGoverning || isConstituent) {
             lines.add(Utils.s(Utils.getResourceByName(R.string.class, ChangingLinesEvaluator.READ_CHANGING_SELECT_LINE + (i + 1))));
           } else {
@@ -1151,9 +1183,7 @@ public class IChingActivityRenderer extends Activity {
 
         CharSequence text = Utils.s(
             R.string.edit_section_reset,
-            new String[]{
-                Utils.s(Utils.getResourceByName(R.string.class, "hex" + current.hex))
-            }
+            Utils.s(Utils.getResourceByName(R.string.class, "hex" + current.hex))
         );
 
         showToast(text);
@@ -1263,6 +1293,7 @@ public class IChingActivityRenderer extends Activity {
       title.setSingleLine();
 
       child.getLayoutParams().height = (int) (textSizeTabs * 3);
+      child.getLayoutParams().width = ((View) tabHost.getParent()).getWidth() / tabWidget.getChildCount();
 
       child.setPadding(3, 0, 3, 0);
     }
@@ -1312,7 +1343,7 @@ public class IChingActivityRenderer extends Activity {
             desc = Utils.s(R.string.read_changing_none) + "<br/>";
           } else {
             int resId = current.changingCount == 1 ? R.string.read_changing_one : R.string.read_changing_count;
-            desc = Utils.s(resId, new Integer[]{current.changingCount}) + Utils.COLUMNS + "<br/>";
+            desc = Utils.s(resId, current.changingCount) + Utils.COLUMNS + "<br/>";
           }
 
 
@@ -1339,7 +1370,7 @@ public class IChingActivityRenderer extends Activity {
         desc += "<em>" + Utils.s(R.string.read_changing_apply_n) + "</em>";
         break;
       default:
-        desc += "<em>" + Utils.s(R.string.read_changing_apply, new Integer[]{current.changing + 1}) + "</em>";
+        desc += "<em>" + Utils.s(R.string.read_changing_apply, current.changing + 1) + "</em>";
     }
     return desc;
   }
@@ -1434,11 +1465,6 @@ public class IChingActivityRenderer extends Activity {
   }
 
   private NumberPicker buildTrigramFilter(boolean lowHiFlag) {
-    int size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 85, getResources().getDisplayMetrics());
-    LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(
-        LinearLayout.LayoutParams.WRAP_CONTENT, size
-    );
-
     String[] filters = new String[]{
         Utils.s(R.string.view_hex_filter_none),
         Utils.s(R.string.view_hex_filter_heaven),
@@ -1455,12 +1481,8 @@ public class IChingActivityRenderer extends Activity {
     triFilter.setMinValue(0);
     triFilter.setMaxValue(8);
     triFilter.setOrientation(NumberPicker.HORIZONTAL);
-    triFilter.setLayoutParams(lParams);
     triFilter.setDisplayedValues(filters);
     triFilter.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
-    triFilter.setGravity(Gravity.BOTTOM);
-    triFilter.setMinimumWidth(size);
-    triFilter.setMinimumHeight(size);
     return triFilter;
   }
 

@@ -1,6 +1,8 @@
 package org.digitalillusion.droid.iching.utils;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 
 import org.digitalillusion.droid.iching.IChingActivity;
 import org.digitalillusion.droid.iching.utils.lists.SettingsEntry;
@@ -25,6 +27,25 @@ public class SettingsManager {
    * Internal storage of the settings *
    */
   private HashMap<String, Serializable> settingsMap = new HashMap<String, Serializable>();
+
+  /**
+   * Set application locale
+   *
+   * @param context
+   * @param locale
+   * @return True if locale was updated, false otherwise
+   */
+  public static boolean setLocale(Context context, Locale locale) {
+    Resources resources = context.getResources();
+    Configuration config = resources.getConfiguration();
+    if (!config.locale.equals(locale)) {
+      Locale.setDefault(locale);
+      config.locale = locale;
+      resources.updateConfiguration(config, null);
+      return true;
+    }
+    return false;
+  }
 
   /**
    * Create a new option, aka a group of settings
@@ -82,6 +103,9 @@ public class SettingsManager {
     throw new InvalidParameterException(setting.getKey() + " does not specify an option.");
   }
 
+  /**
+   * @return Application locale
+   */
   public Locale getLocale() {
     String lang = (String) get(SETTINGS_MAP.LANGUAGE);
     return new Locale(lang);
@@ -92,6 +116,7 @@ public class SettingsManager {
    */
   public void load(Context context) throws FileNotFoundException, IOException {
     DataPersister.loadOptions(context, settingsMap);
+    setLocale(context, getLocale());
   }
 
   /**

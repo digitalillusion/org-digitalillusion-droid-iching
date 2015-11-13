@@ -2,7 +2,7 @@
 <manifest
     package="org.digitalillusion.droid.iching"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:configChanges="orientation|keyboardHidden"
+    android:configChanges="orientation|keyboardHidden|locale|layoutDirection"
     android:installLocation="auto"
     android:theme="@android:style/Theme.Holo"
     >

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -56,6 +57,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -325,7 +327,9 @@ public class IChingActivity extends IChingActivityRenderer {
         settingsList,
         SettingsEntry.LANGUAGE,
         new String[]{
-            Consts.LANGUAGE_EN
+            Consts.LANGUAGE_EN,
+            Consts.LANGUAGE_FR,
+            Consts.LANGUAGE_PT
         },
         SETTINGS_MAP.LANGUAGE
     );
@@ -413,19 +417,22 @@ public class IChingActivity extends IChingActivityRenderer {
                                              final Serializable newValue,
                                              final Runnable renderSettingChange) {
             boolean changed = true;
+            Context context = IChingActivity.this.getBaseContext();
             switch (mapKey) {
               case CHANGING_LINES_EVALUATOR:
                 // Setting to null will reinit evaluator next time is needed
                 changingLinesEvaluator = null;
                 break;
               case LANGUAGE:
+                Locale locale = new Locale(newValue.toString());
+                settings.setLocale(context, locale);
+                // Not breaking here
               case DICTIONARY:
                 // Clear remote strings cache in case language or dictionary change
                 RemoteResolver.clearCache();
                 break;
               case STORAGE:
                 // Switch the storage
-                Context context = IChingActivity.this.getBaseContext();
                 if (newValue.equals(Consts.STORAGE_SDCARD)) {
                   changed = DataPersister.useStorageSDCard(settings);
                 } else if (newValue.equals(Consts.STORAGE_INTERNAL)) {
