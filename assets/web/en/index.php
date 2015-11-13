@@ -3,6 +3,7 @@
 $s = $_REQUEST['s'];
 $h = $_REQUEST['h'];
 
+# SOURCE: http://wengu.tartarie.com/wg/wengu.php?lang=en&l=Yijing
 # -------------------------      01       ----------------------- #
 $book['01']['desc'] = 
 ' Above CH\'IEN THE CREATIVE, HEAVEN
@@ -1854,7 +1855,7 @@ $book['33']['line6'] =
 $book['34']['desc'] = 
 ' Ta Chuang / The Power of the Great 
   Above CHÊN THE AROUSING, THUNDER
-  Above CH\'IEN THE CREATIVE, HEAVEN\e
+  Below CH\'IEN THE CREATIVE, HEAVEN\e
   The great lines, that is, the light, strong lines, are powerful. Four light lines have entered the hexagram from below and are about to ascend higher. The upper trigram is Chên, the Arousing; the lower is Ch\'ien, the Creative. Ch\'ien is strong, Chên produces movement. The union of movement and strength gives the meaning of THE POWER OF THE GREAT. The hexagram is linked with the second month (March-April).';
 $book['34']['judge'] = 
 ' THE POWER OF THE GREAT. Perseverance furthers. \e
@@ -2484,8 +2485,8 @@ $book['44']['line6'] =
 # -------------------------      45       ----------------------- #
 $book['45']['desc'] = 
 ' Ts\'ui / Gathering Together [Massing] 
-  above TUI THE JOYOUS, LAKE
-  below K\'UN THE RECEPTIVE, EARTH\e
+  Above TUI THE JOYOUS, LAKE
+  Below K\'UN THE RECEPTIVE, EARTH\e
   This hexagram is related in form and meaning to Pi, HOLDING TOGETHER (8). In the latter, water is over the earth; here a lake is over the earth. But since the lake is a place where water collects, the idea of gathering together is even more strongly expressed here than in the other hexagram. The same idea also arises from the fact that in the present case it is two strong lines (the fourth and the fifth) that bring about the gather together, whereas in the former case one strong line (the fifth) stands in the midst of weak lines.';
 $book['45']['judge'] = 
 ' GATHERING TOGETHER. Success. 
@@ -2545,8 +2546,8 @@ $book['45']['line6'] =
 # -------------------------      46       ----------------------- #
 $book['46']['desc'] = 
 ' Shêng / Pushing Upward 
-  above K\'UN THE RECEPTIVE, EARTH
-  below SUN THE GENTLE, WIND, WOOD\e
+  Above K\'UN THE RECEPTIVE, EARTH
+  Below SUN THE GENTLE, WIND, WOOD\e
   The lower trigram, Sun, represents wood, and the upper, K\'un, means the earth. Linked with this is the idea that wood in the earth grows upward. In contrast to the meaning of Chin, PROGRESS (35), this pushing upward is associated with effort, just as a plant needs energy for pushing upward through the earth. That is why this hexagram, although it is connected with success, is associated with effort of the will. In PROGRESS the emphasis is on expansion; PUSHING UPWARD indicates rather a vertical ascent–direct rise from obscurity and lowliness to power and influence.';
 $book['46']['judge'] = 
 ' PUSHING UPWARD has supreme success. 
@@ -2597,8 +2598,8 @@ $book['46']['line6'] =
 # -------------------------      47       ----------------------- #
 $book['47']['desc'] = 
 ' K\'un / Oppression (Exhaustion) 
-  above TUI THE JOYOUS, LAKE
-  below K\'AN THE ABYSMAL, WATER\e
+  Above TUI THE JOYOUS, LAKE
+  Below K\'AN THE ABYSMAL, WATER\e
   The lake is above, water below; the lake is empty, dried up. Exhaustion is expressed in yet another way: at the top, a dark line is holding down two light lines; below, a light line is hemmed in between two dark ones. The upper trigram belongs to the principle of darkness, the lower to the principle of light. Thus everywhere superior men are oppressed and held in restraint by inferior men.';
 $book['47']['judge'] = 
 ' OPPRESSION. Success. Perseverance.
@@ -2665,8 +2666,8 @@ $book['47']['line-3'] =
 # -------------------------      48       ----------------------- #
 $book['48']['desc'] = 
 ' Ching / The Well 
-  above K\'AN THE ABYSMAL, WATER
-  below SUN THE GENTLE, WIND, WOOD\e
+  Above K\'AN THE ABYSMAL, WATER
+  Below SUN THE GENTLE, WIND, WOOD\e
   Wood is below, water above. The wood goes down into the earth to bring up water. The image derives from the pole-and-bucket well of ancient China. The wood represents not the buckets, which in ancient times were made of clay, but rather the wooden poles by which the water is hauled up from the well. The image also refers to the world of plants, which lift water out of the earth by means of their fibers.
   The well from which water is drawn conveys the further idea of an inexhaustible dispensing of nourishment.';
 $book['48']['judge'] = 
@@ -3269,8 +3270,8 @@ $book['57']['line6'] =
 # -------------------------      58       ----------------------- #
 $book['58']['desc'] = 
 ' Tui / The Joyous, Lake 
-  above TUI THE JOYOUS, LAKE
-  below TUI THE JOYOUS, LAKE\e
+  Above TUI THE JOYOUS, LAKE
+  Below TUI THE JOYOUS, LAKE\e
   This hexagram, like Sun, is one of the eight formed by doubling of a trigram. The trigram Tui denotes the youngest daughter; it is symbolized by the smiling lake, and its attribute is joyousness. Contrary to appearances, it is not the yielding quality of the top line that accounts for joy here. The attribute of the yielding or dark principle is not joy but melancholy. However, joy is indicated by the fact that there are two strong lines within, expressing themselves through the medium of gentleness.
   True joy, therefore, rests on firmness and strength within, manifesting itself outwardly as yielding and gentle.';
 $book['58']['judge'] = 
@@ -3313,8 +3314,8 @@ $book['58']['line6'] =
 # -------------------------      59       ----------------------- #
 $book['59']['desc'] = 
 ' Huan / Dispersion [Dissolution] 
-  above SUN THE GENTLE, WIND
-  below K\'AN THE ABYSMAL, WATER \e
+  Above SUN THE GENTLE, WIND
+  Below K\'AN THE ABYSMAL, WATER \e
   Wind blowing over water disperses it, dissolving it into foam and mist. This suggests that when a man\'s vital energy is dammed up within him (indicated as a danger by the attribute of the lower trigram), gentleness serves to break up and dissolve the blockage.';
 $book['59']['judge'] = 
 ' DISPERSION. Success. 
@@ -3367,8 +3368,8 @@ $book['59']['line6'] =
 # -------------------------      60       ----------------------- #
 $book['60']['desc'] = 
 ' Chieh / Limitation 
-  above K\'AN THE ABYSMAL, WATER
-  below TUI THE JOYOUS, LAKE\e
+  Above K\'AN THE ABYSMAL, WATER
+  Below TUI THE JOYOUS, LAKE\e
   A lake occupies a limited space. When more water comes into it, it overflows. Therefore limits must be set for the water. The image shows water below and water above, with the firmament between them as a limit.
   The Chinese word for limitation really denotes the joints that divide a bamboo stalk. In relation to ordinary life it means the thrift that sets fixed limits upon expenditures. In relation to the moral sphere it means the fixed limits that the superior man sets upon his actions–the limits of loyalty and disinterestedness.';
 $book['60']['judge'] = 
@@ -3417,8 +3418,8 @@ $book['60']['line6'] =
 # -------------------------      61       ----------------------- #
 $book['61']['desc'] = 
 ' Chung Fu / Inner Truth 
-  above SUN THE GENTLE, WIND
-  below TUI THE JOYOUS, LAKE\e
+  Above SUN THE GENTLE, WIND
+  Below TUI THE JOYOUS, LAKE\e
   The wind blows over the lake and stirs the surface of the water. Thus visible effects of the invisible manifest themselves. The hexagram consists of firm lines above and below, while it is open in the center. This indicates a heart free of prejudices and therefore open to truth. On the other hand, each of the two trigrams has a firm line in the middle; this indicates the force of inner truth in the influences they represent.
   The attributes of the two trigrams are: above, gentleness, forbearance toward inferiors; below, joyousness in obeying superiors. Such conditions create the basis of a mutual confidence that makes achievements possible.
   The character of fu ("truth") is actually the picture of a bird\'s foot over a fledgling. It suggests the idea of brooding. An egg is hollow. The light-giving power must work to quicken it from outside, but there must be a germ of life within, if life is to be awakened. Far-reaching speculations can be linked with these ideas.';
@@ -3473,8 +3474,8 @@ $book['61']['line6'] =
 # -------------------------      62       ----------------------- #
 $book['62']['desc'] = 
 ' Hsiao Kuo / Preponderance of the Small 
-  above CHÊN THE AROUSING, THUNDER
-  below KÊN KEEPING STILL, MOUNTAIN\e
+  Above CHÊN THE AROUSING, THUNDER
+  Below KÊN KEEPING STILL, MOUNTAIN\e
   While in the hexagram Ta Kuo, PREPONDERANCE OF THE GREAT (28), the strong lines preponderate and are within, inclosed between weak lines at the top and bottom, the present hexagram has weak lines preponderating, though here again they are on the outside, the strong lines being within. This indeed is the basis of the exceptional situation indicated by the hexagram. When strong lines are outside, we have the hexagram I, PROVIDING NOURISHMENT (27), or Chung Fu, INNER TRUTH, (61); neither represents an exceptional state. When strong elements within preponderate, they necessarily enforce their will. This creates struggle and exceptional conditions in general. But in the present hexagram it is the weak element that perforce must mediate with the outside world. If a man occupies a position of authority for which he is by nature really inadequate, extraordinary prudence is necessary.';
 $book['62']['judge'] = 
 ' PREPONDERANCE OF THE SMALL. Success. 

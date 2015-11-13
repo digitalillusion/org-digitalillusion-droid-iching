@@ -103,29 +103,6 @@ public class ConnectionManager {
       if (task == null || task.isCancelled()) {
         task = new AsyncTask<Object, Object, Object>() {
           @Override
-          protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(activity) {
-              public void onBackPressed() {
-                cleanUp(activity);
-              }
-
-              ;
-            };
-            progressDialog.setMessage(Utils.s(R.string.connection_on_to_off_download));
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            progressDialog.setMax(Consts.HEX_COUNT);
-            progressDialog.setOnDismissListener(new OnDismissListener() {
-              public void onDismiss(DialogInterface dialog) {
-                cleanUp(activity);
-              }
-            });
-            progressDialog.setTitle(getTitle(dictionary, lang));
-            progressDialog.setProgress(1);
-            progressDialog.show();
-          }
-
-          @Override
           protected Object doInBackground(Object... params) {
             List<Integer> specialCases = Arrays.asList(ChangingLinesEvaluator.ICHING_ALL_LINES_DESC);
             RemoteResolver.clearCache();
@@ -177,6 +154,29 @@ public class ConnectionManager {
             cleanUp(activity);
             successTask.run();
           }
+
+          @Override
+          protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(activity) {
+              public void onBackPressed() {
+                cleanUp(activity);
+              }
+
+              ;
+            };
+            progressDialog.setMessage(Utils.s(R.string.connection_on_to_off_download));
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progressDialog.setMax(Consts.HEX_COUNT);
+            progressDialog.setOnDismissListener(new OnDismissListener() {
+              public void onDismiss(DialogInterface dialog) {
+                cleanUp(activity);
+              }
+            });
+            progressDialog.setTitle(getTitle(dictionary, lang));
+            progressDialog.setProgress(1);
+            progressDialog.show();
+          }
         };
         task.execute(new Object[0]);
       } else if (progressDialog != null && !progressDialog.isShowing()) {
@@ -186,10 +186,10 @@ public class ConnectionManager {
   }
 
   private String getTitle(final String dictionary, final String lang) {
-    return Utils.s(R.string.connection_off_to_on_confirm_title, new String[]{
+    return Utils.s(R.string.connection_off_to_on_confirm_title,
         Utils.s(Utils.getResourceByName(R.string.class, SettingsEntry.DICTIONARY + Utils.UNDERSCORE + dictionary)),
         Utils.s(Utils.getResourceByName(R.string.class, SettingsEntry.LANGUAGE + Utils.UNDERSCORE + lang))
-    });
+    );
   }
 
   private String getHexFromIndex(int hexIndex) {

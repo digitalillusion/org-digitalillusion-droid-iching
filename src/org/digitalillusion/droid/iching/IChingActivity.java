@@ -325,7 +325,9 @@ public class IChingActivity extends IChingActivityRenderer {
         settingsList,
         SettingsEntry.LANGUAGE,
         new String[]{
-            Consts.LANGUAGE_EN
+            Consts.LANGUAGE_EN,
+            Consts.LANGUAGE_FR,
+            Consts.LANGUAGE_PT
         },
         SETTINGS_MAP.LANGUAGE
     );

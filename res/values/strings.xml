@@ -73,7 +73,7 @@
 	        downloaded at:
 	    &lt;/p&gt;
 	    &lt;p&gt;
-	        code.google.com/p/org-digitalillusion-droid-iching/
+	        https://github.com/digitalillusion/org-digitalillusion-droid-iching
         &lt;/p&gt;
         &lt;p&gt;
         	If you want to contact me or if you spot any bug drop me an email at:	        
@@ -98,6 +98,8 @@
     <string name="settings_chlines_evaluator_2">Nanjing</string>
     <string name="settings_lang">Language</string>
     <string name="settings_lang_en">English</string>
+    <string name="settings_lang_fr">Français</string>
+    <string name="settings_lang_pt">Português</string>
     <string name="settings_dictionary">Dictionary</string>
     <string name="settings_dictionary_altervista">androidiching.altervista.org</string>
     <string name="settings_dictionary_custom">Custom (local)</string>
@@ -215,6 +217,8 @@
     <string name="read_changing_reset_section">Reset</string>
     <string name="read_share">Share</string>
     <string name="read_share_using">Share using</string>
+    <string name="read_share_constituent_line">Constituent line</string>
+    <string name="read_share_governing_line">Governing line</string>
     <string name="edit_section_quote">Quote:</string>
     <string name="edit_section_quote_info">This text will be displayed first, emphasized. It is usually a direct citation of the I Ching.</string>
     <string name="edit_section_reading">Reading:</string>
@@ -233,13 +237,14 @@
     <string name="contextmenu_history_remove">Are you sure you want to erase history completely and remove it from the list?</string>
     <string name="validator_error_empty">This field cannot be empty</string>
     <string name="validator_error_non_alphanumeric">This field must contain only numbers and letters</string>
+    <string name="validator_error_invalid_chars">This field contains invalid characters</string>
     <string name="validator_error_password_verify">Password and Password verification fields must match</string>
     <string name="connection_off_to_on_confirm_title" formatted="false">%1s (%2s)</string>
     <string name="connection_off_to_on_confirm">Choosing online mode, the dictionary will be cleared. Another complete download will be required to switch back to offline mode. Do you want to continue?</string>
     <string name="connection_on_to_off_download">Downloading definitions, please wait...</string>
     <string name="connection_on_to_off_abort">Download aborted</string>
-    <string name="view_hex_filter_instr">Filter trigrams (above, below):</string>
-    <string name="view_hex_filter_none"> - </string>
+    <string name="view_hex_filter_instr">Filter trigrams:</string>
+    <string name="view_hex_filter_none">    -    </string>
     <string name="view_hex_filter_heaven">Heaven</string>
     <string name="view_hex_filter_lake">Lake</string>
     <string name="view_hex_filter_fire">Fire</string>
@@ -248,6 +253,15 @@
     <string name="view_hex_filter_water">Water</string>
     <string name="view_hex_filter_mountain">Mountain</string>
     <string name="view_hex_filter_earth">Earth</string>
+    <string name="view_hex_filter_tri_all"> </string>
+    <string name="view_hex_filter_tri_0">&#x2630;</string>
+    <string name="view_hex_filter_tri_1">&#x2631;</string>
+    <string name="view_hex_filter_tri_2">&#x2632;</string>
+    <string name="view_hex_filter_tri_3">&#x2633;</string>
+    <string name="view_hex_filter_tri_4">&#x2634;</string>
+    <string name="view_hex_filter_tri_5">&#x2635;</string>
+    <string name="view_hex_filter_tri_6">&#x2636;</string>
+    <string name="view_hex_filter_tri_7">&#x2637;</string>
     <string name="view_hex_line_governing">o</string>
     <string name="view_hex_line_constituent">◊</string>
     <string name="view_hex_line_further_analysis">Tap the hexagram for further analysis</string>
