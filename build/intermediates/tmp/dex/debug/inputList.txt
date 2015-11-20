@@ -1,0 +1,1 @@
+/home/adriano/Sviluppo/android/iching/build/intermediates/classes/debug
