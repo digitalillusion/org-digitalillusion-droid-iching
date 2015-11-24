@@ -116,7 +116,12 @@ public class SettingsManager {
    */
   public void load(Context context) throws FileNotFoundException, IOException {
     DataPersister.loadOptions(context, settingsMap);
-    setLocale(context, getLocale());
+    Serializable language = settingsMap.get(SETTINGS_MAP.LANGUAGE.getKey());
+    if (language == null) {
+      setLocale(context, context.getResources().getConfiguration().locale);
+    } else {
+      setLocale(context, getLocale());
+    }
   }
 
   /**
