@@ -402,7 +402,7 @@ public class IChingActivityRenderer extends Activity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    settings = new SettingsManager();
+    settings = new SettingsManager(getApplicationContext());
     dsHexSection = new HexSectionDataSource(getApplicationContext());
     current = new CurrentState();
   }

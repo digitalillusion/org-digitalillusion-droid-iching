@@ -29,22 +29,12 @@ public class SettingsManager {
   private HashMap<String, Serializable> settingsMap = new HashMap<String, Serializable>();
 
   /**
-   * Set application locale
-   *
-   * @param context
-   * @param locale
-   * @return True if locale was updated, false otherwise
+   * The activity context
    */
-  public static boolean setLocale(Context context, Locale locale) {
-    Resources resources = context.getResources();
-    Configuration config = resources.getConfiguration();
-    if (!config.locale.equals(locale)) {
-      Locale.setDefault(locale);
-      config.locale = locale;
-      resources.updateConfiguration(config, null);
-      return true;
-    }
-    return false;
+  private Context context;
+
+  public SettingsManager(Context context) {
+    this.context = context;
   }
 
   /**
@@ -92,7 +82,7 @@ public class SettingsManager {
     } else if (setting.equals(SETTINGS_MAP.CHANGING_LINES_EVALUATOR)) {
       return Consts.EVALUATOR_MASTERYIN;
     } else if (setting.equals(SETTINGS_MAP.LANGUAGE)) {
-      return Consts.LANGUAGE_EN;
+      return context.getResources().getConfiguration().locale.getLanguage();
     } else if (setting.equals(SETTINGS_MAP.DICTIONARY)) {
       return Consts.DICTIONARY_ALTERVISTA;
     } else if (setting.equals(SETTINGS_MAP.STORAGE)) {
@@ -112,20 +102,15 @@ public class SettingsManager {
   }
 
   /**
-   * @see {@link DataPersister#loadOptions(HashMap)}
+   * @see {@link DataPersister#loadOptions(android.content.Context, java.util.HashMap)}
    */
-  public void load(Context context) throws FileNotFoundException, IOException {
+  public void load() throws FileNotFoundException, IOException {
     DataPersister.loadOptions(context, settingsMap);
-    Serializable language = settingsMap.get(SETTINGS_MAP.LANGUAGE.getKey());
-    if (language == null) {
-      setLocale(context, context.getResources().getConfiguration().locale);
-    } else {
-      setLocale(context, getLocale());
-    }
+    setLocale(getLocale());
   }
 
   /**
-   * @see {@link HashMap#put(Object) }
+   * @see {@link HashMap#put(Object, Object)} }
    */
   public Serializable put(SETTINGS_MAP setting, Serializable object) {
     return settingsMap.put(setting.getKey(), object);
@@ -151,6 +136,25 @@ public class SettingsManager {
    */
   public void save(IChingActivity activity) {
     DataPersister.saveOptions(settingsMap, activity);
+  }
+
+  /**
+   * Set application locale
+   *
+   * @param locale
+   * @return True if locale was updated, false otherwise
+   */
+  public boolean setLocale(Locale locale) {
+    Resources resources = context.getResources();
+    Configuration config = resources.getConfiguration();
+    if (!config.locale.equals(locale)) {
+      Locale.setDefault(locale);
+      config.locale = locale;
+      resources.updateConfiguration(config, null);
+      put(SETTINGS_MAP.LANGUAGE, locale.getLanguage());
+      return true;
+    }
+    return false;
   }
 
   /**

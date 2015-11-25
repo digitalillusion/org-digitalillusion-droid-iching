@@ -62,7 +62,7 @@ Mantenha sua senha em um lugar seguro. Se ele esta perdida, você não ser capaz
         
     <string name="options_view_hex">Ver Hexagram</string>
         
-    <string name="options_view_edit_hex">Exibir / Editar Hexagram</string>
+    <string name="options_view_edit_hex">Ver / Editar Hexagram</string>
         
     <string name="options_references">Referências</string>
         <string name="options_references_message">
@@ -418,7 +418,7 @@ tem suas raízes comuns aqui.</string>
         
     <string name="validator_error_password_verify">Campos de senha e de verificação de senha deve corresponder</string>
         
-    <string name="connection_off_to_on_confirm_title" formatted="false">%1s (% 2s)</string>
+    <string name="connection_off_to_on_confirm_title" formatted="false">%1s (%2s)</string>
         
     <string name="connection_off_to_on_confirm">Escolhendo modo connectado, o dicionário será apagado. Outro download completo será necessario para voltar o modo off-line. Você quer continuar?</string>
         

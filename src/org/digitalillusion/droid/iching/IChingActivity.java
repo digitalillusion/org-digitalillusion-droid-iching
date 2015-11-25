@@ -425,7 +425,7 @@ public class IChingActivity extends IChingActivityRenderer {
                 break;
               case LANGUAGE:
                 Locale locale = new Locale(newValue.toString());
-                settings.setLocale(context, locale);
+                settings.setLocale(locale);
                 // Not breaking here
               case DICTIONARY:
                 // Clear remote strings cache in case language or dictionary change
@@ -1037,7 +1037,7 @@ public class IChingActivity extends IChingActivityRenderer {
    */
   private void loadSettings() {
     try {
-      settings.load(getBaseContext());
+      settings.load();
     } catch (FileNotFoundException e) {
       settings.resetDefaults(false);
     } catch (IOException e) {

@@ -4,4 +4,4 @@ build/*
 .*
 *.iml
 gradle*
-project.properties
+local.properties
