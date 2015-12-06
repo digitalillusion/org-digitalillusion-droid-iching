@@ -1,69 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="yes">Sim</string>
-        
+    <string name="yes">Sim</string>    
     <string name="no">Não</string>
-        
     <string name="create">Criar</string>
-        
     <string name="cancel">Cancelar</string>
-        
     <string name="retry">Tente novamente</string>
-        
     <string name="update">Atualização</string>
-        
     <string name="remoteconn_unavailable">A conexão remota está indisponível no momento..</string>
-        
     <string name="remoteconn_please_wait">Carregando...</string>
-        
     <string name="history_unavailable">O histórico não pode ser restaurado a partir de cartão SD.</string>
-        
     <string name="crypto_unavailable">A criptografia de senha não é suportada neste dispositivo.</string>
-        
     <string name="history_change">Clique para especificar onde novas leituras serão salvos</string>
-        
     <string name="history_create">Criar um novo histórico...</string>
-        
     <string name="history_create_title">Criar um novo histórico</string>
-        
     <string name="history_create_done">Histórico \"%1s\" foi criado</string>
-        
     <string name="history_name">Nome histórico</string>
-        
     <string name="history_name_info">Digite um nome descritivo, como \"Personal\" ou \"Hóspedes\", para classificar suas leituras</string>
-        
     <string name="history_password">Senha</string>
-        
     <string name="history_password_verify">Verificação da senha</string>
     <string name="history_password_info">Você pode, opcionalmente, protege sua histórico com uma senha. Use somente caracteres alfanuméricos, comprimento máximo é de 8.
 Mantenha sua senha em um lugar seguro. Se ele esta perdida, você não ser capaz de acessar as leituras guardadas no histórico</string>
-        
     <string name="history_password_invalid">Senha inválida</string>
-        
     <string name="history_default">Histórico</string>
-        
     <string name="password_required">Senha necessária</string>
-        
     <string name="options_unavailable">As configurações não podem ser restaurados a partir do cartão SD.</string>
-        
     <string name="history_unsaveable">A histórico não podem ser armazenados no cartão SD.</string>
-        
     <string name="history_unremovable">A histórico não pode ser removido do cartão SD.</string>
-        
     <string name="options_unsaveable">As configurações não podem ser armazenados no cartão SD.</string>
-        
     <string name="history_no_destination">Por favor, crie de primeira um histórico onde mover le entradas</string>
-        
     <string name="hex_reset_section">Tem certeza que deseja redefinir tudo definições do hexagrama?</string>
-        
     <string name="item_select_hex">Selecione um hexagrama</string>
-        
     <string name="item_select_dest_history">Selecione um histórico de destino</string>
-        
     <string name="options_view_hex">Ver Hexagram</string>
-        
     <string name="options_view_edit_hex">Ver / Editar Hexagram</string>
-        
     <string name="options_references">Referências</string>
         <string name="options_references_message">
         &lt;p&gt;
@@ -79,7 +48,6 @@ Em particular, as fontes mais completas e livremente disponíveis são:
 Esta aplicação não é de médio filiados aos referências listadas.
         &lt;/p&gt;
     </string>
-        
     <string name="options_algo">Algoritmos</string>
         <string name="options_algo_message">
         &lt;p&gt;
@@ -96,7 +64,6 @@ probabilidades cada símbolo pode aparecer, se você acredita que uma Força sup
 para os resultados.
         &lt;/p&gt;
     </string>
-        
     <string name="options_about">Sobre</string>
         <string name="options_about_message">
         &lt;p&gt;
@@ -117,361 +84,184 @@ Obrigado por seus comentários, &lt;br/&gt;
 namasté!
         &lt;/p&gt;
     </string>
-        
     <string name="options_settings">Configurações</string>
-        
     <string name="settings_vibration">Vibração</string>
-        
     <string name="settings_vibration_0">Desligado</string>
-        
     <string name="settings_vibration_1">Na geração Hexagram</string>
-        
     <string name="settings_divination_method">Método de adivinhação</string>
-        
     <string name="settings_divination_method_0">Jogar moedas (automático)</string>
-        
     <string name="settings_divination_method_1">Jogar moedas (manual)</string>
-        
     <string name="settings_chlines_evaluator">Avaliador das linhas mutantes</string>
-        
     <string name="settings_chlines_evaluator_0">Manual</string>
-        
     <string name="settings_chlines_evaluator_1">Mestre Yin</string>
-        
     <string name="settings_chlines_evaluator_2">Nanjing</string>
-        
     <string name="settings_lang">Idioma</string>
-        
-    <string name="settings_lang_en">Inglês</string>
-        
-    <string name="settings_lang_fr">Francês</string>
-        
+    <string name="settings_lang_en">English</string>
+    <string name="settings_lang_fr">Français</string>
     <string name="settings_lang_pt">Português</string>
-        
     <string name="settings_dictionary">Dicionário</string>
-        
     <string name="settings_dictionary_altervista">Wilhelm (androidiching.altervista.org)</string>
-        
     <string name="settings_dictionary_custom">Personalizado (local)</string>
-        
     <string name="settings_storage">Armazenamento</string>
-        
     <string name="settings_storage_sdcard">Cartão SD</string>
-        
     <string name="settings_storage_internal">Armazenamento interno de telefone</string>
-        
     <string name="settings_connection_mode">Modo de conexão</string>
-        
     <string name="settings_connection_mode_online">Conectados</string>
-        
     <string name="settings_connection_mode_offline">Off-line</string>
-
-        
     <string name="hex01">乾 Chie / O Criativo</string>
-        
     <string name="hex02">坤 Kun / O Receptivo</string>
-        
     <string name="hex03">屯 Chun / Dificuldade Inicial</string>
-        
     <string name="hex04">蒙 Mêng / A Insensatez Juvenil</string>
-        
     <string name="hex05">需 Hsü / A Espera (Nutrição) </string>
-        
     <string name="hex06">訟 Sung / Conflito</string>
-        
     <string name="hex07">師 Shih / O Exercito</string>
-        
     <string name="hex08">比 Pi / Manter-se Unido (Solidariedade)</string>
-        
     <string name="hex09">小 畜 Hsiao Ch\'u / O Poder de Domar do Pequeno</string>
-        
     <string name="hex10">履 Lü / A Conduta (Trilhar)</string>
-        
     <string name="hex11">泰 T\'ai / Paz </string>
-        
     <string name="hex12">否 P\'i / Estagnação</string>
-        
     <string name="hex13">同 人 T\'ung Jên / Comunidade com os Homens</string>
-        
     <string name="hex14">大 有 Ta Yu / Grandes Posses</string>
-        
     <string name="hex15">謙 Ch\'ien / Modestia</string>
-        
     <string name="hex16">豫 Yü / Entusiasmo</string>
-        
     <string name="hex17">隨 Sui / Seguir </string>
-        
     <string name="hex18">蠱 Ku / Trabalho Sobre O Que Se Deteriorou </string>
-        
     <string name="hex19">臨 Lin / Aproximacão </string>
-        
     <string name="hex20">觀 Kuan / Contemplacão (A Vista)</string>
-        
     <string name="hex21">噬 嗑 Shih Ho / Morder</string>
-        
     <string name="hex22">賁 Pi / Graciosidade (Beleza) </string>
-        
     <string name="hex23">剝 Po / Desintegracão </string>
-        
     <string name="hex24">復 Fu / Retorno (O Ponto De Transicão)</string>
-        
     <string name="hex25">無 妄 Wu Wang / Inocencia (O Inesperado)</string>
-        
     <string name="hex26">大 畜 Ta Ch\'u / O Poder De Domar Do Grande</string>
-        
     <string name="hex27">頤 I / As Bordas Da Boca (Prover Alimento)</string>
-        
     <string name="hex28">大 過 Ta Kuo / Preponderancia Do Grande</string>
-        
     <string name="hex29">坎 K\'an / O Abismal (Agua)</string>
-        
     <string name="hex30">離 Li / Aderir (Fogo)</string>
-        
     <string name="hex31">咸 Hsien / A Influencia (Cortejar)</string>
-        
     <string name="hex32">恆 Hêng / Duracão </string>
-        
     <string name="hex33">遯 TUN / A Retirada</string>
-        
     <string name="hex34">大 壯 Ta Chuang / O Poder do Grande</string>
-        
     <string name="hex35">晉 Chin / Progresso</string>
-        
     <string name="hex36">明 夷 Ming I / Obscurecimento da Luz</string>
-        
     <string name="hex37">家 人 Chia Jên / A Familia</string>
-        
     <string name="hex38">睽 K\'uei / Oposicão </string>
-        
     <string name="hex39">蹇 Chien / Obstrução </string>
-        
     <string name="hex40">解 HHsieh / Liberacão</string>
-        
     <string name="hex41">損 Sun / Diminuicão</string>
-        
     <string name="hex42">益 I / Aumento</string>
-        
     <string name="hex43">夬 Kuai / Irromper (A Determinacão)</string>
-        
     <string name="hex44">姤 Kou / Vir Ao Encontro</string>
-        
     <string name="hex45">萃 Ts\'ui / Reunião</string>
-        
     <string name="hex46">升 Shêng / Ascensão</string>
-        
     <string name="hex47">困 K\'un / Opressão (A Exaustão)</string>
-        
     <string name="hex48">井 Ching / O Poço</string>
-        
     <string name="hex49">革 Ko / Revolucão</string>
-        
     <string name="hex50">鼎 Ting / O Caldeirão</string>
-        
     <string name="hex51">震 Chên / O Incitar (Comocão, Trovão)</string>
-        
     <string name="hex52">艮 Kên / A Quietude (Montanha)</string>
-        
     <string name="hex53">漸 Chien / Desenvolvimento (Progresso Gradual) </string>
-        
     <string name="hex54">歸 妹 Kuei Mei / A Jovem que Se Casa</string>
-        
     <string name="hex55">豐 Fêng / Abundancia (Plenitude)</string>
-        
     <string name="hex56">旅 Lü / O Viajante</string>
-        
     <string name="hex57">巽 Sun / A Suavidade (O Penetrante, Vento) </string>
-        
     <string name="hex58">兌 Tui / Alegria (Lago)</string>
-        
     <string name="hex59">渙 Huan / Dispersão (Dissolucão)</string>
-        
     <string name="hex60">節 Chieh / Limitacão </string>
-        
     <string name="hex61">中 孚 Chung Fu / Verdade Interior</string>
-        
     <string name="hex62">小 過 Hsiao Kuo / A Prepoderancia do Pequeno</string>
-        
     <string name="hex63">既 濟 Chi Chi / Apos A Conclusão</string>
-        
     <string name="hex64">未 濟 Wei Chi / Antes Da Conclusão</string>
-        
     <string name="intro_header_icon_alt">I Ching logotipo</string>
-        
     <string name="consult_coin_alt">Moeda</string>
-<string name="intro_header">O I Ching é um "reflexo do universo em miniatura".
+    <string name="intro_header">O I Ching é um "reflexo do universo em miniatura".
 A palavra "eu" tem três significados: facilidade e simplicidade, a mudança
 e transformação, e invariabilidade. Ambos os dois
 ramos da filosofia chinesa, confucionismo e taoísmo,
 tem suas raízes comuns aqui.</string>
-        
     <string name="intro_question_label">Pose sua pergunta para o Oracle:</string>
-        
     <string name="intro_noquestion_alert">Continuar sem especificar uma pergunta?</string>
-        
     <string name="intro_consult">Consulte</string>
-        
     <string name="intro_history_label">Ou escolha uma pergunta de suo histórico:</string>
-        
     <string name="intro_history">Ver histórico</string>
-        
     <string name="consult_tapcoins">Toque as moedas para gerar um hexagrama</string>
-        
     <string name="consult_tapcoins_manual">Toque as moedas para gerar um hexagrama. Passe para cima confirma uma linha, para baixo para apagá-la</string>
-        
     <string name="consult_read_desc">Leia Descrição</string>
-        
     <string name="read_desc">Descrição</string>
-        
     <string name="read_judge">O julgamento</string>
-        
     <string name="read_image">A Imagem</string>
-        
     <string name="app_name">I Ching</string>
-        
     <string name="read_cast">Hexagram Lançado</string>
-        
     <string name="read_changing">Linhas mutantes</string>
-        
     <string name="read_transformed">Hexagram Transformado</string>
-        
     <string name="read_changing_none">Não existem linhas mutantes</string>
-        
     <string name="read_changing_one">Existe uma linha mutante</string>
-        
     <string name="read_changing_count">Existem %1$d linhas mutantes</string>
-        
     <string name="read_changing_apply">Linha %1$d aplica.</string>
-        
     <string name="read_changing_apply_n">No leitura linha nem hexagrama aplicar.</string>
-        
     <string name="read_changing_apply_ht">Ambos os hexagramas aplicar.</string>
-        
     <string name="read_changing_apply_h">Hexagrama Lançado se aplica.</string>
-        
     <string name="read_changing_apply_t">Hexagrama Transformado se aplica.</string>
-        
     <string name="read_changing_select">Escolha qualquer uma das linhas a consultar:</string>
-        
     <string name="read_changing_select_line1">Linha baixa</string>
-        
     <string name="read_changing_select_line2">Segunda linha</string>
-        
     <string name="read_changing_select_line3">Terceira linha</string>
-        
     <string name="read_changing_select_line4">Quarta linha</string>
-        
     <string name="read_changing_select_line5">Quinta linha</string>
-        
     <string name="read_changing_select_line6">Linha superior</string>
-        
     <string name="read_changing_select_all">Todas as linhas</string>
-        
     <string name="read_changing_edit_section">Editar leitura</string>
-        
     <string name="read_changing_reset_section">Redefinir</string>
-        
     <string name="read_share">Partilhar</string>
-        
     <string name="read_share_using">Compartilhar usando</string>
-        
     <string name="read_share_constituent_line">linha Constituinte</string>
-        
     <string name="read_share_governing_line">linha Governante</string>
-        
     <string name="edit_section_quote">Citação:</string>
-        
     <string name="edit_section_quote_info">Este texto será exibido primeiro, enfatizou. É geralmente uma citação direta do I Ching.</string>
-        
     <string name="edit_section_reading">Leitura:</string>
-        
     <string name="edit_section_reading_info">Faça aqui a sua própria interpretação para essa passagem.</string>
-        
     <string name="edit_section_update">Definição do %1s foi atualizado</string>
-        
     <string name="edit_section_reset">Todas as definições do %1s foi redefinida</string>
-        
     <string name="contextmenu_noquestion">(Nenhuma pergunta)</string>
-        
     <string name="contextmenu_move_entry">Mover</string>
-        
     <string name="contextmenu_delete_entry">Excluir</string>
-        
     <string name="contextmenu_remove_entry">Apagar e remover</string>
-        
     <string name="contextmenu_rename_entry">Renomear</string>
-        
     <string name="contextmenu_delete_all">Apagar o histórico</string>
-        
     <string name="contextmenu_history_erase_entry">Você tem certeza que quer apagar esta entrada?</string>
-        
     <string name="contextmenu_history_erase">Você tem certeza de que quer apagar a história completamente?</string>
-        
     <string name="contextmenu_history_rename">Por favor, especifique o novo nome para esta história</string>
-        
     <string name="contextmenu_history_remove">Você tem certeza de que quer apagar a história completamente e retire-o da lista?</string>
-        
     <string name="validator_error_empty">Este campo não pode ficar vazio</string>
-        
     <string name="validator_error_non_alphanumeric">Este campo deve conter somente letras e números</string>
-        
     <string name="validator_error_invalid_chars">Este campo contém caracteres inválidos</string>
-        
     <string name="validator_error_password_verify">Campos de senha e de verificação de senha deve corresponder</string>
-        
     <string name="connection_off_to_on_confirm_title" formatted="false">%1s (%2s)</string>
-        
     <string name="connection_off_to_on_confirm">Escolhendo modo connectado, o dicionário será apagado. Outro download completo será necessario para voltar o modo off-line. Você quer continuar?</string>
-        
     <string name="connection_on_to_off_download">Transferimiento definições, aguarde por favor...</string>
-        
     <string name="connection_on_to_off_abort">Download abortado</string>
-        
     <string name="view_hex_filter_instr">Filtro trigramas:</string>
-        
     <string name="view_hex_filter_none">-</string>
-        
     <string name="view_hex_filter_heaven">Céu</string>
-        
     <string name="view_hex_filter_lake">Lago</string>
-        
     <string name="view_hex_filter_fire">Fogo</string>
-        
     <string name="view_hex_filter_thunder">Trovão</string>
-        
     <string name="view_hex_filter_wind">Vento</string>
-        
     <string name="view_hex_filter_water">Água</string>
-        
     <string name="view_hex_filter_mountain">Montanha</string>
-        
     <string name="view_hex_filter_earth">Terra</string>
-        
     <string name="view_hex_filter_tri_all"></string>
-        
     <string name="view_hex_filter_tri_0">&#x2630;</string>
-        
     <string name="view_hex_filter_tri_1">&#x2631;</string>
-        
     <string name="view_hex_filter_tri_2">&#x2632;</string>
-        
     <string name="view_hex_filter_tri_3">&#x2633;</string>
-        
     <string name="view_hex_filter_tri_4">&#x2634;</string>
-        
     <string name="view_hex_filter_tri_5">&#x2635;</string>
-        
     <string name="view_hex_filter_tri_6">&#x2636;</string>
-        
     <string name="view_hex_filter_tri_7">&#x2637;</string>
-        
     <string name="view_hex_line_governing">o</string>
-        
     <string name="view_hex_line_constituent">◊</string>
-        
     <string name="view_hex_line_further_analysis">Toque no hexagrama para posterior análise</string>
-        
     <string name="view_hex_line_gov_legend">o: linhas Governantes</string>
-        
     <string name="view_hex_line_const_legend">◊: linhas Constituintes</string>
-
 </resources>

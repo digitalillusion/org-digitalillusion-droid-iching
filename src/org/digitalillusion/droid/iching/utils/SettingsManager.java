@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.security.InvalidParameterException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -24,10 +25,44 @@ import java.util.Locale;
 public class SettingsManager {
 
   /**
+   * Map of possible value for each setting
+   */
+  public static HashMap<SETTINGS_MAP, Serializable[]> SETTINGS_VALUES_MAP = new HashMap<SETTINGS_MAP, Serializable[]>() {{
+    put(SETTINGS_MAP.HAPTIC_FEEDBACK, new Integer[]{
+        Consts.HAPTIC_FEEDBACK_OFF,
+        Consts.HAPTIC_FEEDBACK_ON_THROW_COINS
+    });
+    put(SETTINGS_MAP.DIVINATION_METHOD, new Integer[]{
+        Consts.DIVINATION_METHOD_COINS_AUTO,
+        Consts.DIVINATION_METHOD_COINS_MANUAL
+    });
+    put(SETTINGS_MAP.CHANGING_LINES_EVALUATOR, new Integer[]{
+        Consts.EVALUATOR_MANUAL,
+        Consts.EVALUATOR_MASTERYIN,
+        Consts.EVALUATOR_NAJING
+    });
+    put(SETTINGS_MAP.LANGUAGE, new String[]{
+        Consts.LANGUAGE_EN,
+        Consts.LANGUAGE_FR,
+        Consts.LANGUAGE_PT
+    });
+    put(SETTINGS_MAP.DICTIONARY, new String[]{
+        Consts.DICTIONARY_ALTERVISTA,
+        Consts.DICTIONARY_CUSTOM
+    });
+    put(SETTINGS_MAP.STORAGE, new String[]{
+        Consts.STORAGE_SDCARD,
+        Consts.STORAGE_INTERNAL
+    });
+    put(SETTINGS_MAP.CONNECTION_MODE, new String[]{
+        Consts.CONNECTION_MODE_ONLINE,
+        Consts.CONNECTION_MODE_OFFLINE
+    });
+  }};
+  /**
    * Internal storage of the settings *
    */
   private HashMap<String, Serializable> settingsMap = new HashMap<String, Serializable>();
-
   /**
    * The activity context
    */
@@ -69,28 +104,22 @@ public class SettingsManager {
   }
 
   /**
-   * Return a default setting
+   * Return a context-dependent default setting
    *
    * @param setting The setting to retrieve
    * @return The default value of the requested setting
    */
   public Serializable getDefault(SETTINGS_MAP setting) throws InvalidParameterException {
-    if (setting.equals(SETTINGS_MAP.HAPTIC_FEEDBACK)) {
-      return Consts.HAPTIC_FEEDBACK_ON_THROW_COINS;
-    } else if (setting.equals(SETTINGS_MAP.DIVINATION_METHOD)) {
-      return Consts.DIVINATION_METHOD_COINS_AUTO;
-    } else if (setting.equals(SETTINGS_MAP.CHANGING_LINES_EVALUATOR)) {
-      return Consts.EVALUATOR_MASTERYIN;
-    } else if (setting.equals(SETTINGS_MAP.LANGUAGE)) {
-      return context.getResources().getConfiguration().locale.getLanguage();
-    } else if (setting.equals(SETTINGS_MAP.DICTIONARY)) {
-      return Consts.DICTIONARY_ALTERVISTA;
-    } else if (setting.equals(SETTINGS_MAP.STORAGE)) {
-      return Consts.STORAGE_SDCARD;
-    } else if (setting.equals(SETTINGS_MAP.CONNECTION_MODE)) {
-      return Consts.CONNECTION_MODE_ONLINE;
+    Serializable defaultValue = null;
+    if (setting.equals(SETTINGS_MAP.LANGUAGE)) {
+      defaultValue = context.getResources().getConfiguration().locale.getLanguage();
     }
-    throw new InvalidParameterException(setting.getKey() + " does not specify an option.");
+
+    if (defaultValue != null && Arrays.asList(SETTINGS_VALUES_MAP.get(setting)).contains(defaultValue)) {
+      return defaultValue;
+    } else {
+      return getStaticDefault(setting);
+    }
   }
 
   /**
@@ -155,6 +184,25 @@ public class SettingsManager {
       return true;
     }
     return false;
+  }
+
+  private Serializable getStaticDefault(SETTINGS_MAP setting) throws InvalidParameterException {
+    if (setting.equals(SETTINGS_MAP.HAPTIC_FEEDBACK)) {
+      return Consts.HAPTIC_FEEDBACK_ON_THROW_COINS;
+    } else if (setting.equals(SETTINGS_MAP.DIVINATION_METHOD)) {
+      return Consts.DIVINATION_METHOD_COINS_AUTO;
+    } else if (setting.equals(SETTINGS_MAP.CHANGING_LINES_EVALUATOR)) {
+      return Consts.EVALUATOR_MASTERYIN;
+    } else if (setting.equals(SETTINGS_MAP.LANGUAGE)) {
+      return Consts.LANGUAGE_EN;
+    } else if (setting.equals(SETTINGS_MAP.DICTIONARY)) {
+      return Consts.DICTIONARY_ALTERVISTA;
+    } else if (setting.equals(SETTINGS_MAP.STORAGE)) {
+      return Consts.STORAGE_SDCARD;
+    } else if (setting.equals(SETTINGS_MAP.CONNECTION_MODE)) {
+      return Consts.CONNECTION_MODE_ONLINE;
+    }
+    throw new InvalidParameterException(setting.getKey() + " does not specify an option.");
   }
 
   /**

@@ -1,8 +1,6 @@
 package org.digitalillusion.droid.iching.utils;
 
 import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
 import android.util.Log;
 
@@ -28,7 +26,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Commonly used functions

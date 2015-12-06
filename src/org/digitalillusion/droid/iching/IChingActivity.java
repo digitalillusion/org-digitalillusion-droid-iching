@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -44,6 +43,7 @@ import org.digitalillusion.droid.iching.changinglines.ChangingLinesEvaluator;
 import org.digitalillusion.droid.iching.connection.RemoteResolver;
 import org.digitalillusion.droid.iching.utils.Consts;
 import org.digitalillusion.droid.iching.utils.DataPersister;
+import org.digitalillusion.droid.iching.utils.SettingsManager;
 import org.digitalillusion.droid.iching.utils.SettingsManager.SETTINGS_MAP;
 import org.digitalillusion.droid.iching.utils.Utils;
 import org.digitalillusion.droid.iching.utils.lists.HistoryEntry;
@@ -295,75 +295,51 @@ public class IChingActivity extends IChingActivityRenderer {
     settings.createOption(
         settingsList,
         SettingsEntry.VIBRATION,
-        new Integer[]{
-            Consts.HAPTIC_FEEDBACK_OFF,
-            Consts.HAPTIC_FEEDBACK_ON_THROW_COINS
-        },
+        SettingsManager.SETTINGS_VALUES_MAP.get(SETTINGS_MAP.HAPTIC_FEEDBACK),
         SETTINGS_MAP.HAPTIC_FEEDBACK
     );
     // Divination method
     settings.createOption(
         settingsList,
         SettingsEntry.DIVINATION_METHOD,
-        new Integer[]{
-            Consts.DIVINATION_METHOD_COINS_AUTO,
-            Consts.DIVINATION_METHOD_COINS_MANUAL
-        },
+        SettingsManager.SETTINGS_VALUES_MAP.get(SETTINGS_MAP.DIVINATION_METHOD),
         SETTINGS_MAP.DIVINATION_METHOD
     );
     // Changing lines
     settings.createOption(
         settingsList,
         SettingsEntry.CHLINES_EVALUATOR,
-        new Integer[]{
-            Consts.EVALUATOR_MANUAL,
-            Consts.EVALUATOR_MASTERYIN,
-            Consts.EVALUATOR_NAJING,
-        },
+        SettingsManager.SETTINGS_VALUES_MAP.get(SETTINGS_MAP.CHANGING_LINES_EVALUATOR),
         SETTINGS_MAP.CHANGING_LINES_EVALUATOR
     );
     // Language
     settings.createOption(
         settingsList,
         SettingsEntry.LANGUAGE,
-        new String[]{
-            Consts.LANGUAGE_EN,
-            Consts.LANGUAGE_FR,
-            Consts.LANGUAGE_PT
-        },
+        SettingsManager.SETTINGS_VALUES_MAP.get(SETTINGS_MAP.LANGUAGE),
         SETTINGS_MAP.LANGUAGE
     );
     // Dictionary
     settings.createOption(
         settingsList,
         SettingsEntry.DICTIONARY,
-        new String[]{
-            Consts.DICTIONARY_ALTERVISTA,
-            Consts.DICTIONARY_CUSTOM,
-        },
+        SettingsManager.SETTINGS_VALUES_MAP.get(SETTINGS_MAP.DICTIONARY),
         SETTINGS_MAP.DICTIONARY
     );
     // Storage
     settings.createOption(
         settingsList,
         SettingsEntry.STORAGE,
-        new String[]{
-            Consts.STORAGE_SDCARD,
-            Consts.STORAGE_INTERNAL,
-        },
+        SettingsManager.SETTINGS_VALUES_MAP.get(SETTINGS_MAP.STORAGE),
         SETTINGS_MAP.STORAGE
     );
     // Connection mode
     settings.createOption(
         settingsList,
         SettingsEntry.CONNECTION_MODE,
-        new String[]{
-            Consts.CONNECTION_MODE_ONLINE,
-            Consts.CONNECTION_MODE_OFFLINE
-        },
+        SettingsManager.SETTINGS_VALUES_MAP.get(SETTINGS_MAP.CONNECTION_MODE),
         SETTINGS_MAP.CONNECTION_MODE
     );
-
 
     lvSettings.setAdapter(new ListItem2Adapter<SettingsEntry<?>>(this, settingsList) {
       @Override
