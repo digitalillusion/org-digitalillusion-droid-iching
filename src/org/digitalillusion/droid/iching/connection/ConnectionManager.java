@@ -118,7 +118,7 @@ public class ConnectionManager {
               if (specialCases.contains(hexIndex)) {
                 sections.add(RemoteResolver.ICHING_REMOTE_SECTION_LINE + ChangingLinesEvaluator.ICHING_APPLY_BOTH);
               }
-              for (int j = 0; j < Consts.HEX_LINES_COUNT; j++) {
+              for (int j = 1; j <= Consts.HEX_LINES_COUNT; j++) {
                 sections.add(RemoteResolver.ICHING_REMOTE_SECTION_LINE + j);
               }
 

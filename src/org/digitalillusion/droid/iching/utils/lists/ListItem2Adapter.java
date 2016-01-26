@@ -2,6 +2,7 @@ package org.digitalillusion.droid.iching.utils.lists;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,8 +31,8 @@ public abstract class ListItem2Adapter<T> extends BaseAdapter {
         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     this.list = list;
     this.context = activity.getApplicationContext();
-    this.textSizeMedium = activity.getResources().getDimension(R.dimen.text_size_medium);
-    this.textSizeSmall = activity.getResources().getDimension(R.dimen.text_size_small);
+    this.textSizeMedium = activity.getResources().getDimensionPixelSize(R.dimen.text_size_medium);
+    this.textSizeSmall = activity.getResources().getDimensionPixelSize(R.dimen.text_size_small);
   }
 
   public int getCount() {
@@ -65,10 +66,10 @@ public abstract class ListItem2Adapter<T> extends BaseAdapter {
           android.R.layout.simple_list_item_2, null);
       row.getText1().setTextAppearance(context,
           android.R.style.TextAppearance_Medium);
-      row.getText1().setTextSize(textSizeMedium);
+      row.getText1().setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizeMedium);
       row.getText2().setTextAppearance(context,
           android.R.style.TextAppearance_Small);
-      row.getText2().setTextSize(textSizeSmall);
+      row.getText2().setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizeSmall);
     } else {
       row = (TwoLineListItem) convertView;
     }

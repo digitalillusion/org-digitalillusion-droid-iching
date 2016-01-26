@@ -2,6 +2,7 @@ package org.digitalillusion.droid.iching.utils.lists;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,8 +36,8 @@ public abstract class ExpandableDropDownListItem2Adapter<T> extends BaseExpandab
     this.context = activity.getApplicationContext();
     this.expandableListView = expandableListView;
 
-    this.textSizeSmall = activity.getResources().getDimension(R.dimen.text_size_small);
-    this.textSizeMedium = activity.getResources().getDimension(R.dimen.text_size_medium);
+    this.textSizeSmall = activity.getResources().getDimensionPixelSize(R.dimen.text_size_small);
+    this.textSizeMedium = activity.getResources().getDimensionPixelSize(R.dimen.text_size_medium);
   }
 
   public abstract void childViewInit(TextView childView);
@@ -63,13 +64,13 @@ public abstract class ExpandableDropDownListItem2Adapter<T> extends BaseExpandab
     if (childPosition == 0) {
       row.setTextAppearance(context,
           android.R.style.TextAppearance_Small);
-      row.setTextSize(textSizeSmall);
-      row.setPadding(48, 0, 0, 0);
+      row.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizeSmall);
+      row.setPadding((int) (2 * textSizeMedium), 0, 0, 0);
     } else {
       row.setTextAppearance(context,
           android.R.style.TextAppearance_Medium);
-      row.setTextSize(textSizeMedium);
-      row.setPadding(35, 0, 0, 0);
+      row.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizeMedium);
+      row.setPadding((int) (2 * textSizeSmall), 0, 0, 0);
     }
 
     @SuppressWarnings("unchecked")
@@ -110,11 +111,11 @@ public abstract class ExpandableDropDownListItem2Adapter<T> extends BaseExpandab
           android.R.layout.simple_list_item_2, null);
       row.getText1().setTextAppearance(context,
           android.R.style.TextAppearance_Medium);
-      row.getText1().setTextSize(textSizeMedium);
+      row.getText1().setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizeMedium);
       row.getText2().setTextAppearance(context,
           android.R.style.TextAppearance_Small);
-      row.getText2().setTextSize(textSizeSmall);
-      row.setPadding(35, 0, 0, 0);
+      row.getText2().setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizeSmall);
+      row.setPadding((int) (2 * textSizeSmall), 0, 0, 0);
     } else {
       row = (TwoLineListItem) convertView;
     }
@@ -165,8 +166,8 @@ public abstract class ExpandableDropDownListItem2Adapter<T> extends BaseExpandab
           android.R.layout.simple_list_item_2, null);
       row.getText1().setTextAppearance(context,
           android.R.style.TextAppearance_Medium);
-      row.getText1().setTextSize(textSizeMedium);
-      row.setPadding(35, 0, 0, 0);
+      row.getText1().setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizeMedium);
+      row.setPadding((int) (2 * textSizeSmall), 0, 0, 0);
     } else {
       row = (TwoLineListItem) convertView;
     }

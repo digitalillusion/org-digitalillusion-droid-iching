@@ -6,16 +6,16 @@
     <string name="cancel"> Annuler </string>
     <string name="retry"> Réessayer </string>
     <string name="update"> Mettre à jour </string>
-    <string name="remoteconn_unavailable"> La connexion à distance est indisponible pour le moment. </string>
+    <string name="remoteconn_unavailable"> Le réseau n\'est pas disponible pour le moment. </string>
     <string name="remoteconn_please_wait"> Chargement en cours ... </string>
     <string name="history_unavailable"> L\'historique ne peut pas être restauré à partir de la carte SD. </string>
     <string name="crypto_unavailable"> Le cryptage des mots de passe n\'est pas disponible sur ce dispositif. </string>
-    <string name="history_change"> Cliquez pour spécifier l\'emplacement ou les nouvelles lectures seront enregistrées </string>
+    <string name="history_change"> Cliquez pour spécifier l\'emplacement ou les nouveaux tirages seront enregistrées </string>
     <string name="history_create"> Créer un nouveau historique ... </string>
     <string name="history_create_title"> Création d\'un nouveau historique </string>
     <string name="history_create_done"> L\'historique \"%1s\" a été créé </string>
     <string name="history_name"> Nom du Historique </string>
-    <string name="history_name_info"> Entrez un nom descriptif, comme \"Personnel\" ou \"Visiteurs\", pour classer vos lectures </string>
+    <string name="history_name_info"> Entrez un nom descriptif, comme \"Personnel\" ou \"Visiteurs\", pour classer vos tirages </string>
     <string name="history_password"> Mot de passe </string>
     <string name="history_password_verify"> Vérification du mot de passe </string>
 	<string name="history_password_info"> Vous pouvez éventuellement utiliser un mot de passe pour protéger votre historique. Utilisez uniquement des caractères alphanumériques, la longueur maximale est de 8.
@@ -25,10 +25,10 @@
     <string name="password_required"> Mot de passe requis </string>
     <string name="options_unavailable"> Les paramètres ne peuvent pas être restaurés à partir de la carte SD. </string>
     <string name="history_unsaveable"> L\'historique ne peut pas être stocké sur la carte SD. </string>
-    <string name="history_unremovable"> L\'historique ne peut pas être retiré de la carte SD. </string>
+    <string name="history_unremovable"> L\'historique ne peut pas être effacé de la carte SD. </string>
     <string name="options_unsaveable"> Les paramètres ne peuvent pas être stockés sur la carte SD. </string>
-    <string name="history_no_destination"> Créer d\'abord un historique où déplacer les lectures </string>
-    <string name="hex_reset_section"> Etes-vous sûr de vouloir réinitialiser TOUTES ces définitions d\'hexagramme? </string>
+    <string name="history_no_destination"> Créer d\'abord un historique où déplacer les tirages </string>
+    <string name="hex_reset_section"> Etes-vous sûr de vouloir réinitialiser TOUTES les définitions de cet hexagramme? </string>
     <string name="item_select_hex"> Sélectionnez un Hexagramme </string>
     <string name="item_select_dest_history"> Sélectionnez un historique de destination </string>
     <string name="options_view_hex"> Voir Hexagramme </string>
@@ -60,7 +60,7 @@
 		&lt;p&gt;
 			Gardez à l\'esprit, cependant, que tandis que l\'algorithme peut effectivement atteindre chaque
 			combinaison possible des hexagrammes et des lignes changeantes, les probabilités avec les quelles
-			chaque symbole peut apparaître n \'importent pas vraiment, si vous croyez q\'une Force suprême
+			chaque symbole peut apparaître n\'importent pas vraiment, si vous croyez q\'une Force suprême
 			est responsable pour les résultats.
 		&lt;/p&gt;
 	</string>
@@ -101,7 +101,7 @@
     <string name="settings_lang_pt">Português</string>
     <string name="settings_dictionary"> Dictionnaire </string>
     <string name="settings_dictionary_altervista"> Wilhelm (androidiching.altervista.org) </string>
-    <string name="settings_dictionary_custom"> Custom (local) </string>
+    <string name="settings_dictionary_custom"> Customisé (local) </string>
     <string name="settings_storage"> Stockage </string>
     <string name="settings_storage_sdcard"> Carte SD </string>
     <string name="settings_storage_internal"> Stockage interne du téléphone </string>
@@ -178,26 +178,26 @@
     <string name="intro_question_label"> Posez votre question à l\'Oracle: </string>
     <string name="intro_noquestion_alert"> Procéder sans spécifier une question? </string>
     <string name="intro_consult"> Consulter </string>
-    <string name="intro_history_label"> Ou choisir une question de votre historique: </string>
+    <string name="intro_history_label"> Ou choisissez une question de votre historique: </string>
     <string name="intro_history"> Voir l\'historique </string>
     <string name="consult_tapcoins"> Appuyez sur les pièces de monnaie pour générer un hexagramme </string>
     <string name="consult_tapcoins_manual"> Appuyez sur les pièces de monnaie pour générer un hexagramme. Glissez vers le haut pour confirmer une ligne, vers le bas pour l\'effacer </string>
     <string name="consult_read_desc"> Lire la description </string>
     <string name="read_desc"> Description </string>
     <string name="read_judge"> Le Jugement </string>
-    <string name="read_image"> L\'image </string>
+    <string name="read_image"> L\'Image </string>
     <string name="app_name"> I Ching </string>
-    <string name="read_cast"> Hexagramme Sorti </string>
+    <string name="read_cast"> Hexagramme Principal </string>
     <string name="read_changing"> Lignes changeantes </string>
-    <string name="read_transformed"> Hexagramme Transformé </string>
+    <string name="read_transformed"> Hexagramme de Perspective </string>
     <string name="read_changing_none"> Il n\'y a pas d\'évolution des lignes </string>
     <string name="read_changing_one"> Il ya une ligne changeante </string>
     <string name="read_changing_count"> Il ya %1$d lignes changeantes </string>
     <string name="read_changing_apply"> La ligne %1$d s\'applique. </string>
     <string name="read_changing_apply_n"> Ni des lignes, ni l\'hexagramme s\'appliquent. </string>
     <string name="read_changing_apply_ht"> Les deux hexagrammes s\'appliquent. </string>
-    <string name="read_changing_apply_h"> L\'hexagramme Sorti s\'applique. </string>
-    <string name="read_changing_apply_t"> L\'hexagramme Transformé s\'applique. </string>
+    <string name="read_changing_apply_h"> L\'hexagramme Principal s\'applique. </string>
+    <string name="read_changing_apply_t"> L\'hexagramme de Perspective s\'applique. </string>
     <string name="read_changing_select"> Choisissez l\'une des lignes a consulter: </string>
     <string name="read_changing_select_line1"> Ligne du bas </string>
     <string name="read_changing_select_line2"> Deuxième ligne </string>
@@ -206,7 +206,7 @@
     <string name="read_changing_select_line5"> Cinquième ligne </string>
     <string name="read_changing_select_line6"> Ligne supérieure </string>
     <string name="read_changing_select_all"> Toutes les lignes </string>
-    <string name="read_changing_edit_section"> Modifier lecture </string>
+    <string name="read_changing_edit_section"> Customizer </string>
     <string name="read_changing_reset_section"> Réinitialiser </string>
     <string name="read_share"> Partager </string>
     <string name="read_share_using"> Partager utilisant </string>
@@ -224,9 +224,9 @@
     <string name="contextmenu_remove_entry"> Effacer et supprimer </string>
     <string name="contextmenu_rename_entry"> Renommer </string>
     <string name="contextmenu_delete_all"> Effacer l\'historique </string>
-    <string name="contextmenu_history_erase_entry"> Etes-vous sûr de vouloir effacer cette lecture? </string>
+    <string name="contextmenu_history_erase_entry"> Etes-vous sûr de vouloir effacer ce tirage? </string>
     <string name="contextmenu_history_erase"> Êtes-vous sûr de vouloir effacer l\'historique complètement? </string>
-    <string name="contextmenu_history_rename"> S\'il vous plaît indiquer le nouveau nom de cet historique </string>
+    <string name="contextmenu_history_rename"> S\'il vous plaît, indiquez le nouveau nom de cet historique </string>
     <string name="contextmenu_history_remove"> Êtes-vous sûr de vouloir effacer l\'historique et l\'enlever de la liste? </string>
     <string name="validator_error_empty"> Ce champ ne peut pas être vide </string>
     <string name="validator_error_non_alphanumeric"> Ce champ ne doit contenir que des chiffres et des lettres </string>
@@ -234,9 +234,9 @@
     <string name="validator_error_password_verify"> Mot de passe et vérification du mot de passe doivent correspondre </string>
     <string name="connection_off_to_on_confirm_title" formatted="false">%1s (%2s)</string>
     <string name="connection_off_to_on_confirm"> Choisissant le mode en ligne, le dictionnaire sera effacé. Un autre téléchargement complet sera nécessaire pour revenir en mode déconnecté. Voulez-vous continuer? </string>
-    <string name="connection_on_to_off_download"> Téléchargement définitions, s\'il vous plaît patienter ... </string>
+    <string name="connection_on_to_off_download"> Téléchargement définitions, patientez s\'il vous plaît... </string>
     <string name="connection_on_to_off_abort"> Téléchargement avorté </string>
-    <string name="view_hex_filter_instr"> Filtrer trigrammes: </string>
+    <string name="view_hex_filter_instr"> Filtre des trigrammes: </string>
     <string name="view_hex_filter_none"> - </string>
     <string name="view_hex_filter_heaven"> Ciel </string>
     <string name="view_hex_filter_lake"> Lac </string>
