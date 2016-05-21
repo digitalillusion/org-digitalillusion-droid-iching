@@ -96,9 +96,6 @@ namasté!
     <string name="settings_chlines_evaluator_1">Mestre Yin</string>
     <string name="settings_chlines_evaluator_2">Nanjing</string>
     <string name="settings_lang">Idioma</string>
-    <string name="settings_lang_en">English</string>
-    <string name="settings_lang_fr">Français</string>
-    <string name="settings_lang_pt">Português</string>
     <string name="settings_dictionary">Dicionário</string>
     <string name="settings_dictionary_altervista">Wilhelm (androidiching.altervista.org)</string>
     <string name="settings_dictionary_custom">Personalizado (local)</string>
@@ -140,7 +137,7 @@ namasté!
     <string name="hex30">離 Li / Aderir (Fogo)</string>
     <string name="hex31">咸 Hsien / A Influencia (Cortejar)</string>
     <string name="hex32">恆 Hêng / Duracão </string>
-    <string name="hex33">遯 TUN / A Retirada</string>
+    <string name="hex33">遯 Tun / A Retirada</string>
     <string name="hex34">大 壯 Ta Chuang / O Poder do Grande</string>
     <string name="hex35">晉 Chin / Progresso</string>
     <string name="hex36">明 夷 Ming I / Obscurecimento da Luz</string>

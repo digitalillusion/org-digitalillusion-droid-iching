@@ -43,7 +43,9 @@ public class SettingsManager {
     });
     put(SETTINGS_MAP.LANGUAGE, new String[]{
         Consts.LANGUAGE_EN,
+        Consts.LANGUAGE_ES,
         Consts.LANGUAGE_FR,
+        Consts.LANGUAGE_IT,
         Consts.LANGUAGE_PT
     });
     put(SETTINGS_MAP.DICTIONARY, new String[]{
@@ -133,7 +135,7 @@ public class SettingsManager {
   /**
    * @see {@link DataPersister#loadOptions(android.content.Context, java.util.HashMap)}
    */
-  public void load() throws FileNotFoundException, IOException {
+  public synchronized void load() throws FileNotFoundException, IOException {
     DataPersister.loadOptions(context, settingsMap);
     setLocale(getLocale());
   }

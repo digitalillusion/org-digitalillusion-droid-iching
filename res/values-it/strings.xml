@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="yes">Sì</string>
+    <string name="no">No</string>
+    <string name="create">Crea</string>
+    <string name="cancel">Annulla</string>
+    <string name="retry">Riprova</string>
+    <string name="update">Aggiorna</string>
+    <string name="remoteconn_unavailable">La connessione remota è al momento indisponibile.</string>
+    <string name="remoteconn_please_wait">Caricamento...</string>
+    <string name="history_unavailable">La cronologia non può essere letto dalla carta SD.</string>
+    <string name="crypto_unavailable">La crittografia tramite password non è supportata su questo dispositivo.</string>
+    <string name="history_change">Cliccare per specificare dove salvare le nuove letture</string>
+    <string name="history_create">Crea una nuova cronologia</string>
+    <string name="history_create_title">Creazione cronologia</string>
+    <string name="history_create_done">La cronologia \"%1s\" è stata creata</string>
+    <string name="history_name">Nome cronologia</string>
+    <string name="history_name_info">Immettere un nome descrittivo, come \"Personale\" o \"Ospiti\", per categorizzare le letture</string>
+    <string name="history_password">Password</string>
+    <string name="history_password_verify">Verifica password</string>
+    <string name="history_password_info">Opzionalmente, la cronologia può essere protetta con password. Utilizzare solo caratteri alfanumerici, la lunghezza massima è 8.
+       Trascrivere la password in un luogo sicuro. Se persa, le letture della cronologia non saranno più accessibili.</string>
+    <string name="history_password_invalid">Password non valida</string>
+    <string name="history_default">Cronologia</string>
+    <string name="password_required">Password richiesta</string>
+    <string name="options_unavailable">Le impostazioni non possono essere lette dalla carta SD.</string>
+    <string name="history_unsaveable">La cronologia non può essere salvata sulla carta SD.</string>
+    <string name="history_unremovable">History cannot be removed from SD card.</string>
+    <string name="options_unsaveable">Le impostazioni non possono essere salvate sulla carta SD.</string>
+    <string name="history_no_destination">Si prega di creare una cronologia dove spostare le letture prima di procedere</string>
+    <string name="hex_reset_section">Si desidera veramente reimpostare TUTTE le definizioni di questo esagramma?</string>
+    <string name="item_select_hex">Selezionare un esagramma</string>
+    <string name="item_select_dest_history">Selezionare la cronologia di destinazione</string>
+    <string name="options_view_hex">Visualizza esagramma</string>
+    <string name="options_view_edit_hex">Visualizza/Modifica esagramma</string>
+    <string name="options_references">Referenze</string>
+    <string name="options_references_message">
+        &lt;p&gt;
+	        Tutti i contenuti fruibili tramite l\'applicazione sono disponibili in rete.
+	        In particolare le risorse più complete e gratuite sono:
+	    &lt;/p&gt;
+	    &lt;p&gt;
+		    &lt;p&gt; http://www.arteam.it/home/iching/esagrammi&lt;/p&gt;
+		    &lt;p&gt; http://www.ichingonline.net/instruction.php&lt;/p&gt;
+   		    &lt;p&gt; www.onlineclarity.co.uk/learn/consult/mml.php &lt;/p&gt;
+		&lt;p&gt;
+	    &lt;p&gt;
+	        Questa applicazione non è in alcun modo affiliata alle risorse citate.
+        &lt;/p&gt;
+    </string>
+    <string name="options_algo">Algoritmi</string>
+    <string name="options_algo_message">
+        &lt;p&gt;
+	        Il programma usa il metodo delle tre monete per generare esagrammi.
+        &lt;/p&gt;
+        &lt;p&gt;
+            Le linee mutanti applicabili sono ottenute tramite le regole
+            Mastro Yin (default), regole Nanjing, o libera interpretazione.
+        &lt;/p&gt;
+        &lt;p&gt;
+            Occorre tenere a mente, in ogni caso, che dal momento in cui l\'algoritmo può raggiungere ogni
+            possibile combinazione di esagrammi e linee mutanti, non importa veramente quale sia la probabilità
+            con la quale ciascun simbolo compare, se si ritiene che una Forza suprema sia responsabile per
+            il risultato.
+        &lt;/p&gt;
+    </string>
+    <string name="options_about">A proposito</string>
+    <string name="options_about_message">
+        &lt;p&gt;
+	        Questa applicazione è Open Source rilasciata sotto GNU GPL v3, distribuita gratuitamente
+	        nella speranza che possa essere utile. Il codice sorgente completo può essere visualizzato
+	        e scaricato da:
+	    &lt;/p&gt;
+	    &lt;p&gt;
+	        https://github.com/digitalillusion/org-digitalillusion-droid-iching
+        &lt;/p&gt;
+        &lt;p&gt;
+        	Se volete contattarmi o se incontrate un bug, lasciatemi un email a:
+        &lt;/p&gt;
+        	digitalillusion@altervista.org
+        &lt;/p&gt;
+        &lt;p&gt;
+        	Grazie per i vostri commenti, &lt;br/&gt;
+        	namasté!
+        &lt;/p&gt;
+    </string>
+    <string name="options_settings">Impostazioni</string>
+    <string name="settings_vibration">Vibrazione</string>
+    <string name="settings_vibration_0">Off</string>
+    <string name="settings_vibration_1">Su generazione esagramma</string>
+    <string name="settings_divination_method">Metodo di divinazione</string>
+    <string name="settings_divination_method_0">Lancio monete (automatico)</string>
+    <string name="settings_divination_method_1">Lancio monete (manuale)</string>
+    <string name="settings_chlines_evaluator">Valutazione delle linee mutanti</string>
+    <string name="settings_chlines_evaluator_0">Manuale</string>
+    <string name="settings_chlines_evaluator_1">Mastro Yin</string>
+    <string name="settings_chlines_evaluator_2">Nanjing</string>
+    <string name="settings_lang">Lingua</string>
+    <string name="settings_dictionary">Dizionario</string>
+    <string name="settings_dictionary_altervista">Wilhelm (androidiching.altervista.org)</string>
+    <string name="settings_dictionary_custom">Personalizzato (local)</string>
+    <string name="settings_storage">Salvataggio</string>
+    <string name="settings_storage_sdcard">Carta SD</string>
+    <string name="settings_storage_internal">Stoccaggio interno del telefono</string>
+    <string name="settings_connection_mode">Modalità di connessione</string>
+    <string name="settings_connection_mode_online">In linea</string>
+    <string name="settings_connection_mode_offline">Disconnesso</string>
+
+
+    <string name="hex01">乾 Kkienn / Il Creativo</string>
+    <string name="hex02">坤 Kkunn / Il Ricettivo</string>
+    <string name="hex03">屯 Ciunn / La Difficoltà Iniziale</string>
+    <string name="hex04">蒙 Mong / La Stoltezza Giovanile</string>
+    <string name="hex05">需 Su / L\'Attesa</string>
+    <string name="hex06">訟 Sung / La Lite</string>
+    <string name="hex07">師 Sci / L\'Esercito </string>
+    <string name="hex08">比 Pi / La Solidarietà</string>
+    <string name="hex09">小 畜 Siau Cciù / La Forza Domatrice Piccola</string>
+    <string name="hex10">履 Lu / Il Procedere</string>
+    <string name="hex11">泰 Ttai / La Pace</string>
+    <string name="hex12">否 Pi / Il Ristagno</string>
+    <string name="hex13">同 人 Ttung Jenn / La Compagnia fra Uomini</string>
+    <string name="hex14">大 有 Ta Yu / Il Possesso Grande</string>
+    <string name="hex15">謙 Kkienn / La Modestia</string>
+    <string name="hex16">豫 U / Il Fervore</string>
+    <string name="hex17">隨 Sui / Il Seguire</string>
+    <string name="hex18">蠱 Ku / L\'Emendamento delle Cose Guaste</string>
+    <string name="hex19">臨 Linn / L\'Avvicinamento</string>
+    <string name="hex20">觀 Kuann / La Contemplazione (L\'Aspetto) </string>
+    <string name="hex21">噬 嗑 Sci Ho / Il Morso Che Spezza</string>
+    <string name="hex22">賁 Ppi / L\' Avvenenza </string>
+    <string name="hex23">剝 Po / Lo Sgretolamento</string>
+    <string name="hex24">復 Fu / Il Ritorno (Il Tempo del Volgimento) </string>
+    <string name="hex25">無 妄 U Uang / L\'Innocenza (L\'Inaspettato)</string>
+    <string name="hex26">大 畜 Ta Cciu / La Forza Domatrice Grande</string>
+    <string name="hex27">頤 I / Gli Angoli della Bocca (L\'Alimentazione) </string>
+    <string name="hex28">大 過 Ta Ko / La Preponderanza del Grande</string>
+    <string name="hex29">坎 Kkann / L\'Abissale</string>
+    <string name="hex30">離 Li / Il Risaltante, Il Fuoco (L\'Aderente) </string>
+    <string name="hex31">咸 Hienn / L\'Influenzamento (La Domanda di Matrimonio)</string>
+    <string name="hex32">恆 Hong / La Durata</string>
+    <string name="hex33">遯 Tunn / La Ritirata</string>
+    <string name="hex34">大 壯 Ta Ciuang / La Potenza Del Grande</string>
+    <string name="hex35">晉 Tsinn / Il Progresso</string>
+    <string name="hex36">明 夷 Ming I / L\'ottenebramento Della Luce</string>
+    <string name="hex37">家 人 Kia Jenn / La Casata</string>
+    <string name="hex38">睽 Kkui / La Contrapposizione</string>
+    <string name="hex39">蹇 Kienn / L\'Impedimento </string>
+    <string name="hex40">解 Hie / La Liberazione</string>
+    <string name="hex41">損 Sunn / La Minorazione</string>
+    <string name="hex42">益 I / L\'Accrescimento</string>
+    <string name="hex43">夬 Kuai / Lo Straripamento (la Decisione)</string>
+    <string name="hex44">姤 Kou / Il Farsi Incontro</string>
+    <string name="hex45">萃 Ttsui / La Raccolta</string>
+    <string name="hex46">升 Sciong / L\'Ascendere</string>
+    <string name="hex47">困 Kkunn / L\'Assillo (L\'Esaurimento)</string>
+    <string name="hex48">井 Tsing / Il Pozzo</string>
+    <string name="hex49">革 Ko / Il Sovvertimento (La Muda)</string>
+    <string name="hex50">鼎 Ting / Il Crogiuolo</string>
+    <string name="hex51">震 Cenn / L\'Eccitante (Lo Scuotimento, Il Tuono)</string>
+    <string name="hex52">艮 Kenn / L\'Arresto (La Quiete, Il Monte)</string>
+    <string name="hex53">漸 Tsienn / Lo Sviluppo (Il Progresso Graduale)</string>
+    <string name="hex54">歸 妹 Kui Me / La Ragazza che va Sposa</string>
+    <string name="hex55">豐 Fong / La Copia</string>
+    <string name="hex56">旅 Lu / Il Viandante</string>
+    <string name="hex57">巽 Sunn / Il Mite (Il Penetrante, Il Vento)</string>
+    <string name="hex58">兌 Tui / Il Sereno, Il Lago</string>
+    <string name="hex59">渙 Huann / La Dissoluzione</string>
+    <string name="hex60">節 Tsie / La Delimitazione</string>
+    <string name="hex61">中 孚 Ciung Fu / La Veracità Intrinseca</string>
+    <string name="hex62">小 過 Siau Ko / La Preponderanza del Piccolo</string>
+    <string name="hex63">既 濟 Ki Tsi / Dopo il Compimento</string>
+    <string name="hex64">未 濟 Ue Tsi / Prima del Compimento</string>
+    <string name="intro_header_icon_alt">Logo I Ching</string>
+    <string name="consult_coin_alt">Moneta</string>
+    <string name="intro_header"> I Ching è un riflesso dell\'universo in miniatura.
+        La parola \"I\" ha tre significati, gradualità e semplicità, cambiamento e
+        trasformazione, invariabilità. Entrambi i rami della filosofia Cinese,
+        Confucianesimo e Taoismo, trovano in ciò le loro radici comuni.</string>
+    <string name="intro_question_label">Porre la domanda all\'Oracolo:</string>
+    <string name="intro_noquestion_alert">Procedere senza specificare una domanda?</string>
+    <string name="intro_consult">Consultare</string>
+    <string name="intro_history_label">O scegliere una domanda dalla cronologia</string>
+    <string name="intro_history">Visualizza cronologia</string>
+    <string name="consult_tapcoins">Toccare le monete per generare un esagramma</string>
+    <string name="consult_tapcoins_manual">Toccare le monete per generare un esagramma. Trascinare su per confermare una linea, giù per eliminarla</string>
+    <string name="consult_read_desc">Leggere Descrizione</string>
+    <string name="read_desc">Descrizione</string>
+    <string name="read_judge">Il Giudizio</string>
+    <string name="read_image">L\'Immagine</string>
+    <string name="app_name">I Ching</string>
+    <string name="read_cast">Esagramma Iniziale</string>
+    <string name="read_changing">Linee Mutanti</string>
+    <string name="read_transformed">Esagramma Trasformato</string>
+    <string name="read_changing_none">Non ci sono linee mutanti</string>
+    <string name="read_changing_one">C\'è una linea mutante</string>
+    <string name="read_changing_count">Ci sono %1$d linee mutanti</string>
+    <string name="read_changing_apply">Si applica la linea %1$d.</string>
+    <string name="read_changing_apply_n">Non si applica alcuna linea o esagramma.</string>
+    <string name="read_changing_apply_ht">Entrambi gli esagrammi si applicano.</string>
+    <string name="read_changing_apply_h">Si applica l\'esagramma iniziale</string>
+    <string name="read_changing_apply_t">Si appica l\'esagramma trasformato</string>
+    <string name="read_changing_select">Selezionare la linea da consultare</string>
+    <string name="read_changing_select_line1">Linea bassa</string>
+    <string name="read_changing_select_line2">Seconda linea</string>
+    <string name="read_changing_select_line3">Terza linea</string>
+    <string name="read_changing_select_line4">Quarta linea</string>
+    <string name="read_changing_select_line5">Quinta linea</string>
+    <string name="read_changing_select_line6">Linea alta</string>
+    <string name="read_changing_select_all">Tutte le linee</string>
+    <string name="read_changing_edit_section">Modifica lettura</string>
+    <string name="read_changing_reset_section">Reimpostare</string>
+    <string name="read_share">Condividere</string>
+    <string name="read_share_using">Condividere utilizzando</string>
+    <string name="read_share_constituent_line">Linee costituenti</string>
+    <string name="read_share_governing_line">Linee governanti</string>
+    <string name="edit_section_quote">Citazione:</string>
+    <string name="edit_section_quote_info">Questo testo è mostato all\'inizio, in grassetto. Trattasi di solito di una citazione diretta del I Ching.</string>
+    <string name="edit_section_reading">Lettura:</string>
+    <string name="edit_section_reading_info">Scrivere quì la propria interpretazione per questo passaggio.</string>
+    <string name="edit_section_update">Le definizione di %1s è stata aggiornata</string>
+    <string name="edit_section_reset">Tutte le definizioni di %1s sono state reimpostate</string>
+    <string name="contextmenu_noquestion">(Nessuna domanda)</string>
+    <string name="contextmenu_move_entry">Sposta</string>
+    <string name="contextmenu_delete_entry">Elimina</string>
+    <string name="contextmenu_remove_entry">Cancella e Rimuovi</string>
+    <string name="contextmenu_rename_entry">Rinomina</string>
+    <string name="contextmenu_delete_all">Cancella cronologia</string>
+    <string name="contextmenu_history_erase_entry">Si è certi di voler cancellare questa lettura?</string>
+    <string name="contextmenu_history_erase">Si è certi di volere cancellare l\'intera cronologia?</string>
+    <string name="contextmenu_history_rename">Specificare il nuovo nome di questa cronologia</string>
+    <string name="contextmenu_history_remove">Si è certi di volere cancellare l\'intera cronologia e rimuoverla dalla lista?</string>
+    <string name="validator_error_empty">Questo campo non può essere vuoto</string>
+    <string name="validator_error_non_alphanumeric">Questo campo può contenere solo numeri e lettere</string>
+    <string name="validator_error_invalid_chars">Questo campo contiene caratteri non validi</string>
+    <string name="validator_error_password_verify">I campi Password e Verifica password devono avere lo stesso valore</string>
+    <string name="connection_off_to_on_confirm_title" formatted="false">%1s (%2s)</string>
+    <string name="connection_off_to_on_confirm">Scegliendo la modalità in linea, il dizionario sarà cancellato. Un download completo sarà necessario per ritornare alla modalità offline. Si desidera continuare?</string>
+    <string name="connection_on_to_off_download">Scaricamento definizioni, attendere prego...</string>
+    <string name="connection_on_to_off_abort">Scaricamento interrotto</string>
+    <string name="view_hex_filter_instr">Filtro trigrammi:</string>
+    <string name="view_hex_filter_none">    -    </string>
+    <string name="view_hex_filter_heaven">Cielo</string>
+    <string name="view_hex_filter_lake">Lago</string>
+    <string name="view_hex_filter_fire">Fuoco</string>
+    <string name="view_hex_filter_thunder">Tuono</string>
+    <string name="view_hex_filter_wind">Vento</string>
+    <string name="view_hex_filter_water">Acqua</string>
+    <string name="view_hex_filter_mountain">Montagna</string>
+    <string name="view_hex_filter_earth">Terra</string>
+    <string name="view_hex_filter_tri_all"> </string>
+    <string name="view_hex_filter_tri_0">&#x2630;</string>
+    <string name="view_hex_filter_tri_1">&#x2631;</string>
+    <string name="view_hex_filter_tri_2">&#x2632;</string>
+    <string name="view_hex_filter_tri_3">&#x2633;</string>
+    <string name="view_hex_filter_tri_4">&#x2634;</string>
+    <string name="view_hex_filter_tri_5">&#x2635;</string>
+    <string name="view_hex_filter_tri_6">&#x2636;</string>
+    <string name="view_hex_filter_tri_7">&#x2637;</string>
+    <string name="view_hex_line_governing">o</string>
+    <string name="view_hex_line_constituent">◊</string>
+    <string name="view_hex_line_further_analysis">Toccare l\'esagramma per un\'analisi ulteriore</string>
+    <string name="view_hex_line_gov_legend">o: Linee governanti</string>
+    <string name="view_hex_line_const_legend">◊: Linee costituenti</string>
+
+</resources>

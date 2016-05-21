@@ -93,12 +93,18 @@ public class DataPersister {
   private static boolean failLoadOptions = false;
 
   /**
+   * The default history filename
+   */
+  private static String defaultHistoryFilename;
+
+  /**
    * @return The list of history names that the user has created, plus the default one
    */
   public static List<String> getHistoryNames() {
     ArrayList<String> historyNames = new ArrayList<String>();
     historyNames.add(ICHING_HISTORY_PATH_FILENAME_DEFAULT);
 
+    List<String> customHistoryNames = new ArrayList<String>();
     if (storagePath != null) {
       File[] files = storagePath.listFiles();
 
@@ -108,7 +114,9 @@ public class DataPersister {
           String name = file.getName().replace(ICHING_HISTORY_PATH_FILENAME_PREFIX, Utils.EMPTY_STRING);
           name = name.substring(0, name.lastIndexOf('.'));
           if (!name.isEmpty() && !name.equals(ICHING_HISTORY_PATH_FILENAME_SEPARATOR)) {
-            historyNames.add(name.substring(ICHING_HISTORY_PATH_FILENAME_SEPARATOR.length()));
+            String nameEntry = name.substring(ICHING_HISTORY_PATH_FILENAME_SEPARATOR.length());
+            historyNames.add(nameEntry);
+            customHistoryNames.add(nameEntry);
           }
         }
       }
@@ -118,7 +126,22 @@ public class DataPersister {
     historyNames.remove(getSelectedHistoryName());
     historyNames.add(0, historyName);
 
+    // Find default history filename
+    for (String historyName : historyNames) {
+      if (!customHistoryNames.contains(historyName)) {
+        defaultHistoryFilename = historyName;
+        break;
+      }
+    }
+
     return historyNames;
+  }
+
+  /**
+   * @return The name of the default history file created
+   */
+  public static String getDefaultHistoryFilename() {
+    return defaultHistoryFilename;
   }
 
   /**

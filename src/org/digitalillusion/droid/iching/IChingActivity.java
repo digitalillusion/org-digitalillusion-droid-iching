@@ -630,33 +630,33 @@ public class IChingActivity extends IChingActivityRenderer {
         break;
       case ContextMenuItem.HISTORY_RENAME:
         renderLoadHistory(new Runnable() {
-                            public void run() {
-                              contextSelectDialog.setMessage(Utils.s(R.string.contextmenu_history_rename));
-                              final EditText input = new EditText(IChingActivity.this);
-                              input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-                              input.setHint(DataPersister.getSelectedHistoryName());
-                              contextSelectDialog.setView(input);
-                              contextSelectDialog.setButton(DialogInterface.BUTTON_POSITIVE,
-                                  Utils.s(android.R.string.ok),
-                                  new OnClickListener() {
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                      String historyNewName = input.getText().toString();
-                                      if (!historyNewName.equals(Utils.EMPTY_STRING)) {
-                                        DataPersister.renameHistory(historyList, IChingActivity.this, historyNewName);
-                                      } else {
-                                        DataPersister.revertSelectedHistory();
-                                      }
-                                      renderLoadHistory(null, null);
-                                    }
-                                  });
-                              contextSelectDialog.setButton(DialogInterface.BUTTON_NEGATIVE,
-                                  Utils.s(R.string.cancel),
-                                  DEFAULT_HISTORY_REVERT_DIALOG_BUTTON);
-                              contextSelectDialog.show();
-                            }
-                          },
-            DEFAULT_HISTORY_REVERT_TASK);
+            public void run() {
+              contextSelectDialog.setMessage(Utils.s(R.string.contextmenu_history_rename));
+              final EditText input = new EditText(IChingActivity.this);
+              input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+              input.setHint(DataPersister.getSelectedHistoryName());
+              contextSelectDialog.setView(input);
+              contextSelectDialog.setButton(DialogInterface.BUTTON_POSITIVE,
+                  Utils.s(android.R.string.ok),
+                  new OnClickListener() {
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
+                      String historyNewName = input.getText().toString();
+                      if (!historyNewName.equals(Utils.EMPTY_STRING)) {
+                        DataPersister.renameHistory(historyList, IChingActivity.this, historyNewName);
+                      } else {
+                        DataPersister.revertSelectedHistory();
+                      }
+                      renderLoadHistory(null, null);
+                    }
+                  });
+              contextSelectDialog.setButton(DialogInterface.BUTTON_NEGATIVE,
+                  Utils.s(R.string.cancel),
+                  DEFAULT_HISTORY_REVERT_DIALOG_BUTTON);
+              contextSelectDialog.show();
+            }
+          },
+          DEFAULT_HISTORY_REVERT_TASK);
         break;
     }
     return true;
@@ -673,10 +673,6 @@ public class IChingActivity extends IChingActivityRenderer {
     Utils.setContext(getApplicationContext());
 
     loadSettings();
-
-    if (current.viewId == null) {
-      gotoMain();
-    }
   }
 
   /**
@@ -831,12 +827,20 @@ public class IChingActivity extends IChingActivityRenderer {
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
     final String dictionary = (String) getSettingsManager().get(SETTINGS_MAP.DICTIONARY);
+    final MenuItem omSettings = menu.findItem(R.id.omSettings);
+    omSettings.setTitle(R.string.options_settings);
     final MenuItem omViewHex = menu.findItem(R.id.omViewHex);
     if (dictionary.equals(Consts.DICTIONARY_CUSTOM)) {
       omViewHex.setTitle(R.string.options_view_edit_hex);
     } else {
       omViewHex.setTitle(R.string.options_view_hex);
     }
+    final MenuItem omReferences = menu.findItem(R.id.omReferences);
+    omReferences.setTitle(R.string.options_references);
+    final MenuItem omAlgo = menu.findItem(R.id.omAlgo);
+    omAlgo.setTitle(R.string.options_algo);
+    final MenuItem omAbout = menu.findItem(R.id.omAbout);
+    omAbout.setTitle(R.string.options_about);
     return true;
   }
 
@@ -899,10 +903,8 @@ public class IChingActivity extends IChingActivityRenderer {
   protected void onResume() {
     super.onResume();
 
+    loadSettings();
     switch (current.viewId) {
-      case R.layout.main:
-        gotoMain();
-        break;
       case R.layout.consult:
         gotoConsult();
         break;
@@ -912,8 +914,9 @@ public class IChingActivity extends IChingActivityRenderer {
       case R.layout.settings:
         gotoSettings();
         break;
+      default:
+        gotoMain();
     }
-    loadSettings();
   }
 
   private void prepareDivinationMethod() {
@@ -1013,7 +1016,14 @@ public class IChingActivity extends IChingActivityRenderer {
    */
   private void loadSettings() {
     try {
+      if (settings == null) {
+        settings = new SettingsManager(getApplicationContext());
+      }
       settings.load();
+      if (current.viewId != null) {
+        setContentView(current.viewId);
+      }
+      invalidateOptionsMenu();
     } catch (FileNotFoundException e) {
       settings.resetDefaults(false);
     } catch (IOException e) {

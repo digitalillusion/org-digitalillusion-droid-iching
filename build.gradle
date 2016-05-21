@@ -19,24 +19,8 @@ android {
     defaultConfig {
         minSdkVersion 11
         targetSdkVersion 17
-        versionCode 62
-        versionName "1.6.2"
-    }
-
-
-    signingConfigs {
-        release {
-            storeFile file("../../../Documenti/Impostazioni/Android/digitalillusion")
-            storePassword "********"
-            keyAlias "digitalillusion"
-            keyPassword "********"
-        }
-    }
-
-    buildTypes {
-        release {
-            signingConfig signingConfigs.release
-        }
+        versionCode 66
+        versionName "1.7.0"
     }
 
     sourceSets {
@@ -61,5 +45,10 @@ android {
         // by a similar customization.
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
+    }
+
+    lintOptions {
+        // check for errors in release builds, but continue the build even when errors are found:
+        abortOnError false
     }
 }

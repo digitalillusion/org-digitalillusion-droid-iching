@@ -400,7 +400,6 @@ public class IChingActivityRenderer extends Activity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    settings = new SettingsManager(getApplicationContext());
     dsHexSection = new HexSectionDataSource(getApplicationContext());
     current = new CurrentState();
   }
@@ -756,7 +755,7 @@ public class IChingActivityRenderer extends Activity {
     final EditText etQuestion = (EditText) findViewById(R.id.etQuestion);
     final ExpandableListView elSelectHistory = (ExpandableListView) findViewById(R.id.elSelectHistory);
     try {
-      List<String> historyNames = DataPersister.getHistoryNames();
+      final List<String> historyNames = DataPersister.getHistoryNames();
 
       // Render list of histories
       elSelectHistory.setAdapter(new ExpandableDropDownListItem2Adapter<String>(this, elSelectHistory, historyNames) {
@@ -771,7 +770,11 @@ public class IChingActivityRenderer extends Activity {
             final List<String> historyNamesList = expandibleAdapter.getList();
 
             public void onClick(View v) {
-              final int childPosition = historyNamesList.indexOf(((TextView) v).getText().toString());
+              String selected = ((TextView) v).getText().toString();
+              if (Utils.s(R.string.history_default).equals(selected)) {
+                selected = DataPersister.getDefaultHistoryFilename();
+              }
+              final int childPosition = historyNamesList.indexOf(selected);
               if (childPosition == -1) {
                 onClickShowCreateHistory(v);
               } else {
@@ -800,6 +803,9 @@ public class IChingActivityRenderer extends Activity {
                                String entry) {
           if (childPosition == 0) {
             return Utils.s(R.string.history_create);
+          }
+          if (DataPersister.getDefaultHistoryFilename().equals(entry)) {
+            return Utils.s(R.string.history_default);
           }
           return entry;
         }
@@ -900,11 +906,13 @@ public class IChingActivityRenderer extends Activity {
    * Else, while viewing a reading, show action button to share content
    */
   protected void renderOptionsMenu() {
-    if (optionsMenu != null) {
-      final MenuItem omEdit = optionsMenu.findItem(R.id.omReadDescEdit);
-      final MenuItem omUndo = optionsMenu.findItem(R.id.omReadDescUndo);
-      final MenuItem omShare = optionsMenu.findItem(R.id.omReadDescShare);
-
+    if (optionsMenu == null) {
+      return;
+    }
+    final MenuItem omEdit = optionsMenu.findItem(R.id.omReadDescEdit);
+    final MenuItem omUndo = optionsMenu.findItem(R.id.omReadDescUndo);
+    final MenuItem omShare = optionsMenu.findItem(R.id.omReadDescShare);
+    if (omEdit != null && omUndo != null && omShare != null) {
       final String dictionary = (String) getSettingsManager().get(SETTINGS_MAP.DICTIONARY);
       if (current.viewId == R.layout.readdesc || current.viewId == R.layout.editdesc) {
         if (current.mode == READ_DESC_MODE.VIEW_HEX && dictionary.equals(Consts.DICTIONARY_CUSTOM)) {
@@ -1285,7 +1293,7 @@ public class IChingActivityRenderer extends Activity {
     for (int i = 0; i < tabWidget.getChildCount(); i++) {
       View child = tabWidget.getChildAt(i);
       TextView title = (TextView) child.findViewById(android.R.id.title);
-      float textSizeTabs = getResources().getDimension(R.dimen.text_size_tabs);
+      float textSizeTabs = getResources().getDimensionPixelSize(R.dimen.text_size_tabs);
       title.setTextSize(textSizeTabs);
       title.setText(title.getText().toString().toUpperCase(settings.getLocale()));
       title.setSingleLine();
