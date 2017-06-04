@@ -5,3 +5,5 @@ build/*
 *.iml
 gradle*
 local.properties
+*.apk
+manifest-merger-release-report.txt

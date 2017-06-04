@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import org.digitalillusion.droid.iching.IChingActivityRenderer;
 import org.digitalillusion.droid.iching.R;
+import org.digitalillusion.droid.iching.changinglines.ChangingLinesEvaluator;
 import org.digitalillusion.droid.iching.utils.Consts;
 import org.digitalillusion.droid.iching.utils.SettingsManager.SETTINGS_MAP;
 import org.digitalillusion.droid.iching.utils.Utils;
@@ -115,6 +116,7 @@ public abstract class RemoteResolver {
     askRetry = true;
   }
 
+
   /**
    * Render a remote string on a TextView
    *
@@ -124,8 +126,19 @@ public abstract class RemoteResolver {
    * @return A string from the server
    */
   public static void renderRemoteString(final TextView component, final OnClickListener retryAction, final IChingActivityRenderer activity) {
-    final String hex = activity.getCurrentHex();
-    final String section = activity.getCurrentSection();
+    renderRemoteString(component, retryAction, activity, activity.getCurrentHex(), activity.getCurrentSection());
+  }
+  /**
+   * Render a remote string on a TextView
+   *
+   * @param component   The component where to set the text
+   * @param retryAction The action to execute if the user wants to retry connection
+   * @param activity    The caller activity, needed to display popups
+   * @parqm hex The hexagram
+   * @parqm section The hexagram section
+   * @return A string from the server
+   */
+  public static void renderRemoteString(final TextView component, final OnClickListener retryAction, final IChingActivityRenderer activity, final String hex, final String section) {
     final String key = hex + section;
     component.setText(Utils.EMPTY_STRING);
 
@@ -254,8 +267,9 @@ public abstract class RemoteResolver {
     remoteStringCache.remove(hex + ICHING_REMOTE_SECTION_JUDGE);
     remoteStringCache.remove(hex + ICHING_REMOTE_SECTION_IMAGE);
 
+    remoteStringCache.remove(hex + RemoteResolver.ICHING_REMOTE_SECTION_LINE + ChangingLinesEvaluator.ICHING_APPLY_BOTH);
     for (int i = 1; i <= Consts.HEX_LINES_COUNT; i++) {
-      remoteStringCache.remove(hex + ICHING_REMOTE_SECTION_LINE);
+      remoteStringCache.remove(hex + ICHING_REMOTE_SECTION_LINE + i);
     }
 
   }
@@ -301,6 +315,10 @@ public abstract class RemoteResolver {
 
 
     return Utils.streamToString(is);
+  }
+
+  public static  AsyncTask<?, ?, ?> getWorker() {
+    return worker;
   }
 
 }

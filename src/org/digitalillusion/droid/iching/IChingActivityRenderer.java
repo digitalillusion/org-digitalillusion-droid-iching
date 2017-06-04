@@ -7,9 +7,11 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -17,12 +19,17 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -33,8 +40,10 @@ import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupCollapseListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
+import android.widget.Filter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TabWidget;
@@ -76,15 +85,15 @@ public class IChingActivityRenderer extends Activity {
   /**
    * The id of the cast hexagram tab
    */
-  protected static final int TAB_READ_DESC_CAST_HEXAGRAM = 0;
+  public static final int TAB_READ_DESC_CAST_HEXAGRAM = 0;
   /**
    * The id of the cast hexagram tab
    */
-  protected static final int TAB_READ_DESC_CHANGING_LINES = 1;
+  public static final int TAB_READ_DESC_CHANGING_LINES = 1;
   /**
    * The id of the cast hexagram tab
    */
-  protected static final int TAB_READ_DESC_TRANSFORMED_HEXAGRAM = 2;
+  public static final int TAB_READ_DESC_TRANSFORMED_HEXAGRAM = 2;
   /**
    * Settings manager*
    */
@@ -178,9 +187,10 @@ public class IChingActivityRenderer extends Activity {
   /**
    * Setter for the selected section or changing line
    *
+   * @param current The current state
    * @param section The section or changing line
    */
-  public void setCurrentSection(Serializable section) {
+  public void setCurrentSection(CurrentState current, Serializable section) {
     if (section.equals(ChangingLinesEvaluator.ICHING_APPLY_BOTH) ||
         section.equals(ChangingLinesEvaluator.ICHING_APPLY_CAST) ||
         section.equals(ChangingLinesEvaluator.ICHING_APPLY_MANUAL) ||
@@ -445,91 +455,6 @@ public class IChingActivityRenderer extends Activity {
       current = new CurrentState();
     }
     dsHexSection.open();
-  }
-
-  protected void performShare() {
-    Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-    sharingIntent.setType("text/html");
-
-    final EditText fakeEditText = new EditText(this.getApplicationContext());
-    final OnClickListener retryAction = new OnClickListener() {
-      public void onClick(DialogInterface dialog, int which) {
-        performShare();
-      }
-    };
-
-    String reading = null;
-    switch (current.tabIndex) {
-      case 0:
-        reading = Utils.s(R.string.read_cast);
-        RemoteResolver.renderRemoteString(
-            fakeEditText,
-            retryAction,
-            IChingActivityRenderer.this
-        );
-        break;
-      case 1:
-        reading = Utils.s(R.string.read_changing);
-        prepareReadingDescription(fakeEditText, retryAction);
-        break;
-      case 2:
-        reading = Utils.s(R.string.read_transformed);
-        RemoteResolver.renderRemoteString(
-            fakeEditText,
-            retryAction,
-            IChingActivityRenderer.this
-        );
-        break;
-    }
-    if (current.mode == READ_DESC_MODE.ORACLE) {
-      reading += Utils.COLUMNS + "<br/>";
-    } else {
-      reading = Utils.EMPTY_STRING;
-    }
-
-    // Question
-    final String title = "<h1>" + current.question + "</h1>";
-
-    // Hexagram
-    final String hexagram = "<h3>" + reading +
-        current.hex + " " +
-        Utils.s(Utils.getResourceByName(R.string.class, "hex" + current.hex)) +
-        "</h3>";
-
-    // Section
-    String changingText = Utils.EMPTY_STRING;
-    if (current.section.startsWith(RemoteResolver.ICHING_REMOTE_SECTION_LINE)) {
-      if (current.screen == READ_DESC_SCREEN.LINES) {
-        if (Utils.isConstituent(current.hex, current.changingManualIndex)) {
-          changingText = Utils.s(R.string.read_share_constituent_line);
-        } else if (Utils.isGoverning(current.hex, current.changingManualIndex)) {
-          changingText = Utils.s(R.string.read_share_governing_line);
-        }
-      } else {
-        if (current.mode == READ_DESC_MODE.ORACLE) {
-          changingText = getChangingLinesDescription(current.mode, current.screen);
-        } else {
-          changingText = getChangingLinesDescriptionApply();
-        }
-      }
-    } else if (current.section.equals(RemoteResolver.ICHING_REMOTE_SECTION_DESC)) {
-      final Button button = (Button) findViewById(R.id.btReadDesc);
-      changingText = button.getText().toString();
-    } else if (current.section.equals(RemoteResolver.ICHING_REMOTE_SECTION_JUDGE)) {
-      final Button button = (Button) findViewById(R.id.btReadJudge);
-      changingText = button.getText().toString();
-    } else if (current.section.equals(RemoteResolver.ICHING_REMOTE_SECTION_IMAGE)) {
-      final Button button = (Button) findViewById(R.id.btReadImage);
-      changingText = button.getText().toString();
-    }
-    final String section = "<strong>" + changingText + "</strong>";
-
-    // Content
-    final String content = "<p>" + Html.toHtml(fakeEditText.getText()) + "</p>";
-
-    final String shareContent = title + hexagram + section + content;
-    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, Html.fromHtml(shareContent));
-    startActivity(Intent.createChooser(sharingIntent, Utils.s(R.string.read_share_using)));
   }
 
   /**
@@ -829,7 +754,7 @@ public class IChingActivityRenderer extends Activity {
         final OnItemSelectedListener onItemSelect = new OnItemSelectedListener() {
           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             current.changingManualIndex = position;
-            setCurrentSection(current.changingManualIndex);
+            setCurrentSection(current, current.changingManualIndex);
             RemoteResolver.renderRemoteString(
                 etOutput,
                 new OnClickListener() {
@@ -848,7 +773,7 @@ public class IChingActivityRenderer extends Activity {
         buildChangingLineSelector(spinner, lines, onItemSelect);
         final TextView tvChanging = (TextView) findViewById(R.id.tvChanging);
         tvChanging.setVisibility(View.VISIBLE);
-        tvChanging.setText(Html.fromHtml("<small>" + getChangingLinesDescription(current.mode, current.screen) + "</small>"));
+        tvChanging.setText(Html.fromHtml("<small>" + getChangingLinesDescription(current) + "</small>"));
         break;
       default:
         for (int i = 0; i < Consts.HEX_LINES_COUNT; i++) {
@@ -863,7 +788,7 @@ public class IChingActivityRenderer extends Activity {
 
         final OnTouchListener lisReadDesc = new OnTouchListener() {
           public boolean onTouch(View v, MotionEvent event) {
-            IChingActivityRenderer.this.setCurrentSection(RemoteResolver.ICHING_REMOTE_SECTION_DESC);
+            IChingActivityRenderer.this.setCurrentSection(current, RemoteResolver.ICHING_REMOTE_SECTION_DESC);
             RemoteResolver.renderRemoteString(
                 etOutput,
                 new OnClickListener() {
@@ -883,7 +808,7 @@ public class IChingActivityRenderer extends Activity {
 
         final OnTouchListener lisReadJudge = new OnTouchListener() {
           public boolean onTouch(View v, MotionEvent event) {
-            IChingActivityRenderer.this.setCurrentSection(RemoteResolver.ICHING_REMOTE_SECTION_JUDGE);
+            IChingActivityRenderer.this.setCurrentSection(current, RemoteResolver.ICHING_REMOTE_SECTION_JUDGE);
             RemoteResolver.renderRemoteString(
                 etOutput,
                 new OnClickListener() {
@@ -904,7 +829,7 @@ public class IChingActivityRenderer extends Activity {
 
         OnTouchListener lisReadImage = new OnTouchListener() {
           public boolean onTouch(View v, MotionEvent event) {
-            IChingActivityRenderer.this.setCurrentSection(RemoteResolver.ICHING_REMOTE_SECTION_IMAGE);
+            IChingActivityRenderer.this.setCurrentSection(current, RemoteResolver.ICHING_REMOTE_SECTION_IMAGE);
             RemoteResolver.renderRemoteString(
                 etOutput,
                 new DialogInterface.OnClickListener() {
@@ -967,13 +892,13 @@ public class IChingActivityRenderer extends Activity {
     etOutput.setText(Utils.EMPTY_STRING);
     switch (mode) {
       case ORACLE:
-        setCurrentSection(current.changing);
+        setCurrentSection(current, current.changing);
         OnClickListener retryAction = new OnClickListener() {
           public void onClick(DialogInterface dialog, int which) {
             renderReadDescChanging(hexToRender);
           }
         };
-        prepareReadingDescription(etOutput, retryAction);
+        prepareReadingDescription(etOutput, retryAction, current);
         break;
       case VIEW_HEX:
 
@@ -987,7 +912,7 @@ public class IChingActivityRenderer extends Activity {
         final OnItemSelectedListener onItemSelect = new OnItemSelectedListener() {
           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             current.changingManualIndex = (position + 1 > Consts.HEX_LINES_COUNT) ? ChangingLinesEvaluator.ICHING_APPLY_BOTH : position;
-            setCurrentSection(current.changingManualIndex);
+            setCurrentSection(current, current.changingManualIndex);
             renderReadDescChangingHex(hexToRender);
             RemoteResolver.renderRemoteString(
                 etOutput,
@@ -1016,7 +941,7 @@ public class IChingActivityRenderer extends Activity {
 
     final TextView tvChanging = (TextView) findViewById(R.id.tvChanging);
     tvChanging.setVisibility(View.VISIBLE);
-    tvChanging.setText(Html.fromHtml("<small>" + getChangingLinesDescription(mode, null) + "</small>"));
+    tvChanging.setText(Html.fromHtml("<small>" + getChangingLinesDescription(current) + "</small>"));
 
     renderOptionsMenu();
   }
@@ -1050,6 +975,21 @@ public class IChingActivityRenderer extends Activity {
       }
     });
     resetConfirmDialog.show();
+  }
+
+  void prepareReadingDescription(final EditText etOutput,
+                                 DialogInterface.OnClickListener retryAction,
+                                 IChingActivityRenderer.CurrentState current) {
+    if (current.changing == ChangingLinesEvaluator.ICHING_APPLY_BOTH) {
+      int intMap = Integer.parseInt(current.hex);
+      if (Arrays.binarySearch(ChangingLinesEvaluator.ICHING_ALL_LINES_DESC, intMap) >= 0) {
+        RemoteResolver.renderRemoteString(etOutput, retryAction, this, current.hex, current.section);
+      }
+    } else if (current.changing != ChangingLinesEvaluator.ICHING_APPLY_CAST &&
+        current.changing != ChangingLinesEvaluator.ICHING_APPLY_TRANSFORMED &&
+        current.changing != ChangingLinesEvaluator.ICHING_APPLY_NONE) {
+      RemoteResolver.renderRemoteString(etOutput, retryAction, this, current.hex, current.section);
+    }
   }
 
   /**
@@ -1114,7 +1054,7 @@ public class IChingActivityRenderer extends Activity {
       ((TableRow) row).setBackgroundResource(lineRes);
     } else if (row instanceof TextView) {
       TextView tvRow = (TextView) row;
-      int padding = (int) getResources().getDimension(R.dimen.text_size_medium);
+      int padding = (int) getResources().getDimensionPixelSize(R.dimen.text_size_medium);
       int width = (int) getResources().getDimension(R.dimen.hex_small_width) - padding;
       int height = (int) getResources().getDimension(R.dimen.hex_small_row_height);
       Bitmap bMap = BitmapFactory.decodeResource(getResources(), lineRes);
@@ -1123,12 +1063,15 @@ public class IChingActivityRenderer extends Activity {
       tvRow.setCompoundDrawablesWithIntrinsicBounds(
           null, null, drawable, null
       );
+      tvRow.setAlpha(1f);
       tvRow.setText(" ");
       if (governingLine != null || constituentLine != null) {
         if (governingLine) {
           tvRow.setText(Utils.s(R.string.view_hex_line_governing));
         } else if (constituentLine) {
           tvRow.setText(Utils.s(R.string.view_hex_line_constituent));
+        } else {
+          tvRow.setAlpha(0.8f);
         }
       }
     }
@@ -1141,7 +1084,7 @@ public class IChingActivityRenderer extends Activity {
       View child = tabWidget.getChildAt(i);
       TextView title = (TextView) child.findViewById(android.R.id.title);
       float textSizeTabs = getResources().getDimensionPixelSize(R.dimen.text_size_tabs);
-      title.setTextSize(textSizeTabs);
+      title.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizeTabs);
       title.setText(title.getText().toString().toUpperCase(settings.getLocale()));
       title.setSingleLine();
 
@@ -1150,6 +1093,17 @@ public class IChingActivityRenderer extends Activity {
       title.setHeight(child.getLayoutParams().height);
 
       child.setPadding(3, 0, 3, 0);
+    }
+  }
+
+  protected void setScreenOrientation() {
+    Serializable screenOrientation = settings.get(SETTINGS_MAP.SCREEN_ORIENTATION);
+    if (Consts.SCREEN_ORIENTATION_ROTATE.equals(screenOrientation)) {
+      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+    } else if (Consts.SCREEN_ORIENTATION_LANDSCAPE.equals(screenOrientation)) {
+      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+    } else if (Consts.SCREEN_ORIENTATION_PORTRAIT.equals(screenOrientation)) {
+      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
     }
   }
 
@@ -1180,37 +1134,42 @@ public class IChingActivityRenderer extends Activity {
     }
   }
 
-  private String getChangingLinesDescription(READ_DESC_MODE mode, READ_DESC_SCREEN screen) {
+  ChangingLinesEvaluator getChangingLinesEvaluator() {
+    Integer evalType = (Integer) settings.get(SETTINGS_MAP.CHANGING_LINES_EVALUATOR);
+    ChangingLinesEvaluator changingLinesEvaluator = ChangingLinesEvaluator.produce(evalType);
+    return changingLinesEvaluator;
+  }
+
+  String getChangingLinesDescription(IChingActivityRenderer.CurrentState state) {
     String desc = Utils.EMPTY_STRING;
 
-    if (READ_DESC_SCREEN.LINES == screen) {
+    if (IChingActivityRenderer.TAB_READ_DESC_CHANGING_LINES != state.tabIndex &&
+        READ_DESC_SCREEN.LINES == state.screen) {
       desc = Utils.s(R.string.view_hex_line_gov_legend) + "<br/>" +
           Utils.s(R.string.view_hex_line_const_legend) + "<br/>" +
           Utils.s(R.string.read_changing_select) + "<br/>";
     } else {
-      switch (mode) {
+      switch (state.mode) {
         case VIEW_HEX:
-          desc = Utils.s(R.string.read_changing_select) + "<br/>";
+          desc += Utils.s(R.string.read_changing_select) + "<br/>";
           break;
         case ORACLE:
-          if (current.changingCount == 0) {
+          if (state.changingCount == 0) {
             desc = Utils.s(R.string.read_changing_none) + "<br/>";
           } else {
-            int resId = current.changingCount == 1 ? R.string.read_changing_one : R.string.read_changing_count;
-            desc = Utils.s(resId, current.changingCount) + Utils.COLUMNS + "<br/>";
+            int resId = state.changingCount == 1 ? R.string.read_changing_one : R.string.read_changing_count;
+            desc = Utils.s(resId, state.changingCount) + Utils.COLUMNS + "<br/>";
           }
-
-
-          desc += getChangingLinesDescriptionApply();
+          desc += getChangingLinesDescriptionApply(state.changing);
           break;
       }
     }
     return desc;
   }
 
-  private String getChangingLinesDescriptionApply() {
+  String getChangingLinesDescriptionApply(int changing) {
     String desc = Utils.EMPTY_STRING;
-    switch (current.changing) {
+    switch (changing) {
       case ChangingLinesEvaluator.ICHING_APPLY_BOTH:
         desc += "<em>" + Utils.s(R.string.read_changing_apply_ht) + "</em>";
         break;
@@ -1224,26 +1183,11 @@ public class IChingActivityRenderer extends Activity {
         desc += "<em>" + Utils.s(R.string.read_changing_apply_n) + "</em>";
         break;
       default:
-        desc += "<em>" + Utils.s(R.string.read_changing_apply, current.changing + 1) + "</em>";
+        if (changing >= 0) {
+          desc += "<em>" + Utils.s(R.string.read_changing_apply, changing + 1) + "</em>";
+        }
     }
     return desc;
-  }
-
-  private void prepareReadingDescription(final EditText etOutput,
-                                         OnClickListener retryAction) {
-    if (current.changing == ChangingLinesEvaluator.ICHING_APPLY_BOTH) {
-      int intMap = Integer.parseInt(current.hex);
-      for (int allLines : ChangingLinesEvaluator.ICHING_ALL_LINES_DESC) {
-        if (intMap == allLines) {
-          RemoteResolver.renderRemoteString(etOutput, retryAction, this);
-          break;
-        }
-      }
-    } else if (current.changing != ChangingLinesEvaluator.ICHING_APPLY_CAST &&
-        current.changing != ChangingLinesEvaluator.ICHING_APPLY_TRANSFORMED &&
-        current.changing != ChangingLinesEvaluator.ICHING_APPLY_NONE) {
-      RemoteResolver.renderRemoteString(etOutput, retryAction, this);
-    }
   }
 
   private void promptForHistoryPassword(final Runnable successTask, final Runnable failureTask) {

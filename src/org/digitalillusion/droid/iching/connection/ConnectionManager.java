@@ -153,6 +153,7 @@ public class ConnectionManager {
             super.onPostExecute(result);
             cleanUp(activity);
             successTask.run();
+            task = null;
           }
 
           @Override

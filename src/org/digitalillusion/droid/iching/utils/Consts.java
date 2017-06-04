@@ -8,6 +8,10 @@ package org.digitalillusion.droid.iching.utils;
  */
 public class Consts {
   /**
+   * Shared pref flag for VERSION_CODE *
+   */
+  public static final String SHARED_PREF_VERSION_CODE = "VERSION_CODE";
+  /**
    * The number of hexagrams in the I Ching *
    */
   public static final int HEX_COUNT = 64;
@@ -96,4 +100,17 @@ public class Consts {
   public static final String CONNECTION_MODE_ONLINE = "online";
   public static final String CONNECTION_MODE_OFFLINE = "offline";
 
+  /**
+   * Share settings *
+   */
+  public static final String SHARE_PAGE = "page";
+  public static final String SHARE_HEXAGRAM = "hexagram";
+  public static final String SHARE_READING = "reading";
+
+  /**
+   * Screen orientation settings *
+   */
+  public static final String SCREEN_ORIENTATION_ROTATE = "rotate";
+  public static final String SCREEN_ORIENTATION_LANDSCAPE = "landscape";
+  public static final String SCREEN_ORIENTATION_PORTRAIT = "portrait";
 }

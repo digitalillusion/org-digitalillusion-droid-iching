@@ -133,4 +133,14 @@ public abstract class ChangingLinesEvaluator {
    * @return The position of the most important changing line
    */
   public abstract int evaluate(int[] hex, int[] tHex);
+
+  public int countChanging(int[] hex) {
+    int changingCount = 0;
+    for (int i = 0; i < Consts.HEX_LINES_COUNT; i++) {
+      if (ChangingLinesEvaluator.isChangingLine(hex[i])) {
+        changingCount++;
+      }
+    }
+    return changingCount;
+  }
 }

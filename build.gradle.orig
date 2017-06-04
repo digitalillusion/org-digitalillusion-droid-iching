@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.+'
+        classpath 'com.android.tools.build:gradle:2.3.2'
     }
 }
 apply plugin: 'android'
@@ -14,36 +14,20 @@ dependencies {
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "23.0.1"
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
-<<<<<<< HEAD
-        minSdkVersion 11
-        targetSdkVersion 17
-        versionCode 58
-        versionName "1.6.0"
-=======
+<<<<<<< ours
         minSdkVersion 7
         targetSdkVersion 7
-        versionCode 59
-        versionName "1.6.1"
->>>>>>> fd213bd... Bug fix Release 1.6.1
-    }
-
-
-    signingConfigs {
-        release {
-            storeFile file("../../../Documenti/Impostazioni/Android/digitalillusion")
-            storePassword "********"
-            keyAlias "digitalillusion"
-            keyPassword "********"
-        }
-    }
-
-    buildTypes {
-        release {
-            signingConfig signingConfigs.release
-        }
+        versionCode 65
+        versionName "1.7.0"
+=======
+        minSdkVersion 11
+        targetSdkVersion 17
+        versionCode 68
+        versionName "1.8.0"
+>>>>>>> theirs
     }
 
     sourceSets {
@@ -68,5 +52,10 @@ android {
         // by a similar customization.
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
+    }
+
+    lintOptions {
+        // check for errors in release builds, but continue the build even when errors are found:
+        abortOnError false
     }
 }

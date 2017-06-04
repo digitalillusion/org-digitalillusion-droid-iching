@@ -97,16 +97,28 @@
     <string name="settings_chlines_evaluator_1">Mastro Yin</string>
     <string name="settings_chlines_evaluator_2">Nanjing</string>
     <string name="settings_lang">Lingua</string>
+    <string name="settings_lang_en">English</string>
+    <string name="settings_lang_es">Español</string>
+    <string name="settings_lang_fr">Français</string>
+    <string name="settings_lang_it">Italiano</string>
+    <string name="settings_lang_pt">Português</string>
     <string name="settings_dictionary">Dizionario</string>
     <string name="settings_dictionary_altervista">Wilhelm (androidiching.altervista.org)</string>
-    <string name="settings_dictionary_custom">Personalizzato (local)</string>
+    <string name="settings_dictionary_custom">Personalizzato (locale)</string>
     <string name="settings_storage">Salvataggio</string>
     <string name="settings_storage_sdcard">Carta SD</string>
     <string name="settings_storage_internal">Stoccaggio interno del telefono</string>
     <string name="settings_connection_mode">Modalità di connessione</string>
     <string name="settings_connection_mode_online">In linea</string>
     <string name="settings_connection_mode_offline">Disconnesso</string>
-
+    <string name="settings_share">Contenuto da condividere</string>
+    <string name="settings_share_page">Pagina</string>
+    <string name="settings_share_hexagram">Esagramma</string>
+    <string name="settings_share_reading">Lettura</string>
+    <string name="settings_screen_orientation">Orientazione dello schermo</string>
+    <string name="settings_screen_orientation_rotate">Ruotare</string>
+    <string name="settings_screen_orientation_landscape">Orizzontale</string>
+    <string name="settings_screen_orientation_portrait">Verticale</string>
 
     <string name="hex01">乾 Kkienn / Il Creativo</string>
     <string name="hex02">坤 Kkunn / Il Ricettivo</string>
@@ -213,8 +225,9 @@
     <string name="read_changing_reset_section">Reimpostare</string>
     <string name="read_share">Condividere</string>
     <string name="read_share_using">Condividere utilizzando</string>
-    <string name="read_share_constituent_line">Linee costituenti</string>
-    <string name="read_share_governing_line">Linee governanti</string>
+    <string name="read_share_constituent_line">Linea costituente</string>
+    <string name="read_share_governing_line">Linea governante</string>
+    <string name="read_share_no_content">Alcune delle definizioni da condividere non sono ancora disponibili. Prego, riprovare.</string>
     <string name="edit_section_quote">Citazione:</string>
     <string name="edit_section_quote_info">Questo testo è mostato all\'inizio, in grassetto. Trattasi di solito di una citazione diretta del I Ching.</string>
     <string name="edit_section_reading">Lettura:</string>
