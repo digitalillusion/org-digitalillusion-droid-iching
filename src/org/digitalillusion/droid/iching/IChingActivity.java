@@ -5,10 +5,12 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.InputType;
 import android.view.ContextMenu;
@@ -43,6 +45,7 @@ import org.digitalillusion.droid.iching.changinglines.ChangingLinesEvaluator;
 import org.digitalillusion.droid.iching.connection.RemoteResolver;
 import org.digitalillusion.droid.iching.utils.Consts;
 import org.digitalillusion.droid.iching.utils.DataPersister;
+import org.digitalillusion.droid.iching.utils.IncrementalUpgrades;
 import org.digitalillusion.droid.iching.utils.SettingsManager;
 import org.digitalillusion.droid.iching.utils.SettingsManager.SETTINGS_MAP;
 import org.digitalillusion.droid.iching.utils.Utils;
@@ -74,20 +77,22 @@ public class IChingActivity extends IChingActivityRenderer {
   /**
    * The currently generated hexagram *
    */
-  protected int[] hex;
+  int[] hex;
   /**
    * The hexagram transformed from the currently generated one *
    */
-  protected int[] tHex;
+  int[] tHex;
+
   /**
-   * Proxed changing lines evaluator *
+   * Random number generator
    */
-  private ChangingLinesEvaluator changingLinesEvaluator;
+  private Random rndGen = new Random();
 
   /**
    * Move to the consult view
    */
   public void gotoConsult() {
+    setScreenOrientation();
     setContentView(R.layout.consult);
     TextView tvQuestionShow = (TextView) findViewById(R.id.tvQuestionConsult);
     tvQuestionShow.setText(current.question);
@@ -147,7 +152,7 @@ public class IChingActivity extends IChingActivityRenderer {
    */
   public void gotoMain() {
     setContentView(R.layout.main);
-    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+    setScreenOrientation();
     RemoteResolver.prepareRetryPopup();
 
     final EditText etQuestion = (EditText) findViewById(R.id.etQuestion);
@@ -208,16 +213,18 @@ public class IChingActivity extends IChingActivityRenderer {
     current = new CurrentState();
   }
 
+
+
   /**
    * Move to the read description view
    */
   public void gotoReadDesc() {
+    setScreenOrientation();
 
-    if (changingLinesEvaluator == null) {
-      Integer evalType = (Integer) settings.get(SETTINGS_MAP.CHANGING_LINES_EVALUATOR);
-      changingLinesEvaluator = ChangingLinesEvaluator.produce(evalType);
-    }
+    ChangingLinesEvaluator changingLinesEvaluator = getChangingLinesEvaluator();
     current.changing = changingLinesEvaluator.evaluate(hex, tHex);
+    current.changingCount = changingLinesEvaluator.countChanging(hex);
+
     current.screen = READ_DESC_SCREEN.DEFAULT;
 
     setContentView(R.layout.readdesc);
@@ -283,6 +290,7 @@ public class IChingActivity extends IChingActivityRenderer {
    * Move to the settings view
    */
   public void gotoSettings() {
+    setScreenOrientation();
     setContentView(R.layout.settings);
 
     final ListView lvSettings = (ListView) findViewById(R.id.lvSettings);
@@ -340,6 +348,20 @@ public class IChingActivity extends IChingActivityRenderer {
         SettingsManager.SETTINGS_VALUES_MAP.get(SETTINGS_MAP.CONNECTION_MODE),
         SETTINGS_MAP.CONNECTION_MODE
     );
+    // Share
+    settings.createOption(
+        settingsList,
+        SettingsEntry.SHARE,
+        SettingsManager.SETTINGS_VALUES_MAP.get(SETTINGS_MAP.SHARE),
+        SETTINGS_MAP.SHARE
+    );
+    // Screen Orientation
+    settings.createOption(
+        settingsList,
+        SettingsEntry.SCREEN_ORIENTATION,
+        SettingsManager.SETTINGS_VALUES_MAP.get(SETTINGS_MAP.SCREEN_ORIENTATION),
+        SETTINGS_MAP.SCREEN_ORIENTATION
+    );
 
     lvSettings.setAdapter(new ListItem2Adapter<SettingsEntry<?>>(this, settingsList) {
       @Override
@@ -395,10 +417,6 @@ public class IChingActivity extends IChingActivityRenderer {
             boolean changed = true;
             Context context = IChingActivity.this.getBaseContext();
             switch (mapKey) {
-              case CHANGING_LINES_EVALUATOR:
-                // Setting to null will reinit evaluator next time is needed
-                changingLinesEvaluator = null;
-                break;
               case LANGUAGE:
                 Locale locale = new Locale(newValue.toString());
                 settings.setLocale(locale);
@@ -491,12 +509,7 @@ public class IChingActivity extends IChingActivityRenderer {
   public void onClickGenerateRow(View view) {
     int coinsValue = 0;
     for (int i = 0; i < 3; i++) {
-      double rnd = Math.random();
-      if (rnd < 0.5) {
-        coinsValue += 2;
-      } else {
-        coinsValue += 3;
-      }
+      coinsValue += rndGen.nextInt(2) + 2;
     }
 
     generateRow(coinsValue);
@@ -642,7 +655,7 @@ public class IChingActivity extends IChingActivityRenderer {
                     public void onClick(DialogInterface dialog,
                                         int which) {
                       String historyNewName = input.getText().toString();
-                      if (!historyNewName.equals(Utils.EMPTY_STRING)) {
+                      if (!historyNewName.isEmpty()) {
                         DataPersister.renameHistory(historyList, IChingActivity.this, historyNewName);
                       } else {
                         DataPersister.revertSelectedHistory();
@@ -815,7 +828,7 @@ public class IChingActivity extends IChingActivityRenderer {
         renderResetHexSection();
         break;
       case R.id.omReadDescShare:
-        performShare();
+        new ShareTool(this, current).performShare();
         break;
     }
     return true;
@@ -863,7 +876,7 @@ public class IChingActivity extends IChingActivityRenderer {
 
     current.mode = READ_DESC_MODE.valueOf(savedInstanceState.getString("mode"));
 
-    setCurrentSection(current.changing);
+    setCurrentSection(current, current.changing);
     setCurrentHex(hex);
   }
 
@@ -917,6 +930,8 @@ public class IChingActivity extends IChingActivityRenderer {
       default:
         gotoMain();
     }
+
+    onAppUpgrade();
   }
 
   private void prepareDivinationMethod() {
@@ -1036,6 +1051,22 @@ public class IChingActivity extends IChingActivityRenderer {
       });
       alertDialog.show();
     }
+  }
+
+  /**
+   *  Check App is Upgraded
+   */
+  private void onAppUpgrade(){
+    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+    int versionCode = sharedPreferences.getInt(Consts.SHARED_PREF_VERSION_CODE, BuildConfig.VERSION_CODE);
+
+    if (BuildConfig.VERSION_CODE != versionCode) {
+      IncrementalUpgrades incrementalUpgrades = new IncrementalUpgrades(this);
+      incrementalUpgrades.onAppUpdated(versionCode);
+
+      sharedPreferences.edit().putInt(Consts.SHARED_PREF_VERSION_CODE, BuildConfig.VERSION_CODE).apply();
+    }
+
   }
 
   /**

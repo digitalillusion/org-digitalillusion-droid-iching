@@ -1625,7 +1625,6 @@ $book['32']['desc'] =
 ' Hêng / Duracão 
   Acima: CHEN, O INCITAR, TROVÃO. 
   Abaixo: SUN, A SUAVIDADE, VENTO.\e
-  The strong trigram Chên is above, the weak trigram Sun below. This hexagram is the inverse of the preceding one. In the latter we have influence, here we have union as an enduring condition. The two images are thunder and wind, which are likewise constantly paired phenomena. The lower trigram indicates gentleness within; the upper, movement without.
   O forte trigrama Chên está acima, o trigrama fraco, Sun, abaixo. Este hexagrama é o inverso do anterior: lá há influência; aqui, a união como condição duradoura. Aqui as imagens são o trovão e o vento, fenômenos que surgem constantemente associados. O trigrama inferior e o vento, fenômenos que surgem constantemente associados. O trigrama inferior indica suavidade interna, o trigrama superior, movimento externo. Aplicado à esfera das relações sociais, o hexagrama representa a instituição do casamento como a união duradoura dos sexos. Durante o cortejar o jovem se subordina à jovem. No casamento _ representado pela união do filho mais velho com a filha mais velha _, ao homem cabe a função de ativar e dirigir no plano exterior, enquanto à mulher cabe preservar a suavidade e a obediência no plano interior.';
 $book['32']['judge'] = 
 ' DURAÇÃO. 

@@ -96,6 +96,11 @@
     <string name="settings_chlines_evaluator_1"> Yin Maître </string>
     <string name="settings_chlines_evaluator_2"> Nanjing </string>
     <string name="settings_lang"> Langue </string>
+    <string name="settings_lang_en">English</string>
+    <string name="settings_lang_es">Español</string>
+    <string name="settings_lang_fr">Français</string>
+    <string name="settings_lang_it">Italiano</string>
+    <string name="settings_lang_pt">Português</string>
     <string name="settings_dictionary"> Dictionnaire </string>
     <string name="settings_dictionary_altervista"> Wilhelm (androidiching.altervista.org) </string>
     <string name="settings_dictionary_custom"> Customisé (local) </string>
@@ -105,6 +110,15 @@
     <string name="settings_connection_mode"> Mode de connexion </string>
     <string name="settings_connection_mode_online"> En ligne </string>
     <string name="settings_connection_mode_offline"> Déconnecté </string>
+    <string name="settings_share">Contenu à partager</string>
+    <string name="settings_share_page">Page</string>
+    <string name="settings_share_hexagram">Hexagramme</string>
+    <string name="settings_share_reading">Tirage</string>
+    <string name="settings_screen_orientation">Orientation de l\'écran</string>
+    <string name="settings_screen_orientation_rotate">Rotation</string>
+    <string name="settings_screen_orientation_landscape">Paysage</string>
+    <string name="settings_screen_orientation_portrait">Portrait</string>
+
     <string name="hex01">乾 K\'ien / Le Créateur</string>
     <string name="hex02">坤 K\'ouen / Le Réceptif</string>
     <string name="hex03">屯 Tchouen / La Difficulté Initiale</string>
@@ -209,6 +223,7 @@
     <string name="read_share_using"> Partager utilisant </string>
     <string name="read_share_constituent_line"> Ligne constituante </string>
     <string name="read_share_governing_line"> Ligne gouvernante </string>
+    <string name="read_share_no_content">Certaines des définitions que vous souhaitez partager ne sont pas encore disponibles. Veuillez réessayer.</string>
     <string name="edit_section_quote"> Citation: </string>
     <string name="edit_section_quote_info"> Ce texte sera affiché en premier, mise en accent. Il est généralement une citation directe du I Ching. </string>
     <string name="edit_section_reading"> Lecture: </string>

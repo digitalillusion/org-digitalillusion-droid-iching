@@ -158,7 +158,6 @@ public class DataPersister {
    * Load history
    *
    * @param historyList The history list to load
-   * @param attempt     The number of attempt done to load the history
    * @throws IOException              if path is not readable
    * @throws FileNotFoundException    if no history was saved;
    * @throws InvalidKeyException      if the password is wrong

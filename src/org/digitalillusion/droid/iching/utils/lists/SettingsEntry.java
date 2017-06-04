@@ -20,6 +20,8 @@ public class SettingsEntry<T extends Serializable> {
   public static final String DICTIONARY = "settings_dictionary";
   public static final String STORAGE = "settings_storage";
   public static final String CONNECTION_MODE = "settings_connection_mode";
+  public static final String SHARE = "settings_share";
+  public static final String SCREEN_ORIENTATION = "settings_screen_orientation";
 
   private String optionName;
   private T optionValue;

@@ -60,6 +60,16 @@ public class SettingsManager {
         Consts.CONNECTION_MODE_ONLINE,
         Consts.CONNECTION_MODE_OFFLINE
     });
+    put(SETTINGS_MAP.SHARE, new String[]{
+        Consts.SHARE_PAGE,
+        Consts.SHARE_HEXAGRAM,
+        Consts.SHARE_READING
+    });
+    put(SETTINGS_MAP.SCREEN_ORIENTATION, new String[]{
+        Consts.SCREEN_ORIENTATION_ROTATE,
+        Consts.SCREEN_ORIENTATION_LANDSCAPE,
+        Consts.SCREEN_ORIENTATION_PORTRAIT
+    });
   }};
   /**
    * Internal storage of the settings *
@@ -203,7 +213,12 @@ public class SettingsManager {
       return Consts.STORAGE_SDCARD;
     } else if (setting.equals(SETTINGS_MAP.CONNECTION_MODE)) {
       return Consts.CONNECTION_MODE_ONLINE;
+    } else if (setting.equals(SETTINGS_MAP.SHARE)) {
+      return Consts.SHARE_PAGE;
+    } else if (setting.equals(SETTINGS_MAP.SCREEN_ORIENTATION)) {
+      return Consts.SCREEN_ORIENTATION_ROTATE;
     }
+
     throw new InvalidParameterException(setting.getKey() + " does not specify an option.");
   }
 
@@ -217,7 +232,9 @@ public class SettingsManager {
     LANGUAGE("language"),
     DICTIONARY("dictionary"),
     STORAGE("storage"),
-    CONNECTION_MODE("connectionMode");
+    CONNECTION_MODE("connectionMode"),
+    SHARE("share"),
+    SCREEN_ORIENTATION("screenOrientation");
 
 
     private String key;

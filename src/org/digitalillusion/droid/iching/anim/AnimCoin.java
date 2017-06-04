@@ -21,6 +21,7 @@ public class AnimCoin {
   protected AnimationDrawable animation;
   private boolean running = false;
   private View.OnTouchListener touchListener;
+  private boolean runAnimation = true;
 
   public AnimCoin(final ImageView imageView, Resources res) {
     animation = new AnimationDrawable();
@@ -36,6 +37,7 @@ public class AnimCoin {
   public AnimCoin(final ImageView imageView, final Resources res, int value) {
     this.imageView = imageView;
     this.value = value;
+    this.runAnimation = false;
     flip(res);
 
     imageView.setOnTouchListener(new View.OnTouchListener() {
@@ -44,7 +46,10 @@ public class AnimCoin {
         if (running) {
           return true;
         }
-        boolean flip = flip(res);
+        boolean flip = false;
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+          flip = flip(res);
+        }
         if (touchListener != null) {
           return flip | touchListener.onTouch(v, event);
         }
@@ -74,7 +79,10 @@ public class AnimCoin {
   }
 
   private void runAnimation() {
-    imageView.setBackgroundDrawable(animation);
+    imageView.setImageDrawable(animation);
+    if (!runAnimation) {
+      return;
+    }
     running = true;
     animation.start();
     imageView.postDelayed(new Runnable() {
@@ -82,6 +90,7 @@ public class AnimCoin {
         running = false;
       }
     }, getDuration());
+
   }
 
   private boolean flip(Resources res) {
