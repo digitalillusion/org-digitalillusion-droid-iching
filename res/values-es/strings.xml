@@ -84,6 +84,13 @@ Mantenga su contraseña en un lugar seguro. Si perdido, que ganó ser capaz de a
 		Namasté!
 		&lt;/p&gt;
 	    </string>
+	<string name="options_govegan">Nota del autor</string>
+    <string name="options_govegan_message">
+..........__._.___..__._____.__._.__._._.__.......\n
+......../ _` / _ \\.\\ V / -_/ _` / _` | \', \\......\n
+........\\__, \\___/..\\_/\\___\\__, \\__,_|_||_|......\n
+........|___/..............|___/.................\n
+   </string>
 	<string name = "options_settings"> Ajustes </string>
 	<string name = "settings_vibration"> Vibración </string>
 	<string name = "settings_vibration_0"> Desactivado </string>
@@ -91,6 +98,7 @@ Mantenga su contraseña en un lugar seguro. Si perdido, que ganó ser capaz de a
 	<string name = "settings_divination_method"> Método de adivinación </string>
 	<string name = "settings_divination_method_0"> Monedas al aire (automática) </string>
 	<string name = "settings_divination_method_1"> Monedas al aire (manual) </string>
+    <string name="settings_divination_method_2">Sacuda las monedas (manual)</string>
 	<string name = "settings_chlines_evaluator"> Evaluador de Trazos Cambiantes </string>
 	<string name = "settings_chlines_evaluator_0"> Manual </string>
 	<string name = "settings_chlines_evaluator_1"> Maestro Yin </string>
@@ -197,7 +205,8 @@ Mantenga su contraseña en un lugar seguro. Si perdido, que ganó ser capaz de a
 	<string name = "intro_history"> Ver la cronología </string>
 	<string name = "consult_tapcoins"> Pulse las monedas para generar un hexagrama </string>
 	<string name = "consult_tapcoins_manual"> Pulse las monedas para generar un hexagrama. Pase hacia alto para confirmar un trazo, abajo para borrarlo </string>
-	<string name = "consult_read_desc"> Lea la descripción </string>
+    <string name = "consult_shakecoins_manual">Agite su teléfono para voltear las monedas. Tan pronto como detenga, se genera una línea hexagrama</string>
+    <string name = "consult_read_desc"> Lea la descripción </string>
 	<string name = "read_desc"> Descripción </string>
 	<string name = "read_judge"> El Juicio </string>
 	<string name = "read_image"> La Imagen </string>

@@ -85,6 +85,13 @@
         	namasté!
         &lt;/p&gt;
     </string>
+    <string name="options_govegan">Nota dell\'autore</string>
+    <string name="options_govegan_message">
+..........__._.___..__._____.__._.__._._.__.......\n
+......../ _` / _ \\.\\ V / -_/ _` / _` | \', \\......\n
+........\\__, \\___/..\\_/\\___\\__, \\__,_|_||_|......\n
+........|___/..............|___/.................\n
+   </string>
     <string name="options_settings">Impostazioni</string>
     <string name="settings_vibration">Vibrazione</string>
     <string name="settings_vibration_0">Off</string>
@@ -92,6 +99,7 @@
     <string name="settings_divination_method">Metodo di divinazione</string>
     <string name="settings_divination_method_0">Lancio monete (automatico)</string>
     <string name="settings_divination_method_1">Lancio monete (manuale)</string>
+    <string name="settings_divination_method_2">Agitare monete (manual)</string>
     <string name="settings_chlines_evaluator">Valutazione delle linee mutanti</string>
     <string name="settings_chlines_evaluator_0">Manuale</string>
     <string name="settings_chlines_evaluator_1">Mastro Yin</string>
@@ -197,6 +205,7 @@
     <string name="intro_history">Visualizza cronologia</string>
     <string name="consult_tapcoins">Toccare le monete per generare un esagramma</string>
     <string name="consult_tapcoins_manual">Toccare le monete per generare un esagramma. Trascinare su per confermare una linea, giù per eliminarla</string>
+    <string name="consult_shakecoins_manual">Agitare il telefono per fare girare le monete. Nel momento in cui si fermano sarà generata una linea</string>
     <string name="consult_read_desc">Leggere Descrizione</string>
     <string name="read_desc">Descrizione</string>
     <string name="read_judge">Il Giudizio</string>

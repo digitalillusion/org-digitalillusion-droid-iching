@@ -34,7 +34,8 @@ public class SettingsManager {
     });
     put(SETTINGS_MAP.DIVINATION_METHOD, new Integer[]{
         Consts.DIVINATION_METHOD_COINS_AUTO,
-        Consts.DIVINATION_METHOD_COINS_MANUAL
+        Consts.DIVINATION_METHOD_COINS_MANUAL,
+        Consts.DIVINATION_METHOD_COINS_SHAKE
     });
     put(SETTINGS_MAP.CHANGING_LINES_EVALUATOR, new Integer[]{
         Consts.EVALUATOR_MANUAL,

@@ -2794,8 +2794,8 @@ $book['52']['line6'] =
 # -------------------------      53       ----------------------- #
 $book['53']['desc'] = 
 ' Chien / Desenvolvimento (Progresso Gradual) 
-  Above SUN THE GENTLE, WIND, WOOD
-  Below KÊN KEEPING STILL, MOUNTAIN\e
+  Acima: SUN, A SUAVIDADE, VENTO. 
+  Abaixo: KEN, A QUIETUDE, MONTANHA.\e
   Este hexagrama se compõe de Sun (madeira, o penetrante) acima, isto é, no exterior, e Kên (a montanha, quietude) abaixo, isto é, no interior. 62 Uma árvore na montanha se desenvolve devagar, segundo as leis de sua natureza, e assim mantém-se firmemente enraizada. Isso sugere a idéia de um desenvolvimento que avança gradualmente, passo a passo. os atributos dos trigramas também indicam o mesmo: a tranqüilidade interior que protege contra atitudes precipitadas e a penetração exterior que possibilita o desenvolvimento e o progresso.';
 $book['53']['judge'] = 
 ' DESENVOLVIMENTO. 
@@ -3446,3 +3446,4 @@ if (empty($out)) {
   die($out);
 }
 ?>
+

@@ -25,10 +25,10 @@ public class AnimCoin {
 
   public AnimCoin(final ImageView imageView, Resources res) {
     animation = new AnimationDrawable();
-    animation.addFrame(res.getDrawable(R.drawable.ic_yangcoin), (int) (50 + 100 * Math.random()));
-    animation.addFrame(res.getDrawable(R.drawable.ic_halfcoin), (int) (25 + 25 * Math.random()));
-    animation.addFrame(res.getDrawable(R.drawable.ic_yincoin), (int) (50 + 100 * Math.random()));
-    animation.addFrame(res.getDrawable(R.drawable.ic_halfcoin), (int) (25 + 25 * Math.random()));
+    animation.addFrame(res.getDrawable(R.drawable.ic_yangcoin), (int) (250 + 100 * Math.random()));
+    animation.addFrame(res.getDrawable(R.drawable.ic_halfcoin), (int) (125 + 50 * Math.random()));
+    animation.addFrame(res.getDrawable(R.drawable.ic_yincoin), (int) (250 + 100 * Math.random()));
+    animation.addFrame(res.getDrawable(R.drawable.ic_halfcoin), (int) (125 + 75 * Math.random()));
     animation.setOneShot(false);
     this.imageView = imageView;
     runAnimation();
@@ -66,6 +66,10 @@ public class AnimCoin {
     return value;
   }
 
+  public View getView() {
+    return imageView;
+  }
+
   public int getDuration() {
     int duration = 0;
     for (int i = 0; animation != null && i < animation.getNumberOfFrames(); i++) {
@@ -90,10 +94,14 @@ public class AnimCoin {
         running = false;
       }
     }, getDuration());
-
   }
 
-  private boolean flip(Resources res) {
+  public void runFlipAnimation() {
+    imageView.setImageDrawable(animation);
+    animation.setOneShot(true);
+    animation.start();
+  }
+  public boolean flip(Resources res) {
     if (value == Consts.ICHING_COIN_YIN) {
       value = Consts.ICHING_COIN_YANG;
       animation = new AnimationDrawable();

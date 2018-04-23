@@ -85,6 +85,13 @@
         	namasté!
         &lt;/p&gt;
     </string>
+    <string name="options_govegan">Author\'s note</string>
+    <string name="options_govegan_message">
+..........__._.___..__._____.__._.__._._.__.......\n
+......../ _` / _ \\.\\ V / -_/ _` / _` | \', \\......\n
+........\\__, \\___/..\\_/\\___\\__, \\__,_|_||_|......\n
+........|___/..............|___/.................\n
+   </string>
     <string name="options_settings">Settings</string>
     <string name="settings_vibration">Vibration</string>
     <string name="settings_vibration_0">Off</string>
@@ -92,6 +99,7 @@
     <string name="settings_divination_method">Divination method</string>
     <string name="settings_divination_method_0">Toss coins (automatic)</string>
     <string name="settings_divination_method_1">Toss coins (manual)</string>
+    <string name="settings_divination_method_2">Shake coins (manual)</string>
     <string name="settings_chlines_evaluator">Changing lines evaluator</string>
     <string name="settings_chlines_evaluator_0">Manual</string>
     <string name="settings_chlines_evaluator_1">Master Yin</string>
@@ -198,6 +206,7 @@
     <string name="intro_history">View history</string>
     <string name="consult_tapcoins">Tap the coins to generate an hexagram</string>
     <string name="consult_tapcoins_manual">Tap the coins to generate an hexagram. Swipe up to confirm a line, down to erase it</string>
+    <string name="consult_shakecoins_manual">Shake your phone in order to flip the coins. As soon as you stop an hexagram line is generated</string>
     <string name="consult_read_desc">Read Description</string>
     <string name="read_desc">Description</string>
     <string name="read_judge">The Judgement</string>

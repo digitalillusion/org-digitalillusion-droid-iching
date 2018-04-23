@@ -84,13 +84,21 @@
 			Namasté!
 		&lt;/p&gt;
 	</string>
-    <string name="options_settings"> Paramètres </string>
+    <string name="options_govegan">Note de l\'auteur</string>
+   <string name="options_govegan_message">
+..........__._.___..__._____.__._.__._._.__.......\n
+......../ _` / _ \\.\\ V / -_/ _` / _` | \', \\......\n
+........\\__, \\___/..\\_/\\___\\__, \\__,_|_||_|......\n
+........|___/..............|___/.................\n
+   </string>
+   <string name="options_settings"> Paramètres </string>
     <string name="settings_vibration"> Vibration </string>
     <string name="settings_vibration_0"> Off </string>
     <string name="settings_vibration_1"> Sur génération Hexagramme </string>
     <string name="settings_divination_method"> Méthode de divination </string>
-    <string name="settings_divination_method_0"> Tirage des piéces de monnaie (automatique) </string>
-    <string name="settings_divination_method_1"> Tirage des piéces de monnaie (manuel) </string>
+    <string name="settings_divination_method_0"> Tirage des pièces de monnaie (automatique) </string>
+    <string name="settings_divination_method_1"> Tirage des pièces de monnaie (manuel) </string>
+    <string name="settings_divination_method_2">Secouer les pièces de monnaie (manuel)</string>
     <string name="settings_chlines_evaluator"> Modification des lignes changeantes </string>
     <string name="settings_chlines_evaluator_0"> Manuel </string>
     <string name="settings_chlines_evaluator_1"> Yin Maître </string>
@@ -193,6 +201,7 @@
     <string name="intro_history"> Voir l\'historique </string>
     <string name="consult_tapcoins"> Appuyez sur les pièces de monnaie pour générer un hexagramme </string>
     <string name="consult_tapcoins_manual"> Appuyez sur les pièces de monnaie pour générer un hexagramme. Glissez vers le haut pour confirmer une ligne, vers le bas pour l\'effacer </string>
+    <string name="consult_shakecoins_manual">Secouez votre téléphone pour retourner les pièces. Dès que vous arrêtez une ligne de l\'hexagramme est générée</string>
     <string name="consult_read_desc"> Lire la description </string>
     <string name="read_desc"> Description </string>
     <string name="read_judge"> Le Jugement </string>

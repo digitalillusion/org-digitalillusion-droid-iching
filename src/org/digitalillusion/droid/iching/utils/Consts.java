@@ -61,6 +61,11 @@ public class Consts {
   public static final int DIVINATION_METHOD_COINS_MANUAL = 1;
 
   /**
+   * Divination method manual shake coins *
+   */
+  public static final int DIVINATION_METHOD_COINS_SHAKE = 2;
+
+  /**
    * Manual changing lines evaluator
    */
   public static final int EVALUATOR_MANUAL = 0;

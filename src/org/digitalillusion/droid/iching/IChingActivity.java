@@ -8,11 +8,15 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
+import android.graphics.Typeface;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.InputType;
+import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.GestureDetector;
@@ -56,6 +60,7 @@ import org.digitalillusion.droid.iching.utils.lists.SettingsEntry;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -96,14 +101,17 @@ public class IChingActivity extends IChingActivityRenderer {
     setContentView(R.layout.consult);
     TextView tvQuestionShow = (TextView) findViewById(R.id.tvQuestionConsult);
     tvQuestionShow.setText(current.question);
+    rndGen.setSeed(System.currentTimeMillis());
 
     for (int i = 0; i < hexRow; i++) {
       renderRow(i, hex[i], true, null, null);
     }
 
     if (hexRow < 6) {
+      sensorManager.registerListener(shakeDetector, accelerometer,	SensorManager.SENSOR_DELAY_UI);
       prepareDivinationMethod();
     } else {
+      sensorManager.unregisterListener(shakeDetector);
       ((ImageView) findViewById(R.id.picCoin01)).setVisibility(View.GONE);
       ((ImageView) findViewById(R.id.picCoin02)).setVisibility(View.GONE);
       ((ImageView) findViewById(R.id.picCoin03)).setVisibility(View.GONE);
@@ -686,6 +694,11 @@ public class IChingActivity extends IChingActivityRenderer {
     Utils.setContext(getApplicationContext());
 
     loadSettings();
+
+    sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+    accelerometer = sensorManager
+        .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+    shakeDetector = new ShakeDetector();
   }
 
   /**
@@ -766,9 +779,10 @@ public class IChingActivity extends IChingActivityRenderer {
     final AlertDialog alertDialog = new AlertDialog.Builder(IChingActivity.this).create();
 
     TextView tvMessage = new TextView(getApplicationContext());
+    tvMessage.setId(android.R.id.message);
     tvMessage.setBackgroundColor(getResources().getColor(android.R.color.background_dark));
     tvMessage.setTextColor(getResources().getColor(android.R.color.primary_text_dark));
-    tvMessage.setTextSize(13);
+    tvMessage.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.text_size_small));
     tvMessage.setPadding(5, 5, 5, 5);
 
     alertDialog.setView(tvMessage);
@@ -819,6 +833,13 @@ public class IChingActivity extends IChingActivityRenderer {
       case R.id.omAbout:
         alertDialog.setMessage(Utils.s(R.string.options_about));
         tvMessage.setText(Html.fromHtml(Utils.s(R.string.options_about_message)));
+        alertDialog.show();
+        break;
+      case R.id.omGoVegan:
+        alertDialog.setTitle(Utils.s(R.string.options_govegan));
+        tvMessage.setTypeface(Typeface.MONOSPACE);
+        tvMessage.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.text_size_smaller));
+        tvMessage.setText(Utils.s(R.string.options_govegan_message));
         alertDialog.show();
         break;
       case R.id.omReadDescEdit:
@@ -878,6 +899,8 @@ public class IChingActivity extends IChingActivityRenderer {
 
     setCurrentSection(current, current.changing);
     setCurrentHex(hex);
+
+    renderLoadHistory(null, null);
   }
 
   /**
@@ -935,14 +958,61 @@ public class IChingActivity extends IChingActivityRenderer {
   }
 
   private void prepareDivinationMethod() {
-    Resources res = getResources();
+    final Resources res = getResources();
     int divinationMethod = (Integer) getSettingsManager().get(SETTINGS_MAP.DIVINATION_METHOD);
+    Random rnd = new Random();
+    final AnimCoin coin1, coin2, coin3;
+    TextView tvInstructions = (TextView) findViewById(R.id.tvInstructions);
+
     switch (divinationMethod) {
+      case Consts.DIVINATION_METHOD_COINS_SHAKE:
+        coin1 = new AnimCoin((ImageView) findViewById(R.id.picCoin01), res, rnd.nextInt(2) + 2);
+        coin2 = new AnimCoin((ImageView) findViewById(R.id.picCoin02), res, rnd.nextInt(2) + 2);
+        coin3 = new AnimCoin((ImageView) findViewById(R.id.picCoin03), res, rnd.nextInt(2) + 2);
+
+        shakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+          @Override
+          public void onStartShake() {
+          }
+
+          @Override
+          public void onEndShake() {
+            int coinSum = coin1.getCoinValue() + coin2.getCoinValue() + coin3.getCoinValue();
+            generateRow(coinSum);
+          }
+
+          @Override
+          public void onShake(float xForce) {
+            AnimCoin[] coins = new AnimCoin[] { coin1, coin2, coin3};
+            int flips = 0;
+            if (Math.abs(xForce) < 1.2f) {
+              flips = 3;
+            } else if (Math.abs(xForce) < 1.15f) {
+              flips = 2;
+            } else if (Math.abs(xForce) < 1.12f) {
+              flips = 1;
+            }
+            for (int i = 0; i < flips; i++) {
+              int index = rndGen.nextInt(3);
+              coins[index].flip(res);
+              coins[index].runFlipAnimation();
+            }
+            renderRowShake();
+          }
+
+          private void renderRowShake() {
+            hex[hexRow] = coin1.getCoinValue() + coin2.getCoinValue() + coin3.getCoinValue();
+            renderRow(hexRow, hex[hexRow], true, null, null);
+          }
+
+        });
+        tvInstructions.setText(Utils.s(R.string.consult_shakecoins_manual));
+        break;
       case Consts.DIVINATION_METHOD_COINS_MANUAL:
-        Random rnd = new Random();
-        final AnimCoin coin1 = new AnimCoin((ImageView) findViewById(R.id.picCoin01), res, rnd.nextInt(2) + 2);
-        final AnimCoin coin2 = new AnimCoin((ImageView) findViewById(R.id.picCoin02), res, rnd.nextInt(2) + 2);
-        final AnimCoin coin3 = new AnimCoin((ImageView) findViewById(R.id.picCoin03), res, rnd.nextInt(2) + 2);
+        coin1 = new AnimCoin((ImageView) findViewById(R.id.picCoin01), res, rnd.nextInt(2) + 2);
+        coin2 = new AnimCoin((ImageView) findViewById(R.id.picCoin02), res, rnd.nextInt(2) + 2);
+        coin3 = new AnimCoin((ImageView) findViewById(R.id.picCoin03), res, rnd.nextInt(2) + 2);
+
         OnTouchListener coinTouchListener = new OnTouchListener() {
           public boolean onTouch(View v, MotionEvent event) {
             hex[hexRow] = coin1.getCoinValue() + coin2.getCoinValue() + coin3.getCoinValue();
@@ -986,7 +1056,7 @@ public class IChingActivity extends IChingActivityRenderer {
             return gestureDetector.onTouchEvent(event);
           }
         });
-        TextView tvInstructions = (TextView) findViewById(R.id.tvInstructions);
+        tvInstructions = (TextView) findViewById(R.id.tvInstructions);
         tvInstructions.setText(Utils.s(R.string.consult_tapcoins_manual));
         break;
       default:
@@ -1064,7 +1134,7 @@ public class IChingActivity extends IChingActivityRenderer {
       IncrementalUpgrades incrementalUpgrades = new IncrementalUpgrades(this);
       incrementalUpgrades.onAppUpdated(versionCode);
 
-      sharedPreferences.edit().putInt(Consts.SHARED_PREF_VERSION_CODE, BuildConfig.VERSION_CODE).apply();
+      sharedPreferences.edit().putInt(Consts.SHARED_PREF_VERSION_CODE, BuildConfig.VERSION_CODE).commit();
     }
 
   }
