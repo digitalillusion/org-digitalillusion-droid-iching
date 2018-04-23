@@ -18,6 +18,10 @@
     <item
         android:id="@+id/omAbout"
         android:title="@string/options_about"/>
+    <item
+        android:id="@+id/omGoVegan"
+        android:title="@string/options_govegan"
+        android:visible="false"/>
 
     <item
         android:id="@+id/omReadDescEdit"

@@ -164,7 +164,7 @@ public class DataPersister {
    * @throws GeneralSecurityException if cryptography failed
    */
   @SuppressWarnings("unchecked")
-  public static void loadHistory(final List<HistoryEntry> historyList) throws IOException, FileNotFoundException, InvalidKeyException, GeneralSecurityException {
+  public static synchronized void loadHistory(final List<HistoryEntry> historyList) throws IOException, FileNotFoundException, InvalidKeyException, GeneralSecurityException {
     if (forceSwitchStorage && !failLoadHistory) {
       failLoadHistory = true;
       throw new IOException("Switched storage due to I/O error");
@@ -225,7 +225,7 @@ public class DataPersister {
    * @throws FileNotFoundException if no options were saved;
    */
   @SuppressWarnings("unchecked")
-  public static void loadOptions(Context context, HashMap<String, Serializable> optionsMap) throws IOException, FileNotFoundException {
+  public static synchronized void loadOptions(Context context, HashMap<String, Serializable> optionsMap) throws IOException, FileNotFoundException {
     initStoragePath(context, optionsMap);
     // Storage option has been created at this point
     if (optionsMap.size() == 1) {
@@ -341,7 +341,7 @@ public class DataPersister {
    * @return True if history was saved successfully, false otherwise
    * @throws IOException if input stream is not writable
    */
-  public static boolean saveHistory(final List<HistoryEntry> historyList, final Activity activity) {
+  public static synchronized boolean saveHistory(final List<HistoryEntry> historyList, final Activity activity) {
     try {
       File historyFile = new File(storagePath.getAbsolutePath() + getHistoryPath());
       if (!historyFile.exists()) {
@@ -401,7 +401,7 @@ public class DataPersister {
    * @param optionsMap The options map to save
    * @param activity   The caller activity, needed to display popups (eventually)
    */
-  public static void saveOptions(final HashMap<String, Serializable> optionsMap, final Activity activity) {
+  public static synchronized void saveOptions(final HashMap<String, Serializable> optionsMap, final Activity activity) {
     try {
 
       File optionsFile = new File(storagePath.getAbsolutePath() + File.separator + ICHING_OPTIONS_FILENAME);

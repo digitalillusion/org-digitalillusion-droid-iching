@@ -3,9 +3,8 @@ package org.digitalillusion.droid.iching.utils;
 import android.content.Context;
 import android.content.res.Resources.NotFoundException;
 import android.util.Log;
+import android.util.Pair;
 
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
 import org.digitalillusion.droid.iching.changinglines.ChangingLinesEvaluator;
 import org.digitalillusion.droid.iching.utils.lists.HistoryEntry;
 
@@ -21,6 +20,7 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -80,12 +80,14 @@ public class Utils {
     HttpURLConnection con = null;
     InputStream is = null;
 
-    List<BasicNameValuePair> pairs = new ArrayList<BasicNameValuePair>();
+    String queryString = "";
     for (String[] p : params) {
-      pairs.add(new BasicNameValuePair(p[0], p[1]));
+        if (!queryString.equals(Utils.EMPTY_STRING)) {
+            queryString += "&";
+        }
+        queryString += URLEncoder.encode(p[0], "utf-8") + "=" + URLEncoder.encode(p[1], "utf-8");
     }
 
-    String queryString = URLEncodedUtils.format(pairs, "utf-8");
     url += (!url.endsWith("?") ? "?" : EMPTY_STRING) + queryString;
 
     con = (HttpURLConnection) new URL(url).openConnection();
