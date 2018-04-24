@@ -87,10 +87,22 @@
     </string>
     <string name="options_govegan">Author\'s note</string>
     <string name="options_govegan_message">
-..........__._.___..__._____.__._.__._._.__.......\n
-......../ _` / _ \\.\\ V / -_/ _` / _` | \', \\......\n
-........\\__, \\___/..\\_/\\___\\__, \\__,_|_||_|......\n
-........|___/..............|___/.................\n
+        &lt;p&gt;
+        	Dear User, it is a complicate time to be alive and the ancient I Ching method,
+            also in this modern shape, finds its utility. Since you are as well interested in
+            understanding the Tao you are very likely to be a spiritual and far-sighted
+            person. Therefore, I urge you about the need adopt a vegan lifestyle, if you didn\'t
+            already. There are several reasons to do so: it is a choice of compassion, a deeper
+            consciousness that brings wisdom and unity among sentient beings, in a world blinded
+            by power and profit.
+            It\'s the most effective choice that a single individual can make, encompassing
+            the people, the planet and the animals altogether.
+        &lt;/p&gt;
+        &lt;p&gt;
+        	\'\'For as long as men massacre animals, they will kill each other. He who
+             sows the seed of murder and pain cannot reap joy and love.\'\' &lt;br/&gt;
+        	--Pythagoras
+        &lt;/p&gt;
    </string>
     <string name="options_settings">Settings</string>
     <string name="settings_vibration">Vibration</string>

@@ -84,21 +84,33 @@ Obrigado por seus comentários, &lt;br/&gt;
 namasté!
         &lt;/p&gt;
     </string>
-    <string name="options_govegan">Author\'s note</string>
+    <string name="options_govegan">Nota do autor</string>
     <string name="options_govegan_message">
-..........__._.___..__._____.__._.__._._.__.......\n
-......../ _` / _ \\.\\ V / -_/ _` / _` | \', \\......\n
-........\\__, \\___/..\\_/\\___\\__, \\__,_|_||_|......\n
-........|___/..............|___/.................\n
+        &lt;p&gt;
+        	Prezado Usuário, são tempos complicados para se viver e o antigo método I Ching,
+            também nesta forma moderna, mostra-se útil.
+            Já que você está interessado em entender o Tao, provavelmente é uma pessoa espiritualizada e consciente.
+            Sendo assim, gostaria de insistir na necessidade de adotar um estilo de vida vegano, se ainda não o fez.
+            Há várias razões para fazê-lo:
+            É uma escolha compassiva, uma consciência profunda que traz sabedoria e unidade entre seres inteligentes,
+            em um mundo cego por poder e lucro.
+            É a escolha mais eficaz que um indivíduo pode fazer, englobando completamente as pessoas,
+            o planeta e os animais.
+        &lt;/p&gt;
+        &lt;p&gt;
+        	\'\'Enquanto os homens massacrarem animais, eles se matarão uns aos outros.
+            Aquele que semeia a morte e o sofrimento não pode colher a alegria e o amor.\'\' &lt;br/&gt;
+        	--Pitágoras
+        &lt;/p&gt;
    </string>
     <string name="options_settings">Configurações</string>
     <string name="settings_vibration">Vibração</string>
     <string name="settings_vibration_0">Desligado</string>
     <string name="settings_vibration_1">Na geração do Hexagrama</string>
     <string name="settings_divination_method">Método de adivinhação</string>
-    <string name="settings_divination_method_0">Jogar moedas (automático)</string>
-    <string name="settings_divination_method_1">Jogar moedas (manual)</string>
-    <string name="settings_divination_method_2">Agitar moedas (manual)</string>
+    <string name="settings_divination_method_0">Jogar as moedas (automático)</string>
+    <string name="settings_divination_method_1">Jogar as moedas (manual)</string>
+    <string name="settings_divination_method_2">Agitar as moedas (manual)</string>
     <string name="settings_chlines_evaluator">Avaliador das linhas mutantes</string>
     <string name="settings_chlines_evaluator_0">Manual</string>
     <string name="settings_chlines_evaluator_1">Mestre Yin</string>
@@ -205,7 +217,7 @@ tem suas raízes comuns aqui.</string>
     <string name="intro_history">Ver histórico</string>
     <string name="consult_tapcoins">Toque as moedas para gerar um hexagrama</string>
     <string name="consult_tapcoins_manual">Toque as moedas para gerar um hexagrama. Passe para cima para confirmar uma linha, para baixo para apagá-la</string>
-    <string name="consult_shakecoins_manual">Agite seu telefone para virar as moedas. Assim que você parar, uma linha de hexagrama é gerada</string>
+    <string name="consult_shakecoins_manual">Agite seu telefone para jogar as moedas. Tão logo você parar, uma linha do hexagrama será gerada.</string>
     <string name="consult_read_desc">Leia Descrição</string>
     <string name="read_desc">Descrição</string>
     <string name="read_judge">O Julgamento</string>
