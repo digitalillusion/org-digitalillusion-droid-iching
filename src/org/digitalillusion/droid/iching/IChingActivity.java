@@ -837,8 +837,7 @@ public class IChingActivity extends IChingActivityRenderer {
         break;
       case R.id.omGoVegan:
         alertDialog.setMessage(Utils.s(R.string.options_govegan));
-        tvMessage.setText(Utils.s(R.string.options_govegan_message));
-        tvMessage.setTypeface(Typeface.MONOSPACE);
+        tvMessage.setText(Html.fromHtml(Utils.s(R.string.options_govegan_message)));
         alertDialog.show();
         break;
       case R.id.omReadDescEdit:
