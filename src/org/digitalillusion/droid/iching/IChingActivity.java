@@ -873,6 +873,8 @@ public class IChingActivity extends IChingActivityRenderer {
     omAlgo.setTitle(R.string.options_algo);
     final MenuItem omAbout = menu.findItem(R.id.omAbout);
     omAbout.setTitle(R.string.options_about);
+    final MenuItem omGoVegan = menu.findItem(R.id.omGoVegan);
+    omGoVegan.setTitle(R.string.options_govegan);
     return true;
   }
 
