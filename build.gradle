@@ -20,8 +20,8 @@ android {
     defaultConfig {
         minSdkVersion 11
         targetSdkVersion 17
-        versionCode 70
-        versionName "1.9.0"
+        versionCode 73
+        versionName "1.9.1"
     }
     sourceSets {
         main {

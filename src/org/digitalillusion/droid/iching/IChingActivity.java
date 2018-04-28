@@ -837,8 +837,6 @@ public class IChingActivity extends IChingActivityRenderer {
         break;
       case R.id.omGoVegan:
         alertDialog.setTitle(Utils.s(R.string.options_govegan));
-        tvMessage.setTypeface(Typeface.MONOSPACE);
-        tvMessage.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.text_size_smaller));
         tvMessage.setText(Html.fromHtml(Utils.s(R.string.options_govegan_message)));
         alertDialog.show();
         break;
@@ -875,6 +873,8 @@ public class IChingActivity extends IChingActivityRenderer {
     omAlgo.setTitle(R.string.options_algo);
     final MenuItem omAbout = menu.findItem(R.id.omAbout);
     omAbout.setTitle(R.string.options_about);
+    final MenuItem omGoVegan = menu.findItem(R.id.omGoVegan);
+    omGoVegan.setTitle(R.string.options_govegan);
     return true;
   }
 
