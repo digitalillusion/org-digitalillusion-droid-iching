@@ -12,6 +12,7 @@ apply plugin: 'android'
 
 dependencies {
     implementation(fileTree(include: '*.jar', dir: 'libs'))
+    implementation 'com.android.support:support-compat:24.2.0'
 }
 
 android {
@@ -20,8 +21,8 @@ android {
     defaultConfig {
         minSdkVersion 11
         targetSdkVersion 29
-        versionCode 73
-        versionName "1.9.1"
+        versionCode 74
+        versionName "1.10.0"
     }
     sourceSets {
         main {

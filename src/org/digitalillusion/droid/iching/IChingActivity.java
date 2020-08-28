@@ -413,7 +413,16 @@ public class IChingActivity extends IChingActivityRenderer {
             IChingActivity.this,
             android.R.layout.simple_spinner_item,
             optionsText
-        );
+        ) {
+          @Override
+          public View getView(int position, View convertView, ViewGroup parent) {
+            TextView view = (TextView) super.getView(position, convertView, parent);
+            if (Utils.isDarkMode(settings)) {
+              view.setTextColor(getResources().getColor(android.R.color.primary_text_dark));
+            }
+            return view;
+          }
+        };
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(arrayAdapter);
         spinner.setSelection(entry.getOptionIndex());
@@ -569,6 +578,9 @@ public class IChingActivity extends IChingActivityRenderer {
     final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
         .getMenuInfo();
     ListView lvHistory = (ListView) findViewById(R.id.lvHistory);
+    if (lvHistory == null) {
+      return true;
+    }
     final BaseAdapter listAdapter = (BaseAdapter) lvHistory.getAdapter();
     final View tvHistory = (View) findViewById(R.id.tvHistory);
     contextSelectDialog = new AlertDialog.Builder(IChingActivity.this).create();

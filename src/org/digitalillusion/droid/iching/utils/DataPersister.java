@@ -1,10 +1,14 @@
 package org.digitalillusion.droid.iching.utils;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import org.digitalillusion.droid.iching.R;
@@ -226,35 +230,39 @@ public class DataPersister {
    */
   @SuppressWarnings("unchecked")
   public static synchronized void loadOptions(Activity context, HashMap<String, Serializable> optionsMap) throws IOException, FileNotFoundException {
-    initStoragePath(context, optionsMap);
-    // Storage option has been created at this point
-    if (optionsMap.size() == 1) {
-      if (forceSwitchStorage && !failLoadOptions) {
-        failLoadOptions = true;
-        throw new IOException("Switched storage due to I/O error");
-      }
-
-      File optionsFile = new File(storagePath + File.separator + ICHING_OPTIONS_FILENAME);
-      if (optionsFile.exists()) {
-        FileInputStream fis = new FileInputStream(optionsFile);
-        ObjectInputStream stream = new ObjectInputStream(fis);
-        try {
-          HashMap<String, Serializable> persistedMap = (HashMap<String, Serializable>) stream.readObject();
-          for (Entry<String, Serializable> entry : persistedMap.entrySet()) {
-            // Do not override the storage setting set above
-            if (!SettingsManager.SETTINGS_MAP.STORAGE.getKey().equals(entry.getKey())) {
-              optionsMap.put(entry.getKey(), entry.getValue());
-            }
-          }
-        } catch (ClassNotFoundException e) {
-          e.printStackTrace();
-          Log.e("DataPersister.loadOptions", e.getMessage());
+    if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+      ActivityCompat.requestPermissions(context, new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, 1);
+    } else {
+      initStoragePath(context, optionsMap);
+      // Storage option has been created at this point
+      if (optionsMap.size() == 1) {
+        if (forceSwitchStorage && !failLoadOptions) {
+          failLoadOptions = true;
+          throw new IOException("Switched storage due to I/O error");
         }
-        if (optionsMap.size() == 0) {
+
+        File optionsFile = new File(storagePath + File.separator + ICHING_OPTIONS_FILENAME);
+        if (optionsFile.exists()) {
+          FileInputStream fis = new FileInputStream(optionsFile);
+          ObjectInputStream stream = new ObjectInputStream(fis);
+          try {
+            HashMap<String, Serializable> persistedMap = (HashMap<String, Serializable>) stream.readObject();
+            for (Entry<String, Serializable> entry : persistedMap.entrySet()) {
+              // Do not override the storage setting set above
+              if (!SettingsManager.SETTINGS_MAP.STORAGE.getKey().equals(entry.getKey())) {
+                optionsMap.put(entry.getKey(), entry.getValue());
+              }
+            }
+          } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            Log.e("DataPersister.loadOptions", e.getMessage());
+          }
+          if (optionsMap.size() == 0) {
+            throw new FileNotFoundException();
+          }
+        } else {
           throw new FileNotFoundException();
         }
-      } else {
-        throw new FileNotFoundException();
       }
     }
   }
