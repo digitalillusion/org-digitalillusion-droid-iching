@@ -28,6 +28,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -43,6 +44,7 @@ import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.TwoLineListItem;
 
 import org.digitalillusion.droid.iching.anim.AnimCoin;
 import org.digitalillusion.droid.iching.changinglines.ChangingLinesEvaluator;
@@ -381,6 +383,16 @@ public class IChingActivity extends IChingActivityRenderer {
       public String getText2(SettingsEntry<?> entry) {
         return Utils.s(Utils.getResourceByName(R.string.class, entry.getOptionName() + Utils.UNDERSCORE + entry.getOptionValue()));
       }
+
+      @Override
+      public View getView(int position, View convertView, ViewGroup parent) {
+        TwoLineListItem line = (TwoLineListItem) super.getView(position, convertView, parent);
+        if (Utils.isDarkMode()) {
+          line.getText1().setTextColor(getResources().getColor(android.R.color.primary_text_dark));
+          line.getText2().setTextColor(getResources().getColor(android.R.color.primary_text_dark));
+        }
+        return line;
+      }
     });
 
     lvSettings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -692,6 +704,10 @@ public class IChingActivity extends IChingActivityRenderer {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Utils.setContext(getApplicationContext());
+
+    if (Utils.isDarkMode()) {
+      setTheme(android.R.style.Theme_Holo);
+    }
 
     loadSettings();
 

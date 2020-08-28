@@ -8,6 +8,7 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -824,15 +825,21 @@ public class IChingActivityRenderer extends Activity {
                 failureTask.run();
             }
 
-            tvHistory.setVisibility(View.GONE);
-            etQuestion.requestFocus();
+            if (tvHistory != null) {
+                tvHistory.setVisibility(View.GONE);
+            }
+            if (etQuestion != null) {
+                etQuestion.requestFocus();
+            }
         } catch (IOException e) {
             // Run failure task if any
             if (failureTask != null) {
                 failureTask.run();
             }
 
-            tvHistory.setVisibility(View.GONE);
+            if (tvHistory != null) {
+                tvHistory.setVisibility(View.GONE);
+            }
             AlertDialog alertDialog = new AlertDialog.Builder(IChingActivityRenderer.this).create();
             alertDialog.setMessage(Utils.s(R.string.history_unavailable));
             alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, Utils.s(android.R.string.ok), new DialogInterface.OnClickListener() {
@@ -956,6 +963,9 @@ public class IChingActivityRenderer extends Activity {
                 final TextView tvChanging = (TextView) findViewById(R.id.tvChanging);
                 tvChanging.setVisibility(View.VISIBLE);
                 tvChanging.setText(Html.fromHtml("<small>" + getChangingLinesDescription(current) + "</small>"));
+                if (!Utils.isDarkMode()) {
+                    tvChanging.setTextColor(getResources().getColor(android.R.color.primary_text_light));
+                }
                 break;
             default:
                 for (int i = 0; i < Consts.HEX_LINES_COUNT; i++) {
@@ -1123,6 +1133,9 @@ public class IChingActivityRenderer extends Activity {
 
         final TextView tvChanging = (TextView) findViewById(R.id.tvChanging);
         tvChanging.setVisibility(View.VISIBLE);
+        if (!Utils.isDarkMode()) {
+            tvChanging.setTextColor(getResources().getColor(android.R.color.primary_text_light));
+        }
         tvChanging.setText(Html.fromHtml("<small>" + getChangingLinesDescription(current) + "</small>"));
 
         renderOptionsMenu();
@@ -1241,6 +1254,10 @@ public class IChingActivityRenderer extends Activity {
             int height = (int) getResources().getDimension(R.dimen.hex_small_row_height);
             Bitmap bMap = BitmapFactory.decodeResource(getResources(), lineRes);
             Bitmap bMapScaled = Bitmap.createScaledBitmap(bMap, width, height, true);
+            if (!Utils.isDarkMode()) {
+                bMapScaled = Utils.invert(bMapScaled);
+                tvRow.setTextColor(getResources().getColor(android.R.color.primary_text_light));
+            }
             Drawable drawable = new BitmapDrawable(getResources(), bMapScaled);
             tvRow.setCompoundDrawablesWithIntrinsicBounds(
                     null, null, drawable, null
@@ -1291,10 +1308,19 @@ public class IChingActivityRenderer extends Activity {
         adapterLines.removeAll(Collections.singleton(Utils.EMPTY_STRING));
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 getApplicationContext(),
-                android.R.layout.simple_spinner_item,
+                android.R.layout.simple_dropdown_item_1line,
                 adapterLines.toArray(new String[adapterLines.size()])
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                TextView view = (TextView) super.getView(position, convertView, parent);
+                if (Utils.isDarkMode()) {
+                    view.setTextColor(getResources().getColor(android.R.color.primary_text_dark));
+                }
+                return view;
+            }
+        };
+        spinner.setMinimumHeight(50);
         spinner.setAdapter(adapter);
         spinner.setVisibility(View.VISIBLE);
         spinner.setOnItemSelectedListener(new OnItemSelectedListener() {

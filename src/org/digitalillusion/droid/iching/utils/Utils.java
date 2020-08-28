@@ -1,7 +1,14 @@
 package org.digitalillusion.droid.iching.utils;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
 import android.util.Log;
 import android.util.Pair;
 
@@ -688,5 +695,47 @@ public class Utils {
 
   public static boolean isConstituent(String hex, int line) {
     return Arrays.binarySearch(ChangingLinesEvaluator.ICHING_CONSTITUENT_LINE[line], Integer.parseInt(hex)) >= 0;
+  }
+
+  public static boolean isDarkMode() {
+    Resources resources = Utils.context.getResources();
+    Configuration config = resources.getConfiguration();
+    int currentNightMode = config.uiMode & Configuration.UI_MODE_NIGHT_MASK;
+    switch (currentNightMode) {
+      case Configuration.UI_MODE_NIGHT_NO:
+        return false;
+      case Configuration.UI_MODE_NIGHT_YES:
+      default:
+        return true;
+    }
+  }
+
+  public static Bitmap invert(Bitmap src)
+  {
+    int height = src.getHeight();
+    int width = src.getWidth();
+
+    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+    Canvas canvas = new Canvas(bitmap);
+    Paint paint = new Paint();
+
+    ColorMatrix matrixGrayscale = new ColorMatrix();
+    matrixGrayscale.setSaturation(0);
+
+    ColorMatrix matrixInvert = new ColorMatrix();
+    matrixInvert.set(new float[]
+            {
+                    -1.0f, 0.0f, 0.0f, 0.0f, 255.0f,
+                    0.0f, -1.0f, 0.0f, 0.0f, 255.0f,
+                    0.0f, 0.0f, -1.0f, 0.0f, 255.0f,
+                    0.0f, 0.0f, 0.0f, 1.0f, 0.0f
+            });
+    matrixInvert.preConcat(matrixGrayscale);
+
+    ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrixInvert);
+    paint.setColorFilter(filter);
+
+    canvas.drawBitmap(src, 0, 0, paint);
+    return bitmap;
   }
 }
