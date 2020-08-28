@@ -1,14 +1,14 @@
 package org.digitalillusion.droid.iching;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
@@ -62,7 +62,6 @@ import org.digitalillusion.droid.iching.utils.lists.SettingsEntry;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -406,7 +405,7 @@ public class IChingActivity extends IChingActivityRenderer {
           optionsText[count++] = Utils.s(Utils.getResourceByName(R.string.class, entry.getOptionName() + Utils.UNDERSCORE + value.toString()));
         }
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-            getApplicationContext(),
+            IChingActivity.this,
             android.R.layout.simple_spinner_item,
             optionsText
         );
@@ -435,7 +434,7 @@ public class IChingActivity extends IChingActivityRenderer {
                                              final Serializable newValue,
                                              final Runnable renderSettingChange) {
             boolean changed = true;
-            Context context = IChingActivity.this.getBaseContext();
+            Context context = IChingActivity.this;
             switch (mapKey) {
               case LANGUAGE:
                 Locale locale = new Locale(newValue.toString());
@@ -703,10 +702,10 @@ public class IChingActivity extends IChingActivityRenderer {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Utils.setContext(getApplicationContext());
+    Utils.setContext(this);
 
     if (Utils.isDarkMode()) {
-      setTheme(android.R.style.Theme_Holo);
+      setTheme(android.R.style.Theme_Material);
     }
 
     loadSettings();
@@ -794,7 +793,7 @@ public class IChingActivity extends IChingActivityRenderer {
   public boolean onOptionsItemSelected(MenuItem item) {
     final AlertDialog alertDialog = new AlertDialog.Builder(IChingActivity.this).create();
 
-    TextView tvMessage = new TextView(getApplicationContext());
+    TextView tvMessage = new TextView(this);
     tvMessage.setId(android.R.id.message);
     tvMessage.setBackgroundColor(getResources().getColor(android.R.color.background_dark));
     tvMessage.setTextColor(getResources().getColor(android.R.color.primary_text_dark));
@@ -1118,7 +1117,7 @@ public class IChingActivity extends IChingActivityRenderer {
   private void loadSettings() {
     try {
       if (settings == null) {
-        settings = new SettingsManager(getApplicationContext());
+        settings = new SettingsManager(this);
       }
       settings.load();
       if (current.viewId != null) {

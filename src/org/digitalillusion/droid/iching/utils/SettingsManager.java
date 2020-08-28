@@ -1,8 +1,10 @@
 package org.digitalillusion.droid.iching.utils;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Build;
 
 import org.digitalillusion.droid.iching.IChingActivity;
 import org.digitalillusion.droid.iching.utils.lists.SettingsEntry;
@@ -192,7 +194,7 @@ public class SettingsManager {
     if (!config.locale.equals(locale)) {
       Locale.setDefault(locale);
       config.locale = locale;
-      resources.updateConfiguration(config, null);
+      resources.updateConfiguration(config, resources.getDisplayMetrics());
       put(SETTINGS_MAP.LANGUAGE, locale.getLanguage());
       return true;
     }

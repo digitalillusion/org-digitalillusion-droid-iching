@@ -50,7 +50,7 @@ public class DataPersister {
   /**
    * Path of the local history resources *
    */
-  private static final String ICHING_SDCARD_FILES_PATH = "/Android/data/org.digitalillusion.droid.iching/files/";
+  private static final String ICHING_SDCARD_FILES_PATH = "/Android/data/org.digitalillusion.droid.iching/files";
 
   private static final String ICHING_HISTORY_PATH_FILENAME_PREFIX = "history";
 
@@ -202,7 +202,7 @@ public class DataPersister {
           if (historyName.equals(ICHING_HISTORY_PATH_FILENAME_DEFAULT)) {
             // If default history is corrupted, factory reset
             e.printStackTrace();
-            Log.e("IChingActivity.loadHistory()", e.getMessage());
+            Log.e("DataPersister.loadHistory", e.getMessage());
             historyFile.delete();
             throw new IOException(e.getMessage());
           }
@@ -248,7 +248,7 @@ public class DataPersister {
           }
         } catch (ClassNotFoundException e) {
           e.printStackTrace();
-          Log.e("IChingActivity.loadOptions()", e.getMessage());
+          Log.e("DataPersister.loadOptions", e.getMessage());
         }
         if (optionsMap.size() == 0) {
           throw new FileNotFoundException();
@@ -382,6 +382,7 @@ public class DataPersister {
         public void onClick(DialogInterface dialog, int which) {
         }
       });
+      alertDialog.show();
     } catch (GeneralSecurityException e) {
       AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
       alertDialog.setMessage(Utils.s(R.string.crypto_unavailable));

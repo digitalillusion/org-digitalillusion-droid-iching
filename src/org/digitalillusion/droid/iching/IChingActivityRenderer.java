@@ -6,9 +6,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,7 +22,6 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -417,7 +414,7 @@ public class IChingActivityRenderer extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dsHexSection = new HexSectionDataSource(getApplicationContext());
+        dsHexSection = new HexSectionDataSource(this);
         current = new CurrentState();
     }
 
@@ -434,7 +431,7 @@ public class IChingActivityRenderer extends Activity {
 
     public void showToast(CharSequence text) {
         Toast toast = Toast.makeText(
-                getApplicationContext(),
+                this,
                 text,
                 Toast.LENGTH_SHORT
         );
@@ -1246,7 +1243,14 @@ public class IChingActivityRenderer extends Activity {
         }
 
         if (row instanceof TableRow) {
-            ((TableRow) row).setBackgroundResource(lineRes);
+            if (!Utils.isDarkMode()) {
+                Bitmap bMap = BitmapFactory.decodeResource(getResources(), lineRes);
+                bMap = Utils.invert(bMap);
+                Drawable drawable = new BitmapDrawable(getResources(), bMap);
+                ((TableRow) row).setBackgroundDrawable(drawable);
+            } else {
+                ((TableRow) row).setBackgroundResource(lineRes);
+            }
         } else if (row instanceof TextView) {
             TextView tvRow = (TextView) row;
             int padding = (int) getResources().getDimensionPixelSize(R.dimen.text_size_medium);
@@ -1307,7 +1311,7 @@ public class IChingActivityRenderer extends Activity {
         adapterLines.removeAll(Collections.singleton(null));
         adapterLines.removeAll(Collections.singleton(Utils.EMPTY_STRING));
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                getApplicationContext(),
+                this,
                 android.R.layout.simple_dropdown_item_1line,
                 adapterLines.toArray(new String[adapterLines.size()])
         ) {

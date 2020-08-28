@@ -34,7 +34,7 @@ public abstract class ExpandableDropDownListItem2Adapter<T> extends BaseExpandab
     this.inflater = (LayoutInflater) activity
         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     this.list = list;
-    this.context = activity.getApplicationContext();
+    this.context = activity;
     this.expandableListView = expandableListView;
 
     this.textSizeSmall = activity.getResources().getDimensionPixelSize(R.dimen.text_size_small);
@@ -131,7 +131,7 @@ public abstract class ExpandableDropDownListItem2Adapter<T> extends BaseExpandab
 
     if (Utils.isDarkMode()) {
       row.getText1().setTextColor(context.getResources().getColor(android.R.color.primary_text_dark));
-      row.getText2().setTextColor(context.getResources().getColor(android.R.color.primary_text_dark));
+      row.getText2().setTextColor(context.getResources().getColor(android.R.color.secondary_text_dark));
     }
     row.getText1().setText(getText1(groupPosition, -1, entry));
     row.getText2().setText(getText2(groupPosition, -1, entry));
@@ -185,7 +185,7 @@ public abstract class ExpandableDropDownListItem2Adapter<T> extends BaseExpandab
 
     if (Utils.isDarkMode()) {
       row.getText1().setTextColor(context.getResources().getColor(android.R.color.primary_text_dark));
-      row.getText2().setTextColor(context.getResources().getColor(android.R.color.primary_text_dark));
+      row.getText2().setTextColor(context.getResources().getColor(android.R.color.secondary_text_dark));
     }
     row.getText1().setText(getText1(position, position, entry));
     row.getText2().setText(getText2(position, position, entry));

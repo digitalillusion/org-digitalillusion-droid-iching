@@ -3,7 +3,6 @@ package org.digitalillusion.droid.iching;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.text.Editable;
 import android.text.Html;
 import android.widget.Button;
@@ -128,7 +127,7 @@ public class ShareTool {
   }
 
   private String producePage(IChingActivityRenderer.CurrentState state, DialogInterface.OnClickListener retryAction) {
-    final EditText fakeEditText = new EditText(activity.getApplicationContext());
+    final EditText fakeEditText = new EditText(activity);
 
     switch (state.tabIndex) {
       case IChingActivityRenderer.TAB_READ_DESC_CAST_HEXAGRAM:
