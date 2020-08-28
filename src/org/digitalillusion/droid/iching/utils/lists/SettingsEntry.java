@@ -22,6 +22,7 @@ public class SettingsEntry<T extends Serializable> {
   public static final String CONNECTION_MODE = "settings_connection_mode";
   public static final String SHARE = "settings_share";
   public static final String SCREEN_ORIENTATION = "settings_screen_orientation";
+  public static final String THEME = "settings_theme";
 
   private String optionName;
   private T optionValue;

@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TwoLineListItem;
 
+import org.digitalillusion.droid.iching.IChingActivity;
+import org.digitalillusion.droid.iching.IChingActivityRenderer;
 import org.digitalillusion.droid.iching.R;
 import org.digitalillusion.droid.iching.utils.Utils;
 
@@ -23,11 +25,11 @@ public abstract class ListItem2Adapter<T> extends BaseAdapter {
 
   LayoutInflater inflater;
   List<T> list;
-  Context context;
+  IChingActivityRenderer context;
   private float textSizeMedium;
   private float textSizeSmall;
 
-  public ListItem2Adapter(Activity activity, List<T> list) {
+  public ListItem2Adapter(IChingActivityRenderer activity, List<T> list) {
     this.inflater = (LayoutInflater) activity
         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     this.list = list;
@@ -78,7 +80,7 @@ public abstract class ListItem2Adapter<T> extends BaseAdapter {
     @SuppressWarnings("unchecked")
     T entry = (T) getItem(position);
 
-    if (Utils.isDarkMode()) {
+    if (Utils.isDarkMode(context.getSettingsManager())) {
       row.getText1().setTextColor(context.getResources().getColor(android.R.color.primary_text_dark));
       row.getText2().setTextColor(context.getResources().getColor(android.R.color.secondary_text_dark));
     }

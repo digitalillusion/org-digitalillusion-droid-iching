@@ -1,10 +1,8 @@
 package org.digitalillusion.droid.iching.utils;
 
-import android.annotation.TargetApi;
-import android.content.Context;
+import android.app.Activity;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.os.Build;
 
 import org.digitalillusion.droid.iching.IChingActivity;
 import org.digitalillusion.droid.iching.utils.lists.SettingsEntry;
@@ -73,6 +71,12 @@ public class SettingsManager {
         Consts.SCREEN_ORIENTATION_LANDSCAPE,
         Consts.SCREEN_ORIENTATION_PORTRAIT
     });
+    put(SETTINGS_MAP.THEME, new String[]{
+        Consts.THEME_SYSTEM,
+        Consts.THEME_LIGHT,
+        Consts.THEME_DARK,
+        Consts.THEME_HOLO
+    });
   }};
   /**
    * Internal storage of the settings *
@@ -81,9 +85,9 @@ public class SettingsManager {
   /**
    * The activity context
    */
-  private Context context;
+  private Activity context;
 
-  public SettingsManager(Context context) {
+  public SettingsManager(Activity context) {
     this.context = context;
   }
 
@@ -146,7 +150,7 @@ public class SettingsManager {
   }
 
   /**
-   * @see {@link DataPersister#loadOptions(android.content.Context, java.util.HashMap)}
+   * @see {@link DataPersister#loadOptions(android.app.Activity, java.util.HashMap)}
    */
   public synchronized void load() throws FileNotFoundException, IOException {
     DataPersister.loadOptions(context, settingsMap);
@@ -220,6 +224,8 @@ public class SettingsManager {
       return Consts.SHARE_PAGE;
     } else if (setting.equals(SETTINGS_MAP.SCREEN_ORIENTATION)) {
       return Consts.SCREEN_ORIENTATION_ROTATE;
+    }  else if (setting.equals(SETTINGS_MAP.THEME)) {
+      return Consts.THEME_SYSTEM;
     }
 
     throw new InvalidParameterException(setting.getKey() + " does not specify an option.");
@@ -237,7 +243,8 @@ public class SettingsManager {
     STORAGE("storage"),
     CONNECTION_MODE("connectionMode"),
     SHARE("share"),
-    SCREEN_ORIENTATION("screenOrientation");
+    SCREEN_ORIENTATION("screenOrientation"),
+    THEME("theme");
 
 
     private String key;

@@ -219,13 +219,13 @@ public class DataPersister {
   /**
    * Load options
    *
-   * @param context    The base context
+   * @param context    The activity
    * @param optionsMap The options map to load
    * @throws IOException           if load fails due to an IO error
    * @throws FileNotFoundException if no options were saved;
    */
   @SuppressWarnings("unchecked")
-  public static synchronized void loadOptions(Context context, HashMap<String, Serializable> optionsMap) throws IOException, FileNotFoundException {
+  public static synchronized void loadOptions(Activity context, HashMap<String, Serializable> optionsMap) throws IOException, FileNotFoundException {
     initStoragePath(context, optionsMap);
     // Storage option has been created at this point
     if (optionsMap.size() == 1) {
@@ -346,7 +346,7 @@ public class DataPersister {
       File historyFile = new File(storagePath.getAbsolutePath() + getHistoryPath());
       if (!historyFile.exists()) {
         String absPath = historyFile.getAbsolutePath();
-        File historyDir = new File(absPath.substring(0, absPath.lastIndexOf(File.separator)));
+        File historyDir = new File(absPath.substring(0, absPath.lastIndexOf(File.separator) + 1));
         historyDir.mkdirs();
 
         historyFile.createNewFile();
@@ -548,8 +548,7 @@ public class DataPersister {
     }
   }
 
-  private static void initStoragePath(Context context,
-                                      HashMap<String, Serializable> optionsMap) {
+  private static void initStoragePath(Activity context, HashMap<String, Serializable> optionsMap) {
     // Search options file on internal storage first.
     // Otherwise default to sd card if mounted and chosen
     storagePath = context.getFilesDir();

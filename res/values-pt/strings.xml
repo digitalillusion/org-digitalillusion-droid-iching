@@ -138,6 +138,11 @@ namasté!
     <string name="settings_screen_orientation_rotate">Girar</string>
     <string name="settings_screen_orientation_landscape">Paisagem</string>
     <string name="settings_screen_orientation_portrait">Retrato</string>
+    <string name="settings_theme">Tema</string>
+    <string name="settings_theme_system">Sistema</string>
+    <string name="settings_theme_light">Claro</string>
+    <string name="settings_theme_dark">Escuro</string>
+    <string name="settings_theme_holo">Holo</string>
 
     <string name="hex01">乾 Chie / O Criativo</string>
     <string name="hex02">坤 Kun / O Receptivo</string>

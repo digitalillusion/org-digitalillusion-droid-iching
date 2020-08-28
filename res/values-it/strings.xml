@@ -141,6 +141,11 @@
     <string name="settings_screen_orientation_rotate">Ruotare</string>
     <string name="settings_screen_orientation_landscape">Orizzontale</string>
     <string name="settings_screen_orientation_portrait">Verticale</string>
+    <string name="settings_theme">Tema</string>
+    <string name="settings_theme_system">Sistema</string>
+    <string name="settings_theme_light">Chiaro</string>
+    <string name="settings_theme_dark">Scuro</string>
+    <string name="settings_theme_holo">Holo</string>
 
     <string name="hex01">乾 Kkienn / Il Creativo</string>
     <string name="hex02">坤 Kkunn / Il Ricettivo</string>

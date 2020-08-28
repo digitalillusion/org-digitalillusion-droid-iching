@@ -212,14 +212,14 @@
                             android:id="@+id/tvChanging"
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
-                            android:layout_weight="0.33"
+                            android:layout_weight="0.2"
                             android:background="@android:color/transparent"
                             android:fadingEdge="vertical"
                             android:focusable="false"
                             android:paddingLeft="5dp"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:textColor="@android:color/white"
-                            android:textSize="@dimen/text_size_medium"/>
+                            android:textSize="@dimen/text_size_medium" />
 
                         <Spinner
                             android:id="@+id/spChanging"

@@ -11,6 +11,8 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.TwoLineListItem;
 
+import org.digitalillusion.droid.iching.IChingActivity;
+import org.digitalillusion.droid.iching.IChingActivityRenderer;
 import org.digitalillusion.droid.iching.R;
 import org.digitalillusion.droid.iching.utils.Utils;
 
@@ -25,12 +27,12 @@ public abstract class ExpandableDropDownListItem2Adapter<T> extends BaseExpandab
 
   private LayoutInflater inflater;
   private List<T> list;
-  private Context context;
+  private IChingActivityRenderer context;
   private ExpandableListView expandableListView;
   private float textSizeSmall;
   private float textSizeMedium;
 
-  public ExpandableDropDownListItem2Adapter(Activity activity, ExpandableListView expandableListView, List<T> list) {
+  public ExpandableDropDownListItem2Adapter(IChingActivityRenderer activity, ExpandableListView expandableListView, List<T> list) {
     this.inflater = (LayoutInflater) activity
         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     this.list = list;
@@ -76,7 +78,7 @@ public abstract class ExpandableDropDownListItem2Adapter<T> extends BaseExpandab
 
     @SuppressWarnings("unchecked")
     T entry = (T) getItem(childPosition);
-    if (Utils.isDarkMode()) {
+    if (Utils.isDarkMode(context.getSettingsManager())) {
       row.setTextColor(context.getResources().getColor(android.R.color.primary_text_dark));
     }
     row.setText(getText1(groupPosition, childPosition, entry));
@@ -129,7 +131,7 @@ public abstract class ExpandableDropDownListItem2Adapter<T> extends BaseExpandab
     @SuppressWarnings("unchecked")
     T entry = (T) getItem(childPosition);
 
-    if (Utils.isDarkMode()) {
+    if (Utils.isDarkMode(context.getSettingsManager())) {
       row.getText1().setTextColor(context.getResources().getColor(android.R.color.primary_text_dark));
       row.getText2().setTextColor(context.getResources().getColor(android.R.color.secondary_text_dark));
     }
@@ -183,7 +185,7 @@ public abstract class ExpandableDropDownListItem2Adapter<T> extends BaseExpandab
     @SuppressWarnings("unchecked")
     T entry = (T) getItem(position);
 
-    if (Utils.isDarkMode()) {
+    if (Utils.isDarkMode(context.getSettingsManager())) {
       row.getText1().setTextColor(context.getResources().getColor(android.R.color.primary_text_dark));
       row.getText2().setTextColor(context.getResources().getColor(android.R.color.secondary_text_dark));
     }

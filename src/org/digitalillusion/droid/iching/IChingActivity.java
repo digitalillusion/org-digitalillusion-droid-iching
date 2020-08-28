@@ -1,13 +1,11 @@
 package org.digitalillusion.droid.iching;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -371,6 +369,13 @@ public class IChingActivity extends IChingActivityRenderer {
         SettingsManager.SETTINGS_VALUES_MAP.get(SETTINGS_MAP.SCREEN_ORIENTATION),
         SETTINGS_MAP.SCREEN_ORIENTATION
     );
+    // Theme
+    settings.createOption(
+            settingsList,
+            SettingsEntry.THEME,
+            SettingsManager.SETTINGS_VALUES_MAP.get(SETTINGS_MAP.THEME),
+            SETTINGS_MAP.THEME
+    );
 
     lvSettings.setAdapter(new ListItem2Adapter<SettingsEntry<?>>(this, settingsList) {
       @Override
@@ -386,7 +391,7 @@ public class IChingActivity extends IChingActivityRenderer {
       @Override
       public View getView(int position, View convertView, ViewGroup parent) {
         TwoLineListItem line = (TwoLineListItem) super.getView(position, convertView, parent);
-        if (Utils.isDarkMode()) {
+        if (Utils.isDarkMode(settings)) {
           line.getText1().setTextColor(getResources().getColor(android.R.color.primary_text_dark));
           line.getText2().setTextColor(getResources().getColor(android.R.color.primary_text_dark));
         }
@@ -460,6 +465,9 @@ public class IChingActivity extends IChingActivityRenderer {
                   connectionManager.fromOfflineToOnline(IChingActivity.this, renderSettingChange);
                 }
                 break;
+              case THEME:
+                changeTheme(newValue);
+                break;
             }
 
             if (changed) {
@@ -483,6 +491,22 @@ public class IChingActivity extends IChingActivityRenderer {
         spinner.performClick();
       }
     });
+  }
+
+  private void changeTheme(Serializable newValue) {
+    boolean isSystemLight = newValue.equals(Consts.THEME_SYSTEM) && !Utils.isDarkMode(null);
+    boolean isSystemDark = newValue.equals(Consts.THEME_SYSTEM) && Utils.isDarkMode(null);
+    if (isSystemDark || newValue.equals(Consts.THEME_DARK)) {
+      setTheme(android.R.style.Theme_Material);
+    } else if (isSystemLight || newValue.equals(Consts.THEME_LIGHT)) {
+      setTheme(android.R.style.Theme_DeviceDefault_Light);
+    } else if (newValue.equals(Consts.THEME_HOLO)) {
+      setTheme(android.R.style.Theme_Holo);
+    }
+    if (!settings.get(SETTINGS_MAP.THEME).equals(newValue)) {
+      finish();
+      startActivity(getIntent());
+    }
   }
 
   /**
@@ -704,10 +728,6 @@ public class IChingActivity extends IChingActivityRenderer {
     super.onCreate(savedInstanceState);
     Utils.setContext(this);
 
-    if (Utils.isDarkMode()) {
-      setTheme(android.R.style.Theme_Material);
-    }
-
     loadSettings();
 
     sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -795,8 +815,13 @@ public class IChingActivity extends IChingActivityRenderer {
 
     TextView tvMessage = new TextView(this);
     tvMessage.setId(android.R.id.message);
-    tvMessage.setBackgroundColor(getResources().getColor(android.R.color.background_dark));
-    tvMessage.setTextColor(getResources().getColor(android.R.color.primary_text_dark));
+    if (Utils.isDarkMode(settings)) {
+      tvMessage.setBackgroundColor(getResources().getColor(android.R.color.background_dark));
+      tvMessage.setTextColor(getResources().getColor(android.R.color.primary_text_dark));
+    } else {
+      tvMessage.setBackgroundColor(getResources().getColor(android.R.color.background_light));
+      tvMessage.setTextColor(getResources().getColor(android.R.color.primary_text_light));
+    }
     tvMessage.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.text_size_small));
     tvMessage.setPadding(5, 5, 5, 5);
 
@@ -947,6 +972,7 @@ public class IChingActivity extends IChingActivityRenderer {
   @Override
   public void setContentView(int resId) {
     current.viewId = resId;
+    changeTheme(settings.get(SETTINGS_MAP.THEME));
     super.setContentView(current.viewId);
   }
 

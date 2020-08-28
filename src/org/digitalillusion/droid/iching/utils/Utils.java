@@ -5,12 +5,16 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 
+import org.digitalillusion.droid.iching.R;
 import org.digitalillusion.droid.iching.changinglines.ChangingLinesEvaluator;
 import org.digitalillusion.droid.iching.utils.lists.HistoryEntry;
 
@@ -695,7 +699,15 @@ public class Utils {
     return Arrays.binarySearch(ChangingLinesEvaluator.ICHING_CONSTITUENT_LINE[line], Integer.parseInt(hex)) >= 0;
   }
 
-  public static boolean isDarkMode() {
+  public static boolean isDarkMode(SettingsManager settings) {
+    if (settings != null) {
+      if (Consts.THEME_DARK.equals(settings.get(SettingsManager.SETTINGS_MAP.THEME)) ||
+          Consts.THEME_HOLO.equals(settings.get(SettingsManager.SETTINGS_MAP.THEME))) {
+        return true;
+      } else if (Consts.THEME_LIGHT.equals(settings.get(SettingsManager.SETTINGS_MAP.THEME))) {
+        return false;
+      }
+    }
     Resources resources = Utils.context.getResources();
     Configuration config = resources.getConfiguration();
     int currentNightMode = config.uiMode & Configuration.UI_MODE_NIGHT_MASK;
@@ -706,6 +718,12 @@ public class Utils {
       default:
         return true;
     }
+  }
+
+  public static Drawable invertDrawable(Resources resources, int drawableId) {
+    Bitmap bMap = BitmapFactory.decodeResource(resources, drawableId);
+    bMap = Utils.invert(bMap);
+    return new BitmapDrawable(resources, bMap);
   }
 
   public static Bitmap invert(Bitmap src)

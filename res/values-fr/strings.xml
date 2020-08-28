@@ -138,6 +138,11 @@
     <string name="settings_screen_orientation_rotate">Rotation</string>
     <string name="settings_screen_orientation_landscape">Paysage</string>
     <string name="settings_screen_orientation_portrait">Portrait</string>
+    <string name="settings_theme">Thème</string>
+    <string name="settings_theme_system">Système</string>
+    <string name="settings_theme_light">Clair</string>
+    <string name="settings_theme_dark">Sombre</string>
+    <string name="settings_theme_holo">Holo</string>
 
     <string name="hex01">乾 K\'ien / Le Créateur</string>
     <string name="hex02">坤 K\'ouen / Le Réceptif</string>

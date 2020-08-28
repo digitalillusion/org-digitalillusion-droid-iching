@@ -659,6 +659,10 @@ public class IChingActivityRenderer extends Activity {
                 EditText etOutput = (EditText) findViewById(R.id.etOutput);
                 etOutput.setText(RemoteResolver.getSpannedFromRemoteString(def));
 
+                if (Utils.isDarkMode(settings)) {
+                    etOutput.setTextColor(getResources().getColor(android.R.color.primary_text_dark));
+                }
+
                 showToast(text);
 
                 editDescDialog.dismiss();
@@ -864,6 +868,12 @@ public class IChingActivityRenderer extends Activity {
         final MenuItem omEdit = optionsMenu.findItem(R.id.omReadDescEdit);
         final MenuItem omUndo = optionsMenu.findItem(R.id.omReadDescUndo);
         final MenuItem omShare = optionsMenu.findItem(R.id.omReadDescShare);
+        if (!Utils.isDarkMode(settings)) {
+            omEdit.setIcon(Utils.invertDrawable(getResources(), R.drawable.ic_action_edit));
+            omUndo.setIcon(Utils.invertDrawable(getResources(), R.drawable.ic_action_undo));
+            omShare.setIcon(Utils.invertDrawable(getResources(), R.drawable.ic_action_share));
+        }
+
         final MenuItem omGoVegan = optionsMenu.findItem(R.id.omGoVegan);
         if (omEdit != null && omUndo != null && omShare != null) {
             final String dictionary = (String) getSettingsManager().get(SETTINGS_MAP.DICTIONARY);
@@ -917,7 +927,9 @@ public class IChingActivityRenderer extends Activity {
         final Button btReadJudge = (Button) findViewById(R.id.btReadJudge);
         final Spinner spinner = (Spinner) findViewById(R.id.spChanging);
         final TextView tvFurtherReadDesc = (TextView) findViewById(R.id.tvFurtherReadDesc);
-
+        if (!Utils.isDarkMode(settings)) {
+            etOutput.setTextColor(getResources().getColor(android.R.color.primary_text_light));
+        }
         switch (current.screen) {
             case LINES:
                 final List<String> lines = new ArrayList<String>();
@@ -960,7 +972,7 @@ public class IChingActivityRenderer extends Activity {
                 final TextView tvChanging = (TextView) findViewById(R.id.tvChanging);
                 tvChanging.setVisibility(View.VISIBLE);
                 tvChanging.setText(Html.fromHtml("<small>" + getChangingLinesDescription(current) + "</small>"));
-                if (!Utils.isDarkMode()) {
+                if (!Utils.isDarkMode(settings)) {
                     tvChanging.setTextColor(getResources().getColor(android.R.color.primary_text_light));
                 }
                 break;
@@ -1079,6 +1091,9 @@ public class IChingActivityRenderer extends Activity {
         final EditText etOutput = (EditText) findViewById(R.id.etOutput);
         final Spinner spinner = (Spinner) findViewById(R.id.spChanging);
         etOutput.setText(Utils.EMPTY_STRING);
+        if (!Utils.isDarkMode(settings)) {
+            etOutput.setTextColor(getResources().getColor(android.R.color.primary_text_light));
+        }
         switch (mode) {
             case ORACLE:
                 setCurrentSection(current, current.changing);
@@ -1130,7 +1145,7 @@ public class IChingActivityRenderer extends Activity {
 
         final TextView tvChanging = (TextView) findViewById(R.id.tvChanging);
         tvChanging.setVisibility(View.VISIBLE);
-        if (!Utils.isDarkMode()) {
+        if (!Utils.isDarkMode(settings)) {
             tvChanging.setTextColor(getResources().getColor(android.R.color.primary_text_light));
         }
         tvChanging.setText(Html.fromHtml("<small>" + getChangingLinesDescription(current) + "</small>"));
@@ -1243,11 +1258,8 @@ public class IChingActivityRenderer extends Activity {
         }
 
         if (row instanceof TableRow) {
-            if (!Utils.isDarkMode()) {
-                Bitmap bMap = BitmapFactory.decodeResource(getResources(), lineRes);
-                bMap = Utils.invert(bMap);
-                Drawable drawable = new BitmapDrawable(getResources(), bMap);
-                ((TableRow) row).setBackgroundDrawable(drawable);
+            if (!Utils.isDarkMode(settings)) {
+                ((TableRow) row).setBackgroundDrawable(Utils.invertDrawable(getResources(), lineRes));
             } else {
                 ((TableRow) row).setBackgroundResource(lineRes);
             }
@@ -1258,7 +1270,7 @@ public class IChingActivityRenderer extends Activity {
             int height = (int) getResources().getDimension(R.dimen.hex_small_row_height);
             Bitmap bMap = BitmapFactory.decodeResource(getResources(), lineRes);
             Bitmap bMapScaled = Bitmap.createScaledBitmap(bMap, width, height, true);
-            if (!Utils.isDarkMode()) {
+            if (!Utils.isDarkMode(settings)) {
                 bMapScaled = Utils.invert(bMapScaled);
                 tvRow.setTextColor(getResources().getColor(android.R.color.primary_text_light));
             }
@@ -1312,19 +1324,18 @@ public class IChingActivityRenderer extends Activity {
         adapterLines.removeAll(Collections.singleton(Utils.EMPTY_STRING));
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 this,
-                android.R.layout.simple_dropdown_item_1line,
+                android.R.layout.simple_spinner_dropdown_item,
                 adapterLines.toArray(new String[adapterLines.size()])
         ) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 TextView view = (TextView) super.getView(position, convertView, parent);
-                if (Utils.isDarkMode()) {
+                if (Utils.isDarkMode(settings)) {
                     view.setTextColor(getResources().getColor(android.R.color.primary_text_dark));
                 }
                 return view;
             }
         };
-        spinner.setMinimumHeight(50);
         spinner.setAdapter(adapter);
         spinner.setVisibility(View.VISIBLE);
         spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -1447,6 +1458,9 @@ public class IChingActivityRenderer extends Activity {
 
     private void renderQuestion() {
         final TextView tvQuestion = (TextView) findViewById(R.id.tvQuestionReadDesc);
+        if (!Utils.isDarkMode(settings)) {
+            tvQuestion.setTextColor(getResources().getColor(android.R.color.primary_text_light));
+        }
         if (current.question != null && !current.question.isEmpty()) {
             tvQuestion.setText(current.question);
         } else {
