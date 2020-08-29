@@ -24,6 +24,9 @@ public class IncrementalUpgrades {
     if (buildVersion < 69) {
       onUpdateTo69();
     }
+    if (buildVersion < 75) {
+      onUpdateTo75();
+    }
   }
 
   private void onUpdateTo67() {
@@ -33,5 +36,8 @@ public class IncrementalUpgrades {
   private void onUpdateTo69() {
     activity.getHexSectionDataSource().deleteHexSection("53", Consts.DICTIONARY_ALTERVISTA, RemoteResolver.ICHING_REMOTE_SECTION_DESC, Consts.LANGUAGE_PT);
     activity.getHexSectionDataSource().deleteHexSection("01", Consts.DICTIONARY_ALTERVISTA, RemoteResolver.ICHING_REMOTE_SECTION_DESC, Consts.LANGUAGE_EN);
+  }
+  private void onUpdateTo75() {
+    activity.getHexSectionDataSource().deleteHexSection("37", Consts.DICTIONARY_ALTERVISTA, RemoteResolver.ICHING_REMOTE_SECTION_DESC, Consts.LANGUAGE_PT);
   }
 }

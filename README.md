@@ -19,6 +19,9 @@ https://play.google.com/store/apps/details?id=org.digitalillusion.droid.iching
 - Comply with upgrade to API Level 29 directive
 - Dropped support for API Level < 11 (Android 3.0, 2.3.3, 2.3)
 
+Bugfix
+- Fixed some translation errors
+
 *Bugfix Release 1.9.1*
 - Fixed some minor presentational issues
 

@@ -1921,21 +1921,21 @@ $book['37']['line3'] =
   isso conduz, ao final, à humilhação.   \e
   Na família deve prevalecer um justo equilíbrio entre o rigor e a indulgência. Uma severidade excessiva contra os que nos são mais próximos leva ao arrependimento. O mais aconselhável é se fixar limites firmes dentro dos quais se permita aos indivíduos completa liberdade de movimento. Porém, em casos de dúvida, é preferível um excesso de rigor. Este, apesar dos erros que ocasionalmente possa acarretar, preserva ainda a disciplina na família, enquanto a fraqueza excessiva conduz à humilhação. ';
 $book['37']['line4'] = 
-' Six in the fourth place means:
-  She is the treasure of the house. 
-  Great good fortune. \e
-  It is upon the woman of the house that the well-being of the family depends. Well-being prevails when expenditures and income are soundly balanced. This leads to great good fortune. In the sphere of public life, this line refers to the faithful steward whose measures further the general welfare.';
-$book['37']['line5'] = 
-' Seis na quarta posição significa: 
-  Ela é a riqueza da casa. 
+' Seis na quarta posição significa:
+  Ela é a riqueza da casa.
   Grande boa fortuna.  \e
   O bem-estar da família depende da dona da casa. O bem-estar prevalece quando as despesas e a receita são proporcionais. Isso traz grande boa fortuna. Aplicada à esfera da vida pública, essa linha se referiria ao leal administrador, cujas iniciativas propiciam o bem-estar geral. ';
-$book['37']['line6'] = 
-' Nove na quinta posição significa: 
-  Como um rei ele se aproxima de sua família. 
-  Não tema. 
+$book['37']['line5'] = 
+' Nove na quinta posição significa:
+  Como um rei ele se aproxima de sua família.
+  Não tema.
   Boa fortuna.  \e
   O rei é o símbolo de um homem paternal e interiormente rico. Ele não age infundindo temor, mas, ao contrário, toda a família pode confiar nele porque o amor rege seu relacionamento. Seu caráter por si só exerce a influência correta. ';
+$book['37']['line6'] = 
+' Nove na sexta posição significa:
+  Seu trabalho exige respeito.
+  Ao final vem a boa fortuna. \e
+  A ordem da família baseia-se, em última instância, na pessoa do dono da casa. Quando ele cultiva sua personalidade de modo a que sua influência se deva à força da verdade interior, tudo corre bem na família. Aquele que ocupa a posição de direção deve assumir ele próprio as responsabilidades. ';
 
 # -------------------------      38       ----------------------- #
 $book['38']['desc'] = 
