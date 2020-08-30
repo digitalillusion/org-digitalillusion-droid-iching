@@ -125,7 +125,7 @@ namasté!
     <string name="settings_dictionary_altervista">Wilhelm (androidiching.altervista.org)</string>
     <string name="settings_dictionary_custom">Personalizado (local)</string>
     <string name="settings_storage">Armazenamento</string>
-    <string name="settings_storage_sdcard">Cartão SD</string>
+    <string name="settings_storage_sdcard">Cartão SD virtual</string>
     <string name="settings_storage_internal">Armazenamento interno do telefone</string>
     <string name="settings_connection_mode">Modo de conexão</string>
     <string name="settings_connection_mode_online">Conectados</string>

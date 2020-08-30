@@ -128,7 +128,7 @@
     <string name="settings_dictionary_altervista">Wilhelm (androidiching.altervista.org)</string>
     <string name="settings_dictionary_custom">Personalizzato (locale)</string>
     <string name="settings_storage">Salvataggio</string>
-    <string name="settings_storage_sdcard">Carta SD</string>
+    <string name="settings_storage_sdcard">Carta SD virtuale</string>
     <string name="settings_storage_internal">Stoccaggio interno del telefono</string>
     <string name="settings_connection_mode">Modalità di connessione</string>
     <string name="settings_connection_mode_online">In linea</string>

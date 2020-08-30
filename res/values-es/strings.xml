@@ -125,7 +125,7 @@ Mantenga su contraseña en un lugar seguro. Si perdido, que ganó ser capaz de a
 	<string name = "settings_dictionary_altervista"> Wilhelm (androidiching.altervista.org) </string>
 	<string name = "settings_dictionary_custom"> Personalizado (local) </string>
 	<string name = "settings_storage"> Almacenamiento </string>
-	<string name = "settings_storage_sdcard"> Tarjeta SD </string>
+	<string name = "settings_storage_sdcard"> Tarjeta SD Virtual </string>
 	<string name = "settings_storage_internal"> Almacenamiento interno del teléfono </string>
 	<string name = "settings_connection_mode"> Modo de conexión </string>
 	<string name = "settings_connection_mode_online"> Online </string>
