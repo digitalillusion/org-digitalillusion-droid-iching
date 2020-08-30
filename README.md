@@ -13,6 +13,9 @@ https://play.google.com/store/apps/details?id=org.digitalillusion.droid.iching
 
 ## Changelog
 
+*Bugfix Release 1.10.1*
+- Fixed API 29 issues
+
 *Feature Release 1.10.0*
 - Changed contact email address
 - Light & Dark Themes, using system theme by default

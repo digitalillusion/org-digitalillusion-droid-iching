@@ -51,6 +51,7 @@ public class DataPersister {
    */
   public static final String ICHING_HISTORY_PATH_FILENAME_DEFAULT = Utils.s(R.string.history_default);
 
+
   /**
    * Path of the local history resources *
    */
@@ -175,45 +176,49 @@ public class DataPersister {
     }
 
     historyList.clear();
-    File historyFile = new File(storagePath.getAbsolutePath() + getHistoryPath());
-    if (historyFile.exists()) {
+    if (storagePath != null) {
+      File historyFile = new File(storagePath.getAbsolutePath() + getHistoryPath());
+      if (historyFile.exists()) {
 
-      FileInputStream fis = new FileInputStream(historyFile);
-      byte[] encryptedData = Utils.getBytes(fis);
+        FileInputStream fis = new FileInputStream(historyFile);
+        byte[] encryptedData = Utils.getBytes(fis);
 
-      byte[] decryptedData = null;
-      // Default history cannot by password protected
-      if (!historyName.equals(ICHING_HISTORY_PATH_FILENAME_DEFAULT) && historyPassword.length > 0) {
-        Cipher c = Cipher.getInstance(CRYPTO_ALG);
-        SecretKeySpec k =
-            new SecretKeySpec(historyPassword, CRYPTO_ALG);
-        c.init(Cipher.DECRYPT_MODE, k);
-        decryptedData = c.doFinal(encryptedData);
-      } else {
-        decryptedData = encryptedData;
-      }
-
-      try {
-        ObjectInputStream stream = new BackwardCompatibleInputStream(new ByteArrayInputStream(decryptedData));
-        try {
-          ArrayList<HistoryEntry> persistedList = (ArrayList<HistoryEntry>) stream.readObject();
-          // The first entry might be dummy, used only not to save an empty history file upon creation
-          if (!persistedList.isEmpty() && Utils.isDummyHistoryEntry(persistedList.get(0))) {
-            persistedList.remove(0);
-          }
-          historyList.addAll(persistedList);
-        } catch (Exception e) {
-          if (historyName.equals(ICHING_HISTORY_PATH_FILENAME_DEFAULT)) {
-            // If default history is corrupted, factory reset
-            e.printStackTrace();
-            Log.e("DataPersister.loadHistory", e.getMessage());
-            historyFile.delete();
-            throw new IOException(e.getMessage());
-          }
+        byte[] decryptedData = null;
+        // Default history cannot by password protected
+        if (!historyName.equals(ICHING_HISTORY_PATH_FILENAME_DEFAULT) && historyPassword.length > 0) {
+          Cipher c = Cipher.getInstance(CRYPTO_ALG);
+          SecretKeySpec k =
+                  new SecretKeySpec(historyPassword, CRYPTO_ALG);
+          c.init(Cipher.DECRYPT_MODE, k);
+          decryptedData = c.doFinal(encryptedData);
+        } else {
+          decryptedData = encryptedData;
         }
-      } catch (IOException e) {
-        // If it cannot be converted, it is encripted with a different password
-        throw new InvalidKeyException();
+
+        try {
+          ObjectInputStream stream = new BackwardCompatibleInputStream(new ByteArrayInputStream(decryptedData));
+          try {
+            ArrayList<HistoryEntry> persistedList = (ArrayList<HistoryEntry>) stream.readObject();
+            // The first entry might be dummy, used only not to save an empty history file upon creation
+            if (!persistedList.isEmpty() && Utils.isDummyHistoryEntry(persistedList.get(0))) {
+              persistedList.remove(0);
+            }
+            historyList.addAll(persistedList);
+          } catch (Exception e) {
+            if (historyName.equals(ICHING_HISTORY_PATH_FILENAME_DEFAULT)) {
+              // If default history is corrupted, factory reset
+              e.printStackTrace();
+              Log.e("DataPersister.loadHistory", e.getMessage());
+              historyFile.delete();
+              throw new IOException(e.getMessage());
+            }
+          }
+        } catch (IOException e) {
+          // If it cannot be converted, it is encripted with a different password
+          throw new InvalidKeyException();
+        }
+      } else {
+        throw new FileNotFoundException();
       }
     } else {
       throw new FileNotFoundException();
@@ -351,6 +356,9 @@ public class DataPersister {
    */
   public static synchronized boolean saveHistory(final List<HistoryEntry> historyList, final Activity activity) {
     try {
+      if (storagePath == null) {
+        throw new IOException("storagePath not set");
+      }
       File historyFile = new File(storagePath.getAbsolutePath() + getHistoryPath());
       if (!historyFile.exists()) {
         String absPath = historyFile.getAbsolutePath();
@@ -500,14 +508,18 @@ public class DataPersister {
   /**
    * Set the DataPersister to use the external SD card
    *
+   * @param context The activity context
    * @param settings The settings manager
    * @return True if storage is set to SD card, false if an error prevented the setting
    */
-  public static boolean useStorageSDCard(SettingsManager settings) {
+  public static boolean useStorageSDCard(Activity context, SettingsManager settings) {
     if (!Consts.STORAGE_SDCARD.equals(settings.get(SETTINGS_MAP.STORAGE))) {
       File currentDir = new File(storagePath.getAbsolutePath());
-      File sdCardPath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +
-          ICHING_SDCARD_FILES_PATH);
+      String externalDir = context.getExternalFilesDir(null).getAbsolutePath();
+      if (!externalDir.endsWith(ICHING_SDCARD_FILES_PATH)) {
+        externalDir += ICHING_SDCARD_FILES_PATH;
+      }
+      File sdCardPath = new File(externalDir);
       if (isSDWritable() && changeStorage(currentDir, sdCardPath) &&
           currentDir.listFiles() != null && currentDir.listFiles().length > 0) {
         // Remove source files
@@ -566,7 +578,11 @@ public class DataPersister {
     forceSwitchStorage = false;
     if (!testFile.exists() && isSDWritable() && !Consts.STORAGE_INTERNAL.equals(storageOptionValue)) {
       optionsMap.put(storageOptionKey, Consts.STORAGE_SDCARD);
-      storagePath = new File(Environment.getExternalStorageDirectory() + ICHING_SDCARD_FILES_PATH);
+      String externalDir = context.getExternalFilesDir(null).getAbsolutePath();
+      if (!externalDir.endsWith(ICHING_SDCARD_FILES_PATH)) {
+        externalDir += ICHING_SDCARD_FILES_PATH;
+      }
+      storagePath = new File(externalDir);
     } else {
       if (!testFile.exists()) {
         forceSwitchStorage = true;

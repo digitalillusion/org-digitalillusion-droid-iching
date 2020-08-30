@@ -461,7 +461,7 @@ public class IChingActivity extends IChingActivityRenderer {
               case STORAGE:
                 // Switch the storage
                 if (newValue.equals(Consts.STORAGE_SDCARD)) {
-                  changed = DataPersister.useStorageSDCard(settings);
+                  changed = DataPersister.useStorageSDCard(IChingActivity.this, settings);
                 } else if (newValue.equals(Consts.STORAGE_INTERNAL)) {
                   changed = DataPersister.useStorageInternal(settings, context);
                 }
