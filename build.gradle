@@ -1,28 +1,32 @@
 buildscript {
     repositories {
-        jcenter()
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.1'
+        classpath 'com.android.tools.build:gradle:7.4.2'
     }
 }
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 dependencies {
     implementation(fileTree(include: '*.jar', dir: 'libs'))
-    implementation 'com.android.support:support-compat:24.2.0'
 }
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion '29.0.2'
+    signingConfigs {
+        release {
+        storeFile file('/home/adriano/Documenti/Impostazioni/Android/digitalillusion')
+            keyAlias 'digitalillusion'
+        }
+    }
+    namespace 'org.digitalillusion.droid.iching'
+    compileSdkVersion 33
     defaultConfig {
-        minSdkVersion 11
-        targetSdkVersion 29
-        versionCode 78
-        versionName "1.10.2"
+        minSdkVersion 14
+        targetSdkVersion 33
+        versionCode 80
+        versionName "1.10.3"
     }
     sourceSets {
         main {
@@ -44,13 +48,21 @@ android {
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
     }
-    lintOptions {
-        // check for errors in release builds, but continue the build even when errors are found:
+    lint {
         abortOnError false
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            debuggable false
+        }
+        debug {
+            applicationIdSuffix ".debug"
+            debuggable true
+        }
     }
 }
 repositories {
-    jcenter()
     google()
     mavenCentral()
 }

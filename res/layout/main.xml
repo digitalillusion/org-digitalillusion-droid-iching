@@ -98,7 +98,9 @@
             android:listSelector="@android:color/transparent"
             android:padding="5dp"
             android:scrollbarStyle="insideInset"
-            android:scrollbars="vertical">
+            android:scrollbars="vertical"
+            android:focusable="false"
+            android:focusableInTouchMode="false">
 
             <!-- Preview: listitem=@android:layout/simple_list_item_2 -->
         </ListView>

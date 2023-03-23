@@ -115,6 +115,7 @@ namasté!
     <string name="settings_chlines_evaluator_0">Manual</string>
     <string name="settings_chlines_evaluator_1">Mestre Yin</string>
     <string name="settings_chlines_evaluator_2">Nanjing</string>
+    <string name="settings_chlines_evaluator_3">Selecionar mutante</string>
     <string name="settings_lang">Idioma</string>
     <string name="settings_lang_en">English</string>
     <string name="settings_lang_es">Español</string>
@@ -125,7 +126,7 @@ namasté!
     <string name="settings_dictionary_altervista">Wilhelm (androidiching.altervista.org)</string>
     <string name="settings_dictionary_custom">Personalizado (local)</string>
     <string name="settings_storage">Armazenamento</string>
-    <string name="settings_storage_sdcard">Cartão SD virtual</string>
+    <string name="settings_storage_sdcard">Cartão SD</string>
     <string name="settings_storage_internal">Armazenamento interno do telefone</string>
     <string name="settings_connection_mode">Modo de conexão</string>
     <string name="settings_connection_mode_online">Conectados</string>

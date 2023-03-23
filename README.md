@@ -13,6 +13,13 @@ https://play.google.com/store/apps/details?id=org.digitalillusion.droid.iching
 
 ## Changelog
 
+*Bugfix Release 1.10.3*
+- Mandatory update to API 33
+- Dropped support prior to Android 4
+
+*Bugfix Release 1.10.2*
+- API 29 removes access to SD card. 
+
 *Bugfix Release 1.10.1*
 - Fixed API 29 issues
 

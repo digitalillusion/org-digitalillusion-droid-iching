@@ -93,6 +93,16 @@ public class IChingActivity extends IChingActivityRenderer {
   private Random rndGen = new Random();
 
   /**
+   * Flag indicating that onResume was called
+   */
+  private boolean onResumeCalledAlready;
+  /**
+   * Key to access the onResume called flag in the instance state
+   */
+  private String ON_RESUME_CALLED_PREFERENCE_KEY = "onResumeCalled";
+
+
+  /**
    * Move to the consult view
    */
   public void gotoConsult() {
@@ -203,14 +213,10 @@ public class IChingActivity extends IChingActivityRenderer {
     renderOptionsMenu();
 
     // Trigger load history
-    renderLoadHistory(null, new Runnable() {
-      public void run() {
-        if (historyList.size() == 0) {
-          historyList.add(Utils.buildDummyHistoryEntry());
-          // If default history file does not exist, create it
-          DataPersister.saveHistory(historyList, IChingActivity.this);
-          historyList.clear();
-        }
+    renderLoadHistory(null, () -> {
+      if (historyList.size() == 0) {
+        historyList.add(Utils.buildDummyHistoryEntry());
+        historyList.clear();
       }
     });
 
@@ -448,7 +454,6 @@ public class IChingActivity extends IChingActivityRenderer {
                                              final Serializable newValue,
                                              final Runnable renderSettingChange) {
             boolean changed = true;
-            Context context = IChingActivity.this;
             switch (mapKey) {
               case LANGUAGE:
                 Locale locale = new Locale(newValue.toString());
@@ -463,7 +468,7 @@ public class IChingActivity extends IChingActivityRenderer {
                 if (newValue.equals(Consts.STORAGE_SDCARD)) {
                   changed = DataPersister.useStorageSDCard(IChingActivity.this, settings);
                 } else if (newValue.equals(Consts.STORAGE_INTERNAL)) {
-                  changed = DataPersister.useStorageInternal(settings, context);
+                  changed = DataPersister.useStorageInternal(IChingActivity.this, settings);
                 }
                 break;
               case CONNECTION_MODE:
@@ -741,11 +746,18 @@ public class IChingActivity extends IChingActivityRenderer {
     Utils.setContext(this);
 
     loadSettings();
+    changeTheme(settings.get(SETTINGS_MAP.THEME));
 
     sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
     accelerometer = sensorManager
         .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     shakeDetector = new ShakeDetector();
+
+    if (savedInstanceState != null) {
+      onResumeCalledAlready = savedInstanceState.getBoolean(ON_RESUME_CALLED_PREFERENCE_KEY);
+    } else {
+      onResumeCalledAlready = false;
+    }
   }
 
   /**
@@ -973,7 +985,23 @@ public class IChingActivity extends IChingActivityRenderer {
     READ_DESC_MODE mode = current.mode == null ? READ_DESC_MODE.ORACLE : current.mode;
     savedInstanceState.putString("mode", String.valueOf(mode));
 
+    savedInstanceState.putBoolean(ON_RESUME_CALLED_PREFERENCE_KEY, onResumeCalledAlready);
+
     super.onSaveInstanceState(savedInstanceState);
+  }
+
+  /**
+   * Handle permission requests
+   * @param requestCode
+   * @param permissions
+   * @param grantResults
+   */
+  @Override
+  public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    switch (requestCode) {
+      default:
+        break;
+    }
   }
 
   /**
@@ -992,22 +1020,26 @@ public class IChingActivity extends IChingActivityRenderer {
   protected void onResume() {
     super.onResume();
 
-    loadSettings();
-    switch (current.viewId) {
-      case R.layout.consult:
-        gotoConsult();
-        break;
-      case R.layout.readdesc:
-        gotoReadDesc();
-        break;
-      case R.layout.settings:
-        gotoSettings();
-        break;
-      default:
-        gotoMain();
-    }
+    if (!onResumeCalledAlready) {
+      onResumeCalledAlready = true;
 
-    onAppUpgrade();
+      loadSettings();
+      switch (current.viewId) {
+        case R.layout.consult:
+          gotoConsult();
+          break;
+        case R.layout.readdesc:
+          gotoReadDesc();
+          break;
+        case R.layout.settings:
+          gotoSettings();
+          break;
+        default:
+          gotoMain();
+      }
+
+      onAppUpgrade();
+    }
   }
 
   private void prepareDivinationMethod() {

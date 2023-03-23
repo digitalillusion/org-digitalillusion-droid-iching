@@ -77,6 +77,10 @@ public class Consts {
    * Najing changing lines evaluator
    */
   public static final int EVALUATOR_NAJING = 2;
+  /**
+   * Only Changing lines evaluator
+   */
+  public static final int EVALUATOR_CHANGING = 3;
 
   /**
    * Language codes *

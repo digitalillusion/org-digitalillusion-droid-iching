@@ -1,13 +1,11 @@
 package org.digitalillusion.droid.iching.utils;
 
-import android.app.Activity;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 
-import org.digitalillusion.droid.iching.IChingActivity;
+import org.digitalillusion.droid.iching.IChingActivityRenderer;
 import org.digitalillusion.droid.iching.utils.lists.SettingsEntry;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.security.InvalidParameterException;
@@ -38,6 +36,7 @@ public class SettingsManager {
         Consts.DIVINATION_METHOD_COINS_SHAKE
     });
     put(SETTINGS_MAP.CHANGING_LINES_EVALUATOR, new Integer[]{
+        Consts.EVALUATOR_CHANGING,
         Consts.EVALUATOR_MANUAL,
         Consts.EVALUATOR_MASTERYIN,
         Consts.EVALUATOR_NAJING
@@ -85,9 +84,9 @@ public class SettingsManager {
   /**
    * The activity context
    */
-  private Activity context;
+  private IChingActivityRenderer context;
 
-  public SettingsManager(Activity context) {
+  public SettingsManager(IChingActivityRenderer context) {
     this.context = context;
   }
 
@@ -150,10 +149,13 @@ public class SettingsManager {
   }
 
   /**
-   * @see {@link DataPersister#loadOptions(android.app.Activity, java.util.HashMap)}
+   * @see {@link SettingsManager#load()}
    */
-  public synchronized void load() throws FileNotFoundException, IOException {
+  public synchronized void load() throws IOException {
     DataPersister.loadOptions(context, settingsMap);
+    if (settingsMap.size() == 0) {
+      resetDefaults(false);
+    }
     setLocale(getLocale());
   }
 
@@ -180,10 +182,10 @@ public class SettingsManager {
 
   /**
    * @param activity The caller activity, needed to display popups (eventually)
-   * @see {@link DataPersister#saveOptions(HashMap, android.app.Activity) }
+   * @see {@link DataPersister#saveOptions(android.app.Activity, HashMap) }
    */
-  public void save(IChingActivity activity) {
-    DataPersister.saveOptions(settingsMap, activity);
+  public void save(IChingActivityRenderer activity) {
+    DataPersister.saveOptions(activity, settingsMap);
   }
 
   /**
@@ -211,13 +213,13 @@ public class SettingsManager {
     } else if (setting.equals(SETTINGS_MAP.DIVINATION_METHOD)) {
       return Consts.DIVINATION_METHOD_COINS_AUTO;
     } else if (setting.equals(SETTINGS_MAP.CHANGING_LINES_EVALUATOR)) {
-      return Consts.EVALUATOR_MASTERYIN;
+      return Consts.EVALUATOR_CHANGING;
     } else if (setting.equals(SETTINGS_MAP.LANGUAGE)) {
       return Consts.LANGUAGE_EN;
     } else if (setting.equals(SETTINGS_MAP.DICTIONARY)) {
       return Consts.DICTIONARY_ALTERVISTA;
     } else if (setting.equals(SETTINGS_MAP.STORAGE)) {
-      return Consts.STORAGE_SDCARD;
+      return Consts.STORAGE_INTERNAL;
     } else if (setting.equals(SETTINGS_MAP.CONNECTION_MODE)) {
       return Consts.CONNECTION_MODE_ONLINE;
     } else if (setting.equals(SETTINGS_MAP.SHARE)) {

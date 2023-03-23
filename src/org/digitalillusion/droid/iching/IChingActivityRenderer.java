@@ -1107,12 +1107,34 @@ public class IChingActivityRenderer extends Activity {
             case VIEW_HEX:
 
                 ArrayList<String> lines = new ArrayList<String>();
-                lines.add(Utils.s(R.string.read_changing_select_line1));
-                lines.add(Utils.s(R.string.read_changing_select_line2));
-                lines.add(Utils.s(R.string.read_changing_select_line3));
-                lines.add(Utils.s(R.string.read_changing_select_line4));
-                lines.add(Utils.s(R.string.read_changing_select_line5));
-                lines.add(Utils.s(R.string.read_changing_select_line6));
+                int evalType = (Integer) settings.get(SETTINGS_MAP.CHANGING_LINES_EVALUATOR);
+                if (evalType == Consts.EVALUATOR_CHANGING) {
+                    if (ChangingLinesEvaluator.isChangingLine(hexToRender[0])) {
+                        lines.add(Utils.s(R.string.read_changing_select_line1));
+                    }
+                    if (ChangingLinesEvaluator.isChangingLine(hexToRender[1])) {
+                        lines.add(Utils.s(R.string.read_changing_select_line2));
+                    }
+                    if (ChangingLinesEvaluator.isChangingLine(hexToRender[2])) {
+                        lines.add(Utils.s(R.string.read_changing_select_line3));
+                    }
+                    if (ChangingLinesEvaluator.isChangingLine(hexToRender[3])) {
+                        lines.add(Utils.s(R.string.read_changing_select_line4));
+                    }
+                    if (ChangingLinesEvaluator.isChangingLine(hexToRender[4])) {
+                        lines.add(Utils.s(R.string.read_changing_select_line5));
+                    }
+                    if (ChangingLinesEvaluator.isChangingLine(hexToRender[5])) {
+                        lines.add(Utils.s(R.string.read_changing_select_line6));
+                    }
+                } else {
+                    lines.add(Utils.s(R.string.read_changing_select_line1));
+                    lines.add(Utils.s(R.string.read_changing_select_line2));
+                    lines.add(Utils.s(R.string.read_changing_select_line3));
+                    lines.add(Utils.s(R.string.read_changing_select_line4));
+                    lines.add(Utils.s(R.string.read_changing_select_line5));
+                    lines.add(Utils.s(R.string.read_changing_select_line6));
+                }
                 final OnItemSelectedListener onItemSelect = new OnItemSelectedListener() {
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         current.changingManualIndex = (position + 1 > Consts.HEX_LINES_COUNT) ? ChangingLinesEvaluator.ICHING_APPLY_BOTH : position;

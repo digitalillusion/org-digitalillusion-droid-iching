@@ -1,6 +1,5 @@
 package org.digitalillusion.droid.iching.utils.lists;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.TwoLineListItem;
 
-import org.digitalillusion.droid.iching.IChingActivity;
 import org.digitalillusion.droid.iching.IChingActivityRenderer;
 import org.digitalillusion.droid.iching.R;
 import org.digitalillusion.droid.iching.utils.Utils;
