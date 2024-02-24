@@ -1,10 +1,14 @@
 package org.digitalillusion.droid.iching;
 
+import static org.digitalillusion.droid.iching.utils.SettingsManager.NO_ACTION;
+
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.hardware.Sensor;
@@ -377,10 +381,17 @@ public class IChingActivity extends IChingActivityRenderer {
     );
     // Theme
     settings.createOption(
-            settingsList,
-            SettingsEntry.THEME,
-            SettingsManager.SETTINGS_VALUES_MAP.get(SETTINGS_MAP.THEME),
-            SETTINGS_MAP.THEME
+        settingsList,
+        SettingsEntry.THEME,
+        SettingsManager.SETTINGS_VALUES_MAP.get(SETTINGS_MAP.THEME),
+        SETTINGS_MAP.THEME
+    );
+    // Theme
+    settings.createOption(
+        settingsList,
+        SettingsEntry.BACKUP_AND_RESTORE,
+        SettingsManager.SETTINGS_VALUES_MAP.get(SETTINGS_MAP.BACKUP_AND_RESTORE),
+        SETTINGS_MAP.BACKUP_AND_RESTORE
     );
 
     lvSettings.setAdapter(new ListItem2Adapter<SettingsEntry<?>>(this, settingsList) {
@@ -410,23 +421,27 @@ public class IChingActivity extends IChingActivityRenderer {
         @SuppressWarnings("unchecked")
         final SettingsEntry<Serializable> entry = (SettingsEntry<Serializable>) lvSettings.getItemAtPosition(settingIndex);
         Spinner spinner = (Spinner) findViewById(R.id.spBacking);
-        String[] optionsText = new String[entry.getOptionValues().size()];
-        int count = 0;
+        ArrayList<String> optionsText = new ArrayList();
         for (Serializable value : entry.getOptionValues()) {
-          optionsText[count++] = Utils.s(Utils.getResourceByName(R.string.class, entry.getOptionName() + Utils.UNDERSCORE + value.toString()));
+          if (!value.equals(NO_ACTION)) {
+            optionsText.add(Utils.s(Utils.getResourceByName(R.string.class, entry.getOptionName() + Utils.UNDERSCORE + value.toString())));
+          }
         }
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
             IChingActivity.this,
             android.R.layout.simple_spinner_item,
-            optionsText
+            optionsText.toArray(new String [0])
         ) {
           @Override
           public View getView(int position, View convertView, ViewGroup parent) {
-            TextView view = (TextView) super.getView(position, convertView, parent);
-            if (Utils.isDarkMode(settings)) {
-              view.setTextColor(getResources().getColor(android.R.color.primary_text_dark));
+            if (position < optionsText.size()) {
+              TextView view = (TextView) super.getView(position, convertView, parent);
+              if (Utils.isDarkMode(settings)) {
+                view.setTextColor(getResources().getColor(android.R.color.primary_text_dark));
+              }
+              return view;
             }
-            return view;
+            return new View(parent.getContext());
           }
         };
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -481,6 +496,18 @@ public class IChingActivity extends IChingActivityRenderer {
                 break;
               case THEME:
                 changeTheme(newValue);
+                break;
+              case BACKUP_AND_RESTORE:
+                changed = false;
+                if (newValue.equals(Consts.BACKUP_AND_RESTORE_CREATE_BACKUP)) {
+                  DataPersister.createBackup(IChingActivity.this);
+                } else if (newValue.equals(Consts.BACKUP_AND_RESTORE_RESTORE_BACKUP)) {
+                  Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                  intent.addCategory(Intent.CATEGORY_OPENABLE);
+                  intent.setType("application/zip");
+
+                  startActivityForResult(intent, ACTIVITY_RESULT_REQUEST_CODE.BACKUP_RESTORE_OPEN_FILE.ordinal());
+                }
                 break;
             }
 
@@ -1003,6 +1030,22 @@ public class IChingActivity extends IChingActivityRenderer {
         break;
     }
   }
+
+  /**
+   * Allows handling external activities
+   *
+   * @param requestCode The ACTIVITY_RESULT_REQUEST_CODE to reply to
+   * @param resultCode The external activity result code
+   * @param resultData The external activity result data
+   */
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+    if (requestCode == ACTIVITY_RESULT_REQUEST_CODE.BACKUP_RESTORE_OPEN_FILE.ordinal() &&
+        resultCode == Activity.RESULT_OK && resultData != null) {
+        DataPersister.restoreBackup(IChingActivity.this, resultData.getData());
+    }
+  }
+
 
   /**
    * Wrapper method to set the content view after storing it

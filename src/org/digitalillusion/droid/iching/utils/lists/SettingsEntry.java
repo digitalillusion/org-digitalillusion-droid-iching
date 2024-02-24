@@ -1,5 +1,7 @@
 package org.digitalillusion.droid.iching.utils.lists;
 
+import static org.digitalillusion.droid.iching.utils.SettingsManager.NO_ACTION;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,8 @@ public class SettingsEntry<T extends Serializable> {
   public static final String SHARE = "settings_share";
   public static final String SCREEN_ORIENTATION = "settings_screen_orientation";
   public static final String THEME = "settings_theme";
+
+  public static final String BACKUP_AND_RESTORE = "settings_backup_and_restore";
 
   private String optionName;
   private T optionValue;
@@ -74,7 +78,7 @@ public class SettingsEntry<T extends Serializable> {
   public void setOptionValue(T value) throws IllegalArgumentException {
     if (optionValues.contains(value)) {
       this.optionValue = value;
-    } else {
+    } else if (!value.equals(NO_ACTION)){
       throw new IllegalArgumentException(value + " is not a valid options for " + optionName);
     }
   }

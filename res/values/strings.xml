@@ -28,6 +28,10 @@
     <string name="history_unsaveable">History cannot be stored to SD card.</string>
     <string name="history_unremovable">History cannot be removed from SD card.</string>
     <string name="options_unsaveable">Settings cannot be stored to SD card.</string>
+    <string name="backup_error_create">Error creating backup.</string>
+    <string name="backup_error_restore">Error restoring backup.</string>
+    <string name="backup_restore_done">Backup has been restored.</string>
+    <string name="backup_restore_confirm">Are you sure you want to restore backup? This operation can modify your current history.</string>
     <string name="history_no_destination">Please create a history where to move entries first</string>
     <string name="hex_reset_section">Are you sure you want to reset ALL this hexagram definitions?</string>
     <string name="item_select_hex">Select an Hexagram</string>
@@ -145,6 +149,10 @@
     <string name="settings_theme_light">Light</string>
     <string name="settings_theme_dark">Dark</string>
     <string name="settings_theme_holo">Holo</string>
+    <string name="settings_backup_and_restore">Backup and restore</string>
+    <string name="settings_backup_and_restore_no_action"></string>
+    <string name="settings_backup_and_restore_create_backup">Create backup</string>
+    <string name="settings_backup_and_restore_restore_backup">Restore backup</string>
 
     <string name="hex01">乾 Ch\'ien / The Creative</string>
     <string name="hex02">坤 K\'un / The Receptive</string>

@@ -28,6 +28,10 @@
     <string name="history_unsaveable">La cronologia non può essere salvata sulla carta SD.</string>
     <string name="history_unremovable">History cannot be removed from SD card.</string>
     <string name="options_unsaveable">Le impostazioni non possono essere salvate sulla carta SD.</string>
+    <string name="backup_error_create">Errore durante la creazione del backup.</string>
+    <string name="backup_error_restore">Errore durante il ripristino del backup.</string>
+    <string name="backup_restore_done">Il backup è stato ripristinato.</string>
+    <string name="backup_restore_confirm">Si è certi di voler ripristinare il backup? Questa operazione può modificare la cronologia corrente.</string>
     <string name="history_no_destination">Si prega di creare una cronologia dove spostare le letture prima di procedere</string>
     <string name="hex_reset_section">Si desidera veramente reimpostare TUTTE le definizioni di questo esagramma?</string>
     <string name="item_select_hex">Selezionare un esagramma</string>
@@ -147,6 +151,10 @@
     <string name="settings_theme_light">Chiaro</string>
     <string name="settings_theme_dark">Scuro</string>
     <string name="settings_theme_holo">Holo</string>
+    <string name="settings_backup_and_restore">Backup e ripristino</string>
+    <string name="settings_backup_and_restore_no_action"></string>
+    <string name="settings_backup_and_restore_create_backup">Creare backup</string>
+    <string name="settings_backup_and_restore_restore_backup">Ripristinare backup</string>
 
     <string name="hex01">乾 Kkienn / Il Creativo</string>
     <string name="hex02">坤 Kkunn / Il Ricettivo</string>

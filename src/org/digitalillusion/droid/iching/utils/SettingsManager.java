@@ -22,6 +22,8 @@ import java.util.Locale;
  */
 public class SettingsManager {
 
+  public static final String NO_ACTION = "no_action";
+
   /**
    * Map of possible value for each setting
    */
@@ -75,6 +77,11 @@ public class SettingsManager {
         Consts.THEME_LIGHT,
         Consts.THEME_DARK,
         Consts.THEME_HOLO
+    });
+    put(SETTINGS_MAP.BACKUP_AND_RESTORE, new String[]{
+        Consts.BACKUP_AND_RESTORE_CREATE_BACKUP,
+        Consts.BACKUP_AND_RESTORE_RESTORE_BACKUP,
+        NO_ACTION
     });
   }};
   /**
@@ -226,8 +233,10 @@ public class SettingsManager {
       return Consts.SHARE_PAGE;
     } else if (setting.equals(SETTINGS_MAP.SCREEN_ORIENTATION)) {
       return Consts.SCREEN_ORIENTATION_ROTATE;
-    }  else if (setting.equals(SETTINGS_MAP.THEME)) {
+    } else if (setting.equals(SETTINGS_MAP.THEME)) {
       return Consts.THEME_SYSTEM;
+    } else if (setting.equals(SETTINGS_MAP.BACKUP_AND_RESTORE)) {
+      return NO_ACTION;
     }
 
     throw new InvalidParameterException(setting.getKey() + " does not specify an option.");
@@ -246,7 +255,8 @@ public class SettingsManager {
     CONNECTION_MODE("connectionMode"),
     SHARE("share"),
     SCREEN_ORIENTATION("screenOrientation"),
-    THEME("theme");
+    THEME("theme"),
+    BACKUP_AND_RESTORE("backupAndRestore");
 
 
     private String key;

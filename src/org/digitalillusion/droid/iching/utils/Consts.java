@@ -124,10 +124,16 @@ public class Consts {
   public static final String SCREEN_ORIENTATION_PORTRAIT = "portrait";
 
   /**
-   * Screen orientation settings *
+   * Theme settings *
    */
   public static final String THEME_SYSTEM = "system";
   public static final String THEME_LIGHT = "light";
   public static final String THEME_DARK = "dark";
   public static final String THEME_HOLO = "holo";
+
+  /**
+   * Backup and restore settings *
+   */
+  public static final String BACKUP_AND_RESTORE_CREATE_BACKUP = "create_backup";
+  public static final String BACKUP_AND_RESTORE_RESTORE_BACKUP = "restore_backup";
 }

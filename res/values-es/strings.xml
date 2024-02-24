@@ -9,7 +9,7 @@
 	<string name = "remoteconn_unavailable">Conexión remota no está disponible en este momento.</string>
 	<string name = "remoteconn_please_wait"> Cargando ... </string>
 	<string name = "history_unavailable"> La cronología no se puede restaurar desde la tarjeta SD. </string>
-	<string name = "crypto_unavailable"> Contraseña de cifrado no es compatible con este dispositivo. </string>
+	<string name = "crypto_unavailable"> Contraseña de cifradoretry no es compatible con este dispositivo. </string>
 	<string name = "history_change"> Haga clic para especificar dónde se guardarán nuevas lecturas </string>
 	<string name = "history_create"> Crear una nueva cronología ... </string>
 	<string name = "history_create_title"> Crear una nueva cronología </string>
@@ -27,6 +27,10 @@ Mantenga su contraseña en un lugar seguro. Si perdido, que ganó ser capaz de a
 	<string name = "history_unsaveable"> La cronología no se puede almacenar en la tarjeta SD. </string>
 	<string name = "history_unremovable"> La cronología no se puede quitar de la tarjeta SD. </string>
 	<string name = "options_unsaveable"> No se puede almacenar los ajustes en la tarjeta SD. </string>
+	<string name = "backup_error_create"> Error al crear una copia de seguridad. </string>
+	<string name = "backup_error_restore"> Error al restaurar la copia de seguridad. </string>
+	<string name="backup_restore_done">Se ha restaurado la copia de seguridad.</string>
+	<string name="backup_restore_confirm">¿Está seguro de que desea restaurar la copia de seguridad? Esta operación puede modificar su historial actual.</string>
 	<string name = "history_no_destination"> Por favor, antes crear una cronología donde mover las inscripciones </string>
 	<string name = "hex_reset_section"> ¿Está seguro de que desea restablecer todo esto definiciones hexagrama? </string>
 	<string name = "item_select_hex"> Seleccione un Hexagrama </string>
@@ -144,6 +148,10 @@ Mantenga su contraseña en un lugar seguro. Si perdido, que ganó ser capaz de a
 	<string name = "settings_theme_light">Claro</string>
 	<string name = "settings_theme_dark">Oscuro</string>
 	<string name = "settings_theme_holo">Holo</string>
+	<string name="settings_backup_and_restore">Copia de seguridad y restauración</string>
+	<string name="settings_backup_and_restore_no_action"></string>
+	<string name="settings_backup_and_restore_create_backup">Crear copia de seguridad</string>
+	<string name="settings_backup_and_restore_restore_backup">Restaurar copia de seguridad</string>
 
 	<string name = "hex01">乾 Ch\'ien / El Creador</string>
 	<string name = "hex02">坤 K\'un / Lo Receptivo</string>

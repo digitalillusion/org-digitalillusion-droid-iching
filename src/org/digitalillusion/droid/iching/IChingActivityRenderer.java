@@ -728,15 +728,13 @@ public class IChingActivityRenderer extends Activity {
                                     DataPersister.setSelectedHistory(historyNamesList.get(childPosition), Utils.EMPTY_STRING, true);
 
                                     renderLoadHistory(
-                                            new Runnable() {
-                                                public void run() {
-                                                    String selected = historyNamesList.remove(childPosition);
-                                                    historyNamesList.add(0, selected);
-                                                    elSelectHistory.collapseGroup(0);
-                                                    etQuestion.requestFocus();
+                                            () -> {
+                                                String selected1 = historyNamesList.remove(childPosition);
+                                                historyNamesList.add(0, selected1);
+                                                elSelectHistory.collapseGroup(0);
+                                                etQuestion.requestFocus();
 
-                                                    renderLoadHistory(successTask, null);
-                                                }
+                                                renderLoadHistory(successTask, null);
                                             },
                                             DEFAULT_HISTORY_REVERT_TASK
                                     );
@@ -1106,26 +1104,33 @@ public class IChingActivityRenderer extends Activity {
                 break;
             case VIEW_HEX:
 
-                ArrayList<String> lines = new ArrayList<String>();
+                ArrayList<String> lines = new ArrayList();
+                ArrayList<Integer> lines_index = new ArrayList();
                 int evalType = (Integer) settings.get(SETTINGS_MAP.CHANGING_LINES_EVALUATOR);
                 if (evalType == Consts.EVALUATOR_CHANGING) {
-                    if (ChangingLinesEvaluator.isChangingLine(hexToRender[0])) {
+                    if (current.changing == ChangingLinesEvaluator.ICHING_APPLY_CAST || ChangingLinesEvaluator.isChangingLine(hexToRender[0])) {
                         lines.add(Utils.s(R.string.read_changing_select_line1));
+                        lines_index.add(0);
                     }
-                    if (ChangingLinesEvaluator.isChangingLine(hexToRender[1])) {
+                    if (current.changing == ChangingLinesEvaluator.ICHING_APPLY_CAST || ChangingLinesEvaluator.isChangingLine(hexToRender[1])) {
                         lines.add(Utils.s(R.string.read_changing_select_line2));
+                        lines_index.add(1);
                     }
-                    if (ChangingLinesEvaluator.isChangingLine(hexToRender[2])) {
+                    if (current.changing == ChangingLinesEvaluator.ICHING_APPLY_CAST || ChangingLinesEvaluator.isChangingLine(hexToRender[2])) {
                         lines.add(Utils.s(R.string.read_changing_select_line3));
+                        lines_index.add(2);
                     }
-                    if (ChangingLinesEvaluator.isChangingLine(hexToRender[3])) {
+                    if (current.changing == ChangingLinesEvaluator.ICHING_APPLY_CAST || ChangingLinesEvaluator.isChangingLine(hexToRender[3])) {
                         lines.add(Utils.s(R.string.read_changing_select_line4));
+                        lines_index.add(3);
                     }
-                    if (ChangingLinesEvaluator.isChangingLine(hexToRender[4])) {
+                    if (current.changing == ChangingLinesEvaluator.ICHING_APPLY_CAST || ChangingLinesEvaluator.isChangingLine(hexToRender[4])) {
                         lines.add(Utils.s(R.string.read_changing_select_line5));
+                        lines_index.add(4);
                     }
-                    if (ChangingLinesEvaluator.isChangingLine(hexToRender[5])) {
+                    if (current.changing == ChangingLinesEvaluator.ICHING_APPLY_CAST || ChangingLinesEvaluator.isChangingLine(hexToRender[5])) {
                         lines.add(Utils.s(R.string.read_changing_select_line6));
+                        lines_index.add(5);
                     }
                 } else {
                     lines.add(Utils.s(R.string.read_changing_select_line1));
@@ -1134,10 +1139,11 @@ public class IChingActivityRenderer extends Activity {
                     lines.add(Utils.s(R.string.read_changing_select_line4));
                     lines.add(Utils.s(R.string.read_changing_select_line5));
                     lines.add(Utils.s(R.string.read_changing_select_line6));
+                    lines_index.addAll(Arrays.asList(new Integer [] {0, 1, 2, 3, 4, 5}));
                 }
                 final OnItemSelectedListener onItemSelect = new OnItemSelectedListener() {
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        current.changingManualIndex = (position + 1 > Consts.HEX_LINES_COUNT) ? ChangingLinesEvaluator.ICHING_APPLY_BOTH : position;
+                        current.changingManualIndex = (position + 1 > Consts.HEX_LINES_COUNT) ? ChangingLinesEvaluator.ICHING_APPLY_BOTH : lines_index.get(position);
                         setCurrentSection(current, current.changingManualIndex);
                         renderReadDescChangingHex(hexToRender);
                         RemoteResolver.renderRemoteString(
@@ -1583,6 +1589,10 @@ public class IChingActivityRenderer extends Activity {
     protected enum READ_DESC_SCREEN {
         DEFAULT,
         LINES
+    }
+
+    public enum ACTIVITY_RESULT_REQUEST_CODE {
+        BACKUP_RESTORE_OPEN_FILE
     }
 
     /**

@@ -253,6 +253,11 @@ public abstract class RemoteResolver {
       component.setText(spanned);
     }
 
+    if (component.getText().length() == 0 && worker == null) {
+      remoteStringCache.remove(key);
+      renderRemoteString(component, retryAction, activity, hex, section);
+    }
+
   }
 
   /**

@@ -13,6 +13,13 @@ https://play.google.com/store/apps/details?id=org.digitalillusion.droid.iching
 
 ## Changelog
 
+*Feature Release 1.11.0*
+- Backup/Recovery histories to zip file
+
+Bugfix:
+- Changing lines selector empty in View Hexagram
+- Can't select empty default history
+
 *Bugfix Release 1.10.3*
 - Mandatory update to API 33
 - Dropped support prior to Android 4

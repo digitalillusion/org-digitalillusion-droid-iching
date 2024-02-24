@@ -1,16 +1,27 @@
 package org.digitalillusion.droid.iching.utils;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Environment;
+
 import android.util.Log;
 
+import androidx.core.content.FileProvider;
+
+import org.digitalillusion.droid.iching.BuildConfig;
 import org.digitalillusion.droid.iching.IChingActivityRenderer;
 import org.digitalillusion.droid.iching.R;
 import org.digitalillusion.droid.iching.utils.SettingsManager.SETTINGS_MAP;
 import org.digitalillusion.droid.iching.utils.lists.HistoryEntry;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -18,6 +29,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -26,11 +38,18 @@ import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
 import java.security.InvalidParameterException;
 import java.security.MessageDigest;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map.Entry;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -51,7 +70,7 @@ public class DataPersister {
   /**
    * Path of the local history resources *
    */
-  private static final String ICHING_SDCARD_FILES_PATH = "/Android/data/org.digitalillusion.droid.iching/files";
+  private static final String ICHING_SDCARD_FILES_PATH = "/Android/data/" + BuildConfig.APPLICATION_ID + "/files";
 
   private static final String ICHING_HISTORY_PATH_FILENAME_PREFIX = "history";
 
@@ -100,10 +119,10 @@ public class DataPersister {
    * @return The list of history names that the user has created, plus the default one
    */
   public static List<String> getHistoryNames() {
-    ArrayList<String> historyNames = new ArrayList<String>();
+    ArrayList<String> historyNames = new ArrayList<>();
     historyNames.add(ICHING_HISTORY_PATH_FILENAME_DEFAULT);
 
-    List<String> customHistoryNames = new ArrayList<String>();
+    List<String> customHistoryNames = new ArrayList<>();
     if (storagePath != null) {
       File[] files = storagePath.listFiles();
 
@@ -177,7 +196,7 @@ public class DataPersister {
         FileInputStream fis = new FileInputStream(historyFile);
         byte[] encryptedData = Utils.getBytes(fis);
 
-        byte[] decryptedData = null;
+        byte[] decryptedData;
         // Default history cannot by password protected
         if (!historyName.equals(ICHING_HISTORY_PATH_FILENAME_DEFAULT) && historyPassword.length > 0) {
           Cipher c = Cipher.getInstance(CRYPTO_ALG);
@@ -211,7 +230,7 @@ public class DataPersister {
           // If it cannot be converted, it is encripted with a different password
           throw new InvalidKeyException();
         }
-      } else {
+      } else if (!historyName.equals(ICHING_HISTORY_PATH_FILENAME_DEFAULT)) {
         throw new FileNotFoundException();
       }
     } else {
@@ -259,7 +278,6 @@ public class DataPersister {
    * Remove an existing history from SD card. Default history cannot be removed
    *
    * @param activity The caller activity, needed to display popups (eventually)
-   * @throws IOException if SD is not writable
    */
   public static void removeHistory(final Activity activity) {
     try {
@@ -274,14 +292,8 @@ public class DataPersister {
     } catch (IOException e) {
       AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
       alertDialog.setMessage(Utils.s(R.string.history_unremovable));
-      alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, Utils.s(R.string.retry), new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-          removeHistory(activity);
-        }
-      });
-      alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, Utils.s(R.string.cancel), new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-        }
+      alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, Utils.s(R.string.retry), (dialog, which) -> removeHistory(activity));
+      alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, Utils.s(R.string.cancel), (dialog, which) -> {
       });
     } finally {
       historyName = null;
@@ -298,7 +310,7 @@ public class DataPersister {
    */
   public static void renameHistory(final List<HistoryEntry> historyList, final IChingActivityRenderer activity, final String newName) {
     byte[] backupPassword = new byte[DataPersister.historyPassword.length];
-    String backupName = new String(DataPersister.historyName);
+    String backupName = DataPersister.historyName;
     if (!newName.equals(backupName)) {
       System.arraycopy(DataPersister.historyPassword, 0, backupPassword, 0, backupPassword.length);
 
@@ -335,7 +347,6 @@ public class DataPersister {
    * @param historyList The history list to save
    * @param activity    The caller activity, needed to display popups (eventually)
    * @return True if history was saved successfully, false otherwise
-   * @throws IOException if input stream is not writable
    */
   public static synchronized boolean saveHistory(final List<HistoryEntry> historyList, final IChingActivityRenderer activity) {
     try {
@@ -371,22 +382,14 @@ public class DataPersister {
     } catch (IOException e) {
       AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
       alertDialog.setMessage(Utils.s(R.string.history_unsaveable));
-      alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, Utils.s(R.string.retry), new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-          saveHistory(historyList, activity);
-        }
-      });
-      alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, Utils.s(R.string.cancel), new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-        }
+      alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, Utils.s(R.string.retry), (dialog, which) -> saveHistory(historyList, activity));
+      alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, Utils.s(R.string.cancel), (dialog, which) -> {
       });
       alertDialog.show();
     } catch (GeneralSecurityException e) {
       AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
       alertDialog.setMessage(Utils.s(R.string.crypto_unavailable));
-      alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, Utils.s(R.string.cancel), new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-        }
+      alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, Utils.s(R.string.cancel), (dialog, which) -> {
       });
       alertDialog.show();
     }
@@ -419,14 +422,8 @@ public class DataPersister {
     } catch (IOException e) {
       AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
       alertDialog.setMessage(Utils.s(R.string.options_unsaveable));
-      alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, Utils.s(R.string.retry), new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-          saveOptions(activity, optionsMap);
-        }
-      });
-      alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, Utils.s(R.string.cancel), new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-        }
+      alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, Utils.s(R.string.retry), (dialog, which) -> saveOptions(activity, optionsMap));
+      alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, Utils.s(R.string.cancel), (dialog, which) -> {
       });
     }
   }
@@ -545,6 +542,105 @@ public class DataPersister {
     return true;
   }
 
+  /**
+   * Create backup
+   *
+   * @param activity   The caller activity, needed to display popups (eventually)
+   */
+  public static synchronized void createBackup(final IChingActivityRenderer activity) {
+    File currentDir = new File(storagePath.getAbsolutePath());
+    int BUFFER = 256;
+    try {
+      BufferedInputStream origin;
+      Format formatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.ROOT);
+      String destPath = currentDir.getAbsolutePath() + "/IChing-backup-" + formatter.format(new Date()) + ".zip";
+      File destFile = new File(destPath);
+      FileOutputStream dest = new FileOutputStream(destFile);
+      ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(
+              dest));
+      byte[] data = new byte[BUFFER];
+
+      File[] files = currentDir.listFiles((dir, name) -> name.startsWith(ICHING_HISTORY_PATH_FILENAME_PREFIX));
+      for (File file : files) {
+        FileInputStream fi = new FileInputStream(file);
+        origin = new BufferedInputStream(fi, BUFFER);
+
+        String path = file.getAbsolutePath();
+        ZipEntry entry = new ZipEntry(path.substring(path.lastIndexOf("/") + 1));
+        out.putNextEntry(entry);
+        int count;
+
+        while ((count = origin.read(data, 0, BUFFER)) != -1) {
+          out.write(data, 0, count);
+        }
+        origin.close();
+      }
+
+      out.close();
+
+      Intent intent = new Intent(Intent.ACTION_SEND);
+      intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+      Uri uri = FileProvider.getUriForFile(activity, BuildConfig.APPLICATION_ID, destFile);
+      intent.setType("application/zip");
+      intent.putExtra(Intent.EXTRA_STREAM, uri);
+      activity.startActivity(Intent.createChooser(intent, Utils.s(R.string.read_share_using)));
+    } catch (Exception e) {
+      AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
+      alertDialog.setMessage(Utils.s(R.string.backup_error_create));
+        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, Utils.s(R.string.cancel), (dialog, which) -> {
+      });
+      alertDialog.show();
+    }
+  }
+
+  /**
+   * Restore backup
+   *
+   * @param activity The caller activity, needed to display popups (eventually)
+   * @param uri The uri of the backup zip file to extract
+   */
+  public static synchronized void restoreBackup(final IChingActivityRenderer activity, Uri uri) {
+    AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
+    alertDialog.setMessage(Utils.s(R.string.backup_restore_confirm));
+    alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, Utils.s(R.string.yes), (dialog, which) -> {
+      try {
+
+        InputStream is = activity.getContentResolver().openInputStream(uri);
+        ZipInputStream zin = new ZipInputStream(is);
+        ZipEntry ze;
+
+        File currentDir = new File(storagePath.getAbsolutePath());
+        for (File f : currentDir.listFiles(f -> f.isFile() && f.exists() && f.getName().startsWith(ICHING_HISTORY_PATH_FILENAME_PREFIX))) {
+          f.delete();
+        }
+        while ((ze = zin.getNextEntry()) != null) {
+          FileOutputStream fout = new FileOutputStream(storagePath.getAbsolutePath() + File.separator + ze.getName());
+          for (int c = zin.read(); c != -1; c = zin.read()) {
+            fout.write(c);
+          }
+
+          zin.closeEntry();
+          fout.close();
+        }
+        zin.close();
+
+        setSelectedHistory(ICHING_HISTORY_PATH_FILENAME_DEFAULT, Utils.EMPTY_STRING, true);
+        CharSequence text = Utils.s(
+            R.string.backup_restore_done
+        );
+        activity.showToast(text);
+      } catch (Exception e) {
+        AlertDialog alertDialogErr = new AlertDialog.Builder(activity).create();
+        alertDialogErr.setMessage(Utils.s(R.string.backup_error_restore));
+        alertDialogErr.show();
+      }
+    });
+    alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, Utils.s(R.string.cancel), (dialog, which) -> {});
+    alertDialog.show();
+
+
+  }
+
   private static String getHistoryPath() {
     if (historyName == null || historyName.isEmpty() || historyName.equals(ICHING_HISTORY_PATH_FILENAME_DEFAULT)) {
       return File.separator + ICHING_HISTORY_PATH_FILENAME_PREFIX + ICHING_HISTORY_PATH_FILENAME_EXT;
@@ -591,10 +687,7 @@ public class DataPersister {
    */
   private static boolean isSDWritable() {
     String state = Environment.getExternalStorageState();
-    if (Environment.MEDIA_MOUNTED.equals(state)) {
-      return true;
-    }
-    return false;
+    return Environment.MEDIA_MOUNTED.equals(state);
   }
 
 

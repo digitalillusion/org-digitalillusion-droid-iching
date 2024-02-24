@@ -27,6 +27,10 @@ Mantenha sua senha em um lugar seguro. Se ela for perdida, você não será capa
     <string name="history_unsaveable">O histórico não pode ser armazenado no cartão SD.</string>
     <string name="history_unremovable">O histórico não pode ser removido do cartão SD.</string>
     <string name="options_unsaveable">As configurações não podem ser armazenadas no cartão SD.</string>
+    <string name="backup_error_create">Erro ao criar backup</string>
+    <string name="backup_error_restore">Erro ao restaurar o backup</string>
+    <string name="backup_restore_done">O backup foi restaurado.</string>
+    <string name="backup_restore_confirm">Tem certeza de que deseja restaurar o backup? Essa operação pode modificar seu histórico atual.</string>
     <string name="history_no_destination">Por favor, crie primeiro um histórico onde mover as entradas</string>
     <string name="hex_reset_section">Tem certeza que deseja refazer todas as definições do hexagrama?</string>
     <string name="item_select_hex">Selecione um hexagrama</string>
@@ -34,56 +38,56 @@ Mantenha sua senha em um lugar seguro. Se ela for perdida, você não será capa
     <string name="options_view_hex">Ver Hexagrama</string>
     <string name="options_view_edit_hex">Ver / Editar Hexagrama</string>
     <string name="options_references">Referências</string>
-        <string name="options_references_message">
-        &lt;p&gt;
-Todos os conteúdos disponíveis para esta aplicação foram encontrados na net.
-Em particular, as fontes mais completas e livremente disponíveis são:
-&lt;/p&gt;
-&lt;p&gt;
-&lt;p&gt; http://www1.uol.com.br/iching/&lt;/p&gt;
-&lt;p&gt; http://www.ichingonline.net/instruction.php&lt;/p&gt;
-&lt;p&gt; www.onlineclarity.co.uk/learn/consult/mml.php &lt;/p&gt;
-&lt;p&gt;
-&lt;p&gt;
-Esta aplicação não é de modo algum filiada às referências listadas.
-        &lt;/p&gt;
-    </string>
+    <string name="options_references_message">
+        &lt;p&gt;
+            Todos os conteúdos disponíveis para esta aplicação foram encontrados na net.
+            Em particular, as fontes mais completas e livremente disponíveis são:
+        &lt;/p&gt;
+        &lt;p&gt;
+            &lt;p&gt; http://www1.uol.com.br/iching/&lt;/p&gt;
+            &lt;p&gt; http://www.ichingonline.net/instruction.php&lt;/p&gt;
+            &lt;p&gt; www.onlineclarity.co.uk/learn/consult/mml.php &lt;/p&gt;
+        &lt;p&gt;
+        &lt;p&gt;
+            Esta aplicação não é de modo algum filiada às referências listadas.
+        &lt;/p&gt;
+    </string>
     <string name="options_algo">Algoritmos</string>
-        <string name="options_algo_message">
-        &lt;p&gt;
-O programa usa o método de três moedas para produzir as linhas do hexagrama.
-        &lt;/p&gt;
-        &lt;p&gt;
-As linhas mutantes aplicáveis ​​são obtidas através das
-Regras do Mestre Yin (padrão), as regras de Nanjing, ou interpretação livre.
-        &lt;/p&gt;
-        &lt;p&gt;
-Tenha em mente, no entanto, que enquanto o algoritmo pode efectivamente atingir cada uma das
-combinações possíveis de hexagramas e linhas mutantes, não importa realmente com qual
-probabilidades cada símbolo pode aparecer, se você acredita que uma Força suprema será responsável
-para os resultados.
-        &lt;/p&gt;
-    </string>
+    <string name="options_algo_message">
+        &lt;p&gt;
+            O programa usa o método de três moedas para produzir as linhas do hexagrama.
+        &lt;/p&gt;
+        &lt;p&gt;
+            As linhas mutantes aplicáveis são obtidas através das
+            Regras do Mestre Yin (padrão), as regras de Nanjing, ou interpretação livre.
+        &lt;/p&gt;
+        &lt;p&gt;
+            Tenha em mente, no entanto, que enquanto o algoritmo pode efectivamente atingir cada uma das
+            combinações possíveis de hexagramas e linhas mutantes, não importa realmente com qual
+            probabilidades cada símbolo pode aparecer, se você acredita que uma Força suprema será responsável
+            para os resultados.
+        &lt;/p&gt;
+    </string>
     <string name="options_about">Sobre</string>
-        <string name="options_about_message">
-        &lt;p&gt;
-Esta aplicação é Open Source liberado sob a licença GNU GPL v3, distribuído gratuitamente
-na esperança de que ele vai ser útil. O código-fonte completo pode ser visualizado e
-baixado em:
-&lt;/p&gt;
-&lt;p&gt;
-https://github.com/digitalillusion/org-digitalillusion-droid-iching
-        &lt;/p&gt;
-        &lt;p&gt;
-Se você quiser entrar em contato comigo ou se você encontrar qualquer bug mande-me um e-mail para:
-        &lt;/p&gt;
-androidiching@altervista.org
-        &lt;/p&gt;
-        &lt;p&gt;
-Obrigado por seus comentários, &lt;br/&gt;
-namasté!
-        &lt;/p&gt;
-    </string>
+    <string name="options_about_message">
+        &lt;p&gt;
+            Esta aplicação é Open Source liberado sob a licença GNU GPL v3, distribuído gratuitamente
+            na esperança de que ele vai ser útil. O código-fonte completo pode ser visualizado e
+            baixado em:
+        &lt;/p&gt;
+        &lt;p&gt;
+            https://github.com/digitalillusion/org-digitalillusion-droid-iching
+        &lt;/p&gt;
+        &lt;p&gt;
+            Se você quiser entrar em contato comigo ou se você encontrar qualquer bug mande-me um e-mail para:
+        &lt;/p&gt;
+           androidiching@altervista.org
+        &lt;/p&gt;
+        &lt;p&gt;
+           Obrigado por seus comentários, &lt;br/&gt;
+           namasté!
+        &lt;/p&gt;
+    </string>
     <string name="options_govegan">Nota do autor</string>
     <string name="options_govegan_message">
         &lt;p&gt;
@@ -144,6 +148,10 @@ namasté!
     <string name="settings_theme_light">Claro</string>
     <string name="settings_theme_dark">Escuro</string>
     <string name="settings_theme_holo">Holo</string>
+    <string name="settings_backup_and_restore">Backup e restauração</string>
+    <string name="settings_backup_and_restore_no_action"></string>
+    <string name="settings_backup_and_restore_create_backup">Criar backup</string>
+    <string name="settings_backup_and_restore_restore_backup">Restaurar backup</string>
 
     <string name="hex01">乾 Chie / O Criativo</string>
     <string name="hex02">坤 Kun / O Receptivo</string>
