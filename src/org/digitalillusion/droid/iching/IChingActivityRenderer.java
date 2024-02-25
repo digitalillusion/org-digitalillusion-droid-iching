@@ -785,9 +785,14 @@ public class IChingActivityRenderer extends Activity {
             // Manage the load of history and all it's exceptions
             DataPersister.loadHistory(historyList);
 
+            List<HistoryEntry> lvHistoryList = new ArrayList<>();
+            for (HistoryEntry e : historyList) {
+                lvHistoryList.add(HistoryEntry.from(e));
+            }
+
             if (lvHistory != null) {
                 // Render list of readings of the selected history
-                lvHistory.setAdapter(new ListItem2Adapter<HistoryEntry>(this, historyList) {
+                lvHistory.setAdapter(new ListItem2Adapter<HistoryEntry>(this, lvHistoryList) {
                     @Override
                     public String getText1(HistoryEntry entry) {
                         return entry.getQuestion();
@@ -1352,12 +1357,13 @@ public class IChingActivityRenderer extends Activity {
         adapterLines.removeAll(Collections.singleton(Utils.EMPTY_STRING));
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 this,
-                android.R.layout.simple_spinner_dropdown_item,
+                android.R.layout.simple_spinner_item,
                 adapterLines.toArray(new String[adapterLines.size()])
         ) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 TextView view = (TextView) super.getView(position, convertView, parent);
+                view.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.text_size_small));
                 if (Utils.isDarkMode(settings)) {
                     view.setTextColor(getResources().getColor(android.R.color.primary_text_dark));
                 }

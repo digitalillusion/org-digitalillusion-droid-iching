@@ -444,7 +444,7 @@ public class IChingActivity extends IChingActivityRenderer {
             return new View(parent.getContext());
           }
         };
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         spinner.setAdapter(arrayAdapter);
         spinner.setSelection(entry.getOptionIndex());
         spinner.setPromptId(Utils.getResourceByName(R.string.class, entry.getOptionName()));

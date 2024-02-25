@@ -147,27 +147,27 @@
                             <Button
                                 android:id="@+id/btReadDesc"
                                 android:layout_width="match_parent"
-                                android:layout_height="0dp"
+                                android:layout_height="48dp"
                                 android:layout_gravity="center"
                                 android:layout_weight="0.33"
                                 android:text="@string/read_desc"
-                                android:textSize="14dp"/>
+                                android:textSize="14dp" />
 
                             <Button
                                 android:id="@+id/btReadJudge"
                                 android:layout_width="match_parent"
-                                android:layout_height="0dp"
+                                android:layout_height="48dp"
                                 android:layout_weight="0.33"
                                 android:text="@string/read_judge"
-                                android:textSize="14dp"/>
+                                android:textSize="14dp" />
 
                             <Button
                                 android:id="@+id/btReadImage"
                                 android:layout_width="match_parent"
-                                android:layout_height="0dp"
+                                android:layout_height="48dp"
                                 android:layout_weight="0.33"
                                 android:text="@string/read_image"
-                                android:textSize="14dp"/>
+                                android:textSize="14dp" />
 
                             <!-- Interface for changing lines -->
                             <TextView
@@ -186,8 +186,8 @@
                             <Spinner
                                 android:id="@+id/spChanging"
                                 android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="0.33"
+                                android:layout_height="48dp"
+                                android:layout_weight="0.99"
                                 android:textAppearance="?android:attr/textAppearanceSmall"
                                 android:textSize="@dimen/text_size_small"
                                 android:visibility="gone"></Spinner>
@@ -235,10 +235,10 @@
                                     <TextView
                                         android:id="@+id/tvHexName"
                                         android:layout_width="fill_parent"
-                                        android:layout_height="36dp"
+                                        android:layout_height="48dp"
                                         android:textAppearance="?android:attr/textAppearanceSmall"
                                         android:textSize="@dimen/text_size_small"
-                                        android:textStyle="bold"/>
+                                        android:textStyle="bold" />
                                 </LinearLayout>
                             </LinearLayout>
 

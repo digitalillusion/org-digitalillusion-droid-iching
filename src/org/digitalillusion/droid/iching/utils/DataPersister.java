@@ -614,7 +614,11 @@ public class DataPersister {
           f.delete();
         }
         while ((ze = zin.getNextEntry()) != null) {
-          FileOutputStream fout = new FileOutputStream(storagePath.getAbsolutePath() + File.separator + ze.getName());
+          File out = new File(storagePath.getAbsolutePath() + File.separator + ze.getName());
+          if (!out.getCanonicalPath().startsWith(currentDir.getCanonicalPath())) {
+            throw new SecurityException();
+          }
+          FileOutputStream fout = new FileOutputStream(out);
           for (int c = zin.read(); c != -1; c = zin.read()) {
             fout.write(c);
           }

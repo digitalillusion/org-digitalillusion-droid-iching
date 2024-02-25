@@ -72,4 +72,15 @@ public class HistoryEntry implements Serializable {
   public void setTHex(int[] tHex) {
     this.tHex = tHex;
   }
+
+  public static HistoryEntry from(HistoryEntry e2) {
+    HistoryEntry e1 = new HistoryEntry();
+    e1.changing = e2.changing;
+    e1.date = e2.date;
+    e1.hex = e2.hex.clone();
+    e1.tHex = e2.tHex.clone();
+    e1.question = e2.question;
+    return e1;
+
+  }
 }

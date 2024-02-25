@@ -224,8 +224,8 @@
                         <Spinner
                             android:id="@+id/spChanging"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="0.33"
+                            android:layout_height="48dp"
+                            android:layout_weight="0.99"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textSize="@dimen/text_size_small"
                             android:visibility="gone"></Spinner>
