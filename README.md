@@ -13,6 +13,9 @@ https://play.google.com/store/apps/details?id=org.digitalillusion.droid.iching
 
 ## Changelog
 
+*Bugfix Release 1.11.2*
+- Fix pre-release report detected problems
+
 *Bugfix Release 1.11.1*
 - Fix app bundle
 

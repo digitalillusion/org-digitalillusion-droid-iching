@@ -1,12 +1,9 @@
 package org.digitalillusion.droid.iching.utils;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
 
@@ -78,7 +75,7 @@ public class DataPersister {
 
   private static final String ICHING_HISTORY_PATH_FILENAME_EXT = ".bin";
 
-  private static final String CRYPTO_ALG = "AES";
+  private static final String CRYPTO_ALG = "AES/GCM/NoPadding";
 
   private static final String CRYPTO_DIGEST = "SHA-1";
 
@@ -199,11 +196,20 @@ public class DataPersister {
         byte[] decryptedData;
         // Default history cannot by password protected
         if (!historyName.equals(ICHING_HISTORY_PATH_FILENAME_DEFAULT) && historyPassword.length > 0) {
-          Cipher c = Cipher.getInstance(CRYPTO_ALG);
-          SecretKeySpec k =
-                  new SecretKeySpec(historyPassword, CRYPTO_ALG);
-          c.init(Cipher.DECRYPT_MODE, k);
-          decryptedData = c.doFinal(encryptedData);
+          try {
+            Cipher c = Cipher.getInstance(CRYPTO_ALG);
+            SecretKeySpec k =
+                    new SecretKeySpec(historyPassword, CRYPTO_ALG);
+            c.init(Cipher.DECRYPT_MODE, k);
+            decryptedData = c.doFinal(encryptedData);
+          } catch (Throwable e) {
+            // Legacy decription
+            Cipher c = Cipher.getInstance("AES");
+            SecretKeySpec k =
+                    new SecretKeySpec(historyPassword, "AES");
+            c.init(Cipher.DECRYPT_MODE, k);
+            decryptedData = c.doFinal(encryptedData);
+          }
         } else {
           decryptedData = encryptedData;
         }

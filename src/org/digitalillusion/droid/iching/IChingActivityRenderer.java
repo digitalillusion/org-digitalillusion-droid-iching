@@ -735,6 +735,7 @@ public class IChingActivityRenderer extends Activity {
                                                 etQuestion.requestFocus();
 
                                                 renderLoadHistory(successTask, null);
+                                                notifyDataSetChanged();
                                             },
                                             DEFAULT_HISTORY_REVERT_TASK
                                     );
@@ -1148,7 +1149,7 @@ public class IChingActivityRenderer extends Activity {
                 }
                 final OnItemSelectedListener onItemSelect = new OnItemSelectedListener() {
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        current.changingManualIndex = (position + 1 > Consts.HEX_LINES_COUNT) ? ChangingLinesEvaluator.ICHING_APPLY_BOTH : lines_index.get(position);
+                        current.changingManualIndex = (position + 1 > lines_index.size()) ? ChangingLinesEvaluator.ICHING_APPLY_BOTH : lines_index.get(position);
                         setCurrentSection(current, current.changingManualIndex);
                         renderReadDescChangingHex(hexToRender);
                         RemoteResolver.renderRemoteString(

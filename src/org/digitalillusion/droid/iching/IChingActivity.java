@@ -94,7 +94,7 @@ public class IChingActivity extends IChingActivityRenderer {
   /**
    * Random number generator
    */
-  private Random rndGen = new Random();
+  private final Random rndGen = new Random();
 
   /**
    * Flag indicating that onResume was called
@@ -103,7 +103,7 @@ public class IChingActivity extends IChingActivityRenderer {
   /**
    * Key to access the onResume called flag in the instance state
    */
-  private String ON_RESUME_CALLED_PREFERENCE_KEY = "onResumeCalled";
+  private final String ON_RESUME_CALLED_PREFERENCE_KEY = "onResumeCalled";
 
 
   /**
@@ -197,22 +197,7 @@ public class IChingActivity extends IChingActivityRenderer {
     }
 
     final ListView lvHistory = (ListView) findViewById(R.id.lvHistory);
-    lvHistory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-      public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
-        final ListView lvHistory = (ListView) findViewById(R.id.lvHistory);
-        HistoryEntry entry = (HistoryEntry) lvHistory.getItemAtPosition(position);
-        IChingActivity thiz = IChingActivity.this;
-        thiz.current.changing = entry.getChanging();
-        thiz.current.changingManualIndex = 0;
-        thiz.hex = entry.getHex();
-        thiz.tHex = entry.getTHex();
-        thiz.current.question = entry.getQuestion();
-        thiz.current.mode = READ_DESC_MODE.ORACLE;
-        thiz.current.tabIndex = 0;
-        thiz.current.section = RemoteResolver.ICHING_REMOTE_SECTION_DESC;
-        thiz.gotoReadDesc();
-      }
-    });
+    lvHistory.setOnItemClickListener((adapter, view, position, id) -> onClickHistoryEntry(position));
 
     renderOptionsMenu();
 
@@ -230,6 +215,19 @@ public class IChingActivity extends IChingActivityRenderer {
     current = new CurrentState();
   }
 
+  private void onClickHistoryEntry(int position) {
+    final ListView lvHistory = (ListView) findViewById(R.id.lvHistory);
+    HistoryEntry entry = (HistoryEntry) lvHistory.getItemAtPosition(position);
+    IChingActivity.this.current.changing = entry.getChanging();
+    IChingActivity.this.current.changingManualIndex = 0;
+    IChingActivity.this.hex = entry.getHex();
+    IChingActivity.this.tHex = entry.getTHex();
+    IChingActivity.this.current.question = entry.getQuestion();
+    IChingActivity.this.current.mode = READ_DESC_MODE.ORACLE;
+    IChingActivity.this.current.tabIndex = 0;
+    IChingActivity.this.current.section = RemoteResolver.ICHING_REMOTE_SECTION_DESC;
+    IChingActivity.this.gotoReadDesc();
+  }
 
 
   /**
@@ -312,7 +310,7 @@ public class IChingActivity extends IChingActivityRenderer {
 
     final ListView lvSettings = (ListView) findViewById(R.id.lvSettings);
 
-    List<SettingsEntry<?>> settingsList = new ArrayList<SettingsEntry<?>>();
+    List<SettingsEntry<?>> settingsList = new ArrayList<>();
 
     renderOptionsMenu();
 
@@ -421,10 +419,10 @@ public class IChingActivity extends IChingActivityRenderer {
         @SuppressWarnings("unchecked")
         final SettingsEntry<Serializable> entry = (SettingsEntry<Serializable>) lvSettings.getItemAtPosition(settingIndex);
         Spinner spinner = (Spinner) findViewById(R.id.spBacking);
-        ArrayList<String> optionsText = new ArrayList();
+        ArrayList<String> optionsText = new ArrayList<>();
         for (Serializable value : entry.getOptionValues()) {
           if (!value.equals(NO_ACTION)) {
-            optionsText.add(Utils.s(Utils.getResourceByName(R.string.class, entry.getOptionName() + Utils.UNDERSCORE + value.toString())));
+            optionsText.add(Utils.s(Utils.getResourceByName(R.string.class, entry.getOptionName() + Utils.UNDERSCORE + value)));
           }
         }
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
@@ -452,12 +450,8 @@ public class IChingActivity extends IChingActivityRenderer {
           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             final SETTINGS_MAP mapKey = SETTINGS_MAP.values()[settingIndex];
             final Serializable newValue = entry.getOptionValues().get(position);
-            final Runnable renderSettingChange = new Runnable() {
-              public void run() {
-                renderSettingChanged(lvSettings, entry, mapKey,
-                    newValue);
-              }
-            };
+            final Runnable renderSettingChange = () -> renderSettingChanged(lvSettings, entry, mapKey,
+                newValue);
 
             performOnItemSelected(mapKey, newValue, renderSettingChange);
           }
@@ -704,7 +698,7 @@ public class IChingActivity extends IChingActivityRenderer {
         contextSelectDialog.show();
         break;
       case ContextMenuItem.HISTORY_REMOVE:
-        renderLoadHistory(new Runnable() {
+        renderLoadHistory( new Runnable() {
           public void run() {
             contextSelectDialog.setTitle(DataPersister.getSelectedHistoryName());
             contextSelectDialog.setMessage(Utils.s(R.string.contextmenu_history_remove));
@@ -747,7 +741,7 @@ public class IChingActivity extends IChingActivityRenderer {
                       } else {
                         DataPersister.revertSelectedHistory();
                       }
-                      renderLoadHistory(null, null);
+                      renderLoadHistory( null, null);
                     }
                   });
               contextSelectDialog.setButton(DialogInterface.BUTTON_NEGATIVE,
@@ -847,12 +841,11 @@ public class IChingActivity extends IChingActivityRenderer {
       if (current.viewId == R.layout.main) {
         onBackPressed();
         System.exit(0);
-        return true;
       } else {
         current.question = Utils.EMPTY_STRING;
         gotoMain();
-        return true;
       }
+      return true;
     }
     return false;
   }
@@ -991,7 +984,12 @@ public class IChingActivity extends IChingActivityRenderer {
     setCurrentSection(current, current.changing);
     setCurrentHex(hex);
 
-    renderLoadHistory(null, null);
+    renderLoadHistory( null, null);
+
+    final ListView lvHistory = (ListView) findViewById(R.id.lvHistory);
+    if (lvHistory != null) {
+      lvHistory.setOnItemClickListener((adapter, view, position, id) -> onClickHistoryEntry(position));
+    }
   }
 
   /**
@@ -1287,7 +1285,7 @@ public class IChingActivity extends IChingActivityRenderer {
   /**
    * Unique identifiers for the context menu voices *
    */
-  private class ContextMenuItem {
+  private static class ContextMenuItem {
     private static final int HISTORY_MOVE_ENTRY = 1;
     private static final int HISTORY_DELETE_ENTRY = 2;
     private static final int HISTORY_DELETE_ALL = 3;
