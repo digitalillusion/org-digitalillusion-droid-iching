@@ -669,6 +669,7 @@ public class IChingActivity extends IChingActivityRenderer {
                 }
                 DataPersister.saveHistory(historyList, IChingActivity.this);
                 listAdapter.notifyDataSetChanged();
+                renderLoadHistory(null, null);
               }
             });
         contextSelectDialog.setButton(DialogInterface.BUTTON_NEGATIVE,
@@ -690,6 +691,7 @@ public class IChingActivity extends IChingActivityRenderer {
                 tvHistory.setVisibility(View.GONE);
                 DataPersister.saveHistory(historyList, IChingActivity.this);
                 listAdapter.notifyDataSetChanged();
+                renderLoadHistory(null, null);
               }
             });
         contextSelectDialog.setButton(DialogInterface.BUTTON_NEGATIVE,

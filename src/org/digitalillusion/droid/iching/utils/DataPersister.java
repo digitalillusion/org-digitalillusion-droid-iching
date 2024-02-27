@@ -31,10 +31,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
 import java.security.InvalidParameterException;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,6 +51,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
@@ -198,12 +201,14 @@ public class DataPersister {
         if (!historyName.equals(ICHING_HISTORY_PATH_FILENAME_DEFAULT) && historyPassword.length > 0) {
           try {
             Cipher c = Cipher.getInstance(CRYPTO_ALG);
+            byte[] iv = Arrays.copyOfRange(encryptedData, 0, c.getBlockSize());
+            byte[] data = Arrays.copyOfRange(encryptedData, c.getBlockSize(), encryptedData.length);
             SecretKeySpec k =
                     new SecretKeySpec(historyPassword, CRYPTO_ALG);
-            c.init(Cipher.DECRYPT_MODE, k);
-            decryptedData = c.doFinal(encryptedData);
+            c.init(Cipher.DECRYPT_MODE, k, new IvParameterSpec(iv));
+            decryptedData = c.doFinal(data);
           } catch (Throwable e) {
-            // Legacy decription
+            // Legacy decryption
             Cipher c = Cipher.getInstance("AES");
             SecretKeySpec k =
                     new SecretKeySpec(historyPassword, "AES");
@@ -373,9 +378,15 @@ public class DataPersister {
         byte[] encryptedData;
         if (historyPassword != null && historyPassword.length > 0) {
           Cipher c = Cipher.getInstance(CRYPTO_ALG);
+          byte[] iv = new byte[c.getBlockSize()];
+          new SecureRandom().nextBytes(iv);
           SecretKeySpec k = new SecretKeySpec(historyPassword, CRYPTO_ALG);
-          c.init(Cipher.ENCRYPT_MODE, k);
-          encryptedData = c.doFinal(baos.toByteArray());
+          c.init(Cipher.ENCRYPT_MODE, k, new IvParameterSpec(iv));
+          byte[] data = c.doFinal(baos.toByteArray());
+          ByteBuffer bb = ByteBuffer.allocate(iv.length + data.length);
+          bb.put(iv);
+          bb.put(data);
+          encryptedData = bb.array();
         } else {
           encryptedData = baos.toByteArray();
         }
