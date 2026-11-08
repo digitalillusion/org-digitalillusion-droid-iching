@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
-import android.widget.TwoLineListItem;
+
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.TextViewCompat;
 
 import org.digitalillusion.droid.iching.IChingActivityRenderer;
 import org.digitalillusion.droid.iching.R;
@@ -63,13 +65,11 @@ public abstract class ExpandableDropDownListItem2Adapter<T> extends BaseExpandab
     }
 
     if (childPosition == 0) {
-      row.setTextAppearance(context,
-          android.R.style.TextAppearance_Small);
+      TextViewCompat.setTextAppearance(row, android.R.style.TextAppearance_Small);
       row.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizeSmall);
       row.setPadding((int) (2 * textSizeMedium), 0, 0, 0);
     } else {
-      row.setTextAppearance(context,
-          android.R.style.TextAppearance_Medium);
+      TextViewCompat.setTextAppearance(row, android.R.style.TextAppearance_Medium);
       row.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizeMedium);
       row.setPadding((int) (2 * textSizeSmall), 0, 0, 0);
     }
@@ -77,7 +77,7 @@ public abstract class ExpandableDropDownListItem2Adapter<T> extends BaseExpandab
     @SuppressWarnings("unchecked")
     T entry = (T) getItem(childPosition);
     if (Utils.isDarkMode(context.getSettingsManager())) {
-      row.setTextColor(context.getResources().getColor(android.R.color.primary_text_dark));
+      row.setTextColor(ContextCompat.getColor(context, R.color.text_primary_dark));
     }
     row.setText(getText1(groupPosition, childPosition, entry));
     return row;
@@ -109,32 +109,30 @@ public abstract class ExpandableDropDownListItem2Adapter<T> extends BaseExpandab
 
   public View getGroupView(int groupPosition, boolean isExpanded,
                            View convertView, ViewGroup parent) {
-    TwoLineListItem row;
-    if (convertView == null) {
-      row = (TwoLineListItem) inflater.inflate(
-          android.R.layout.simple_list_item_2, null);
-      row.getText1().setTextAppearance(context,
-          android.R.style.TextAppearance_Medium);
-      row.getText1().setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizeMedium);
-      row.getText2().setTextAppearance(context,
-          android.R.style.TextAppearance_Small);
-      row.getText2().setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizeSmall);
+    View row = convertView;
+    if (row == null) {
+      row = inflater.inflate(android.R.layout.simple_list_item_2, null);
+      TextView text1 = row.findViewById(android.R.id.text1);
+      TextViewCompat.setTextAppearance(text1, android.R.style.TextAppearance_Medium);
+      text1.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizeMedium);
+      TextView text2 = row.findViewById(android.R.id.text2);
+      TextViewCompat.setTextAppearance(text2, android.R.style.TextAppearance_Small);
+      text2.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizeSmall);
       row.setPadding((int) (2 * textSizeSmall), 0, 0, 0);
-    } else {
-      row = (TwoLineListItem) convertView;
     }
-
+    TextView text1 = row.findViewById(android.R.id.text1);
+    TextView text2 = row.findViewById(android.R.id.text2);
 
     int childPosition = Math.max(0, expandableListView.getSelectedItemPosition());
     @SuppressWarnings("unchecked")
     T entry = (T) getItem(childPosition);
 
     if (Utils.isDarkMode(context.getSettingsManager())) {
-      row.getText1().setTextColor(context.getResources().getColor(android.R.color.primary_text_dark));
-      row.getText2().setTextColor(context.getResources().getColor(android.R.color.secondary_text_dark));
+      text1.setTextColor(ContextCompat.getColor(context, R.color.text_primary_dark));
+      text2.setTextColor(ContextCompat.getColor(context, R.color.text_secondary_dark));
     }
-    row.getText1().setText(getText1(groupPosition, -1, entry));
-    row.getText2().setText(getText2(groupPosition, -1, entry));
+    text1.setText(getText1(groupPosition, -1, entry));
+    text2.setText(getText2(groupPosition, -1, entry));
 
     return row;
   }
@@ -168,27 +166,26 @@ public abstract class ExpandableDropDownListItem2Adapter<T> extends BaseExpandab
   public abstract String getText2(int groupPosition, int childPosition, T entry);
 
   public View getView(int position, View convertView, ViewGroup parent) {
-    TwoLineListItem row;
-    if (convertView == null) {
-      row = (TwoLineListItem) inflater.inflate(
-          android.R.layout.simple_list_item_2, null);
-      row.getText1().setTextAppearance(context,
-          android.R.style.TextAppearance_Medium);
-      row.getText1().setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizeMedium);
+    View row = convertView;
+    if (row == null) {
+      row = inflater.inflate(android.R.layout.simple_list_item_2, null);
+      TextView text1 = row.findViewById(android.R.id.text1);
+      TextViewCompat.setTextAppearance(text1, android.R.style.TextAppearance_Medium);
+      text1.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizeMedium);
       row.setPadding((int) (2 * textSizeSmall), 0, 0, 0);
-    } else {
-      row = (TwoLineListItem) convertView;
     }
+    TextView text1 = row.findViewById(android.R.id.text1);
+    TextView text2 = row.findViewById(android.R.id.text2);
 
     @SuppressWarnings("unchecked")
     T entry = (T) getItem(position);
 
     if (Utils.isDarkMode(context.getSettingsManager())) {
-      row.getText1().setTextColor(context.getResources().getColor(android.R.color.primary_text_dark));
-      row.getText2().setTextColor(context.getResources().getColor(android.R.color.secondary_text_dark));
+      text1.setTextColor(ContextCompat.getColor(context, R.color.text_primary_dark));
+      text2.setTextColor(ContextCompat.getColor(context, R.color.text_secondary_dark));
     }
-    row.getText1().setText(getText1(position, position, entry));
-    row.getText2().setText(getText2(position, position, entry));
+    text1.setText(getText1(position, position, entry));
+    text2.setText(getText2(position, position, entry));
 
     return row;
   }

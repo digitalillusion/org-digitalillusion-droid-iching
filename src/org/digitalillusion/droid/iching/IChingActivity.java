@@ -11,12 +11,14 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Insets;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.preference.PreferenceManager;
-import android.text.Html;
+import android.os.VibratorManager;
 import android.text.InputType;
 import android.util.TypedValue;
 import android.view.ContextMenu;
@@ -31,7 +33,10 @@ import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 import android.view.inputmethod.InputMethodManager;
+import android.window.OnBackInvokedDispatcher;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -46,7 +51,8 @@ import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import android.widget.TwoLineListItem;
+
+import androidx.core.content.ContextCompat;
 
 import org.digitalillusion.droid.iching.anim.AnimCoin;
 import org.digitalillusion.droid.iching.changinglines.ChangingLinesEvaluator;
@@ -68,7 +74,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -371,12 +376,14 @@ public class IChingActivity extends IChingActivityRenderer {
         SETTINGS_MAP.SHARE
     );
     // Screen Orientation
-    settings.createOption(
-        settingsList,
-        SettingsEntry.SCREEN_ORIENTATION,
-        SettingsManager.SETTINGS_VALUES_MAP.get(SETTINGS_MAP.SCREEN_ORIENTATION),
-        SETTINGS_MAP.SCREEN_ORIENTATION
-    );
+    if (Utils.isScreenOrientationLockable()) {
+      settings.createOption(
+          settingsList,
+          SettingsEntry.SCREEN_ORIENTATION,
+          SettingsManager.SETTINGS_VALUES_MAP.get(SETTINGS_MAP.SCREEN_ORIENTATION),
+          SETTINGS_MAP.SCREEN_ORIENTATION
+      );
+    }
     // Theme
     settings.createOption(
         settingsList,
@@ -405,10 +412,11 @@ public class IChingActivity extends IChingActivityRenderer {
 
       @Override
       public View getView(int position, View convertView, ViewGroup parent) {
-        TwoLineListItem line = (TwoLineListItem) super.getView(position, convertView, parent);
+        View line = super.getView(position, convertView, parent);
         if (Utils.isDarkMode(settings)) {
-          line.getText1().setTextColor(getResources().getColor(android.R.color.primary_text_dark));
-          line.getText2().setTextColor(getResources().getColor(android.R.color.primary_text_dark));
+          int textColor = ContextCompat.getColor(IChingActivity.this, R.color.text_primary_dark);
+          ((TextView) line.findViewById(android.R.id.text1)).setTextColor(textColor);
+          ((TextView) line.findViewById(android.R.id.text2)).setTextColor(textColor);
         }
         return line;
       }
@@ -435,7 +443,7 @@ public class IChingActivity extends IChingActivityRenderer {
             if (position < optionsText.size()) {
               TextView view = (TextView) super.getView(position, convertView, parent);
               if (Utils.isDarkMode(settings)) {
-                view.setTextColor(getResources().getColor(android.R.color.primary_text_dark));
+                view.setTextColor(ContextCompat.getColor(IChingActivity.this, R.color.text_primary_dark));
               }
               return view;
             }
@@ -448,7 +456,7 @@ public class IChingActivity extends IChingActivityRenderer {
         spinner.setPromptId(Utils.getResourceByName(R.string.class, entry.getOptionName()));
         spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
           public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            final SETTINGS_MAP mapKey = SETTINGS_MAP.values()[settingIndex];
+            final SETTINGS_MAP mapKey = entry.getSetting();
             final Serializable newValue = entry.getOptionValues().get(position);
             final Runnable renderSettingChange = () -> renderSettingChanged(lvSettings, entry, mapKey,
                 newValue);
@@ -465,8 +473,7 @@ public class IChingActivity extends IChingActivityRenderer {
             boolean changed = true;
             switch (mapKey) {
               case LANGUAGE:
-                Locale locale = new Locale(newValue.toString());
-                settings.setLocale(locale);
+                settings.setLocale(SettingsManager.localeOf(newValue.toString()));
                 // Not breaking here
               case DICTIONARY:
                 // Clear remote strings cache in case language or dictionary change
@@ -776,6 +783,11 @@ public class IChingActivity extends IChingActivityRenderer {
         .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     shakeDetector = new ShakeDetector();
 
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+      getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+          OnBackInvokedDispatcher.PRIORITY_DEFAULT, this::navigateBack);
+    }
+
     if (savedInstanceState != null) {
       onResumeCalledAlready = savedInstanceState.getBoolean(ON_RESUME_CALLED_PREFERENCE_KEY);
     } else {
@@ -839,17 +851,25 @@ public class IChingActivity extends IChingActivityRenderer {
    */
   @Override
   public boolean onKeyDown(int keyCode, KeyEvent event) {
-    if (keyCode == KeyEvent.KEYCODE_BACK) {
-      if (current.viewId == R.layout.main) {
-        onBackPressed();
-        System.exit(0);
-      } else {
-        current.question = Utils.EMPTY_STRING;
-        gotoMain();
-      }
+    // From Android 13 back navigation is delivered to the callback registered in onCreate
+    if (keyCode == KeyEvent.KEYCODE_BACK && Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+      navigateBack();
       return true;
     }
     return false;
+  }
+
+  /**
+   * Back navigation: from the main view exit the application, from any other view return to the main view
+   */
+  private void navigateBack() {
+    if (current.viewId == R.layout.main) {
+      finish();
+      System.exit(0);
+    } else {
+      current.question = Utils.EMPTY_STRING;
+      gotoMain();
+    }
   }
 
   /**
@@ -862,11 +882,11 @@ public class IChingActivity extends IChingActivityRenderer {
     TextView tvMessage = new TextView(this);
     tvMessage.setId(android.R.id.message);
     if (Utils.isDarkMode(settings)) {
-      tvMessage.setBackgroundColor(getResources().getColor(android.R.color.background_dark));
-      tvMessage.setTextColor(getResources().getColor(android.R.color.primary_text_dark));
+      tvMessage.setBackgroundColor(ContextCompat.getColor(this, android.R.color.background_dark));
+      tvMessage.setTextColor(ContextCompat.getColor(this, R.color.text_primary_dark));
     } else {
-      tvMessage.setBackgroundColor(getResources().getColor(android.R.color.background_light));
-      tvMessage.setTextColor(getResources().getColor(android.R.color.primary_text_light));
+      tvMessage.setBackgroundColor(ContextCompat.getColor(this, android.R.color.background_light));
+      tvMessage.setTextColor(ContextCompat.getColor(this, R.color.text_primary_light));
     }
     tvMessage.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.text_size_small));
     tvMessage.setPadding(5, 5, 5, 5);
@@ -908,22 +928,22 @@ public class IChingActivity extends IChingActivityRenderer {
         break;
       case R.id.omAlgo:
         alertDialog.setMessage(Utils.s(R.string.options_algo));
-        tvMessage.setText(Html.fromHtml(Utils.s(R.string.options_algo_message)));
+        tvMessage.setText(Utils.fromHtml(Utils.s(R.string.options_algo_message)));
         alertDialog.show();
         break;
       case R.id.omReferences:
         alertDialog.setMessage(Utils.s(R.string.options_references));
-        tvMessage.setText(Html.fromHtml(Utils.s(R.string.options_references_message)));
+        tvMessage.setText(Utils.fromHtml(Utils.s(R.string.options_references_message)));
         alertDialog.show();
         break;
       case R.id.omAbout:
         alertDialog.setMessage(Utils.s(R.string.options_about));
-        tvMessage.setText(Html.fromHtml(Utils.s(R.string.options_about_message)));
+        tvMessage.setText(Utils.fromHtml(Utils.s(R.string.options_about_message)));
         alertDialog.show();
         break;
       case R.id.omGoVegan:
         alertDialog.setTitle(Utils.s(R.string.options_govegan));
-        tvMessage.setText(Html.fromHtml(Utils.s(R.string.options_govegan_message)));
+        tvMessage.setText(Utils.fromHtml(Utils.s(R.string.options_govegan_message)));
         alertDialog.show();
         break;
       case R.id.omReadDescEdit:
@@ -1057,6 +1077,30 @@ public class IChingActivity extends IChingActivityRenderer {
     current.viewId = resId;
     changeTheme(settings.get(SETTINGS_MAP.THEME));
     super.setContentView(current.viewId);
+    applySystemBarsInsets();
+  }
+
+  /**
+   * From Android 15 the window is drawn edge-to-edge: pad the content so that system bars,
+   * display cutouts and the soft keyboard do not cover it, and since the system bars are
+   * transparent, use dark system bar icons on light themes
+   */
+  private void applySystemBarsInsets() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+      int lightSystemBars = WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+          | WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS;
+      getWindow().getInsetsController().setSystemBarsAppearance(
+          Utils.isDarkMode(settings) ? 0 : lightSystemBars, lightSystemBars);
+
+      View content = findViewById(android.R.id.content);
+      content.setOnApplyWindowInsetsListener((v, windowInsets) -> {
+        Insets insets = windowInsets.getInsets(WindowInsets.Type.systemBars()
+            | WindowInsets.Type.displayCutout() | WindowInsets.Type.ime());
+        v.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+        return WindowInsets.CONSUMED;
+      });
+      content.requestApplyInsets();
+    }
   }
 
   @Override
@@ -1204,10 +1248,7 @@ public class IChingActivity extends IChingActivityRenderer {
     for (int i = 0; i < Consts.HEX_LINES_COUNT; i++) {
       renderRow(i, hex[i], true, null, null);
     }
-    if (Utils.mask((Integer) settings.get(SETTINGS_MAP.HAPTIC_FEEDBACK), Consts.HAPTIC_FEEDBACK_ON_THROW_COINS)) {
-      Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-      v.vibrate(300);
-    }
+    vibrateOnThrowCoins();
   }
 
   private void generateRow(int coinsValue) {
@@ -1218,9 +1259,25 @@ public class IChingActivity extends IChingActivityRenderer {
       gotoConsult();
     }
 
+    vibrateOnThrowCoins();
+  }
+
+  /**
+   * Vibrate if haptic feedback is enabled when throwing coins
+   */
+  @SuppressWarnings("deprecation")
+  private void vibrateOnThrowCoins() {
     if (Utils.mask((Integer) settings.get(SETTINGS_MAP.HAPTIC_FEEDBACK), Consts.HAPTIC_FEEDBACK_ON_THROW_COINS)) {
-      Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-      v.vibrate(300);
+      final long durationMs = 300;
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        getSystemService(VibratorManager.class).getDefaultVibrator()
+            .vibrate(VibrationEffect.createOneShot(durationMs, VibrationEffect.DEFAULT_AMPLITUDE));
+      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE))
+            .vibrate(VibrationEffect.createOneShot(durationMs, VibrationEffect.DEFAULT_AMPLITUDE));
+      } else {
+        ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE)).vibrate(durationMs);
+      }
     }
   }
 
@@ -1255,7 +1312,8 @@ public class IChingActivity extends IChingActivityRenderer {
    *  Check App is Upgraded
    */
   private void onAppUpgrade(){
-    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+    // Same file that the deprecated PreferenceManager.getDefaultSharedPreferences used
+    SharedPreferences sharedPreferences = getSharedPreferences(getPackageName() + "_preferences", MODE_PRIVATE);
     int versionCode = sharedPreferences.getInt(Consts.SHARED_PREF_VERSION_CODE, BuildConfig.VERSION_CODE);
 
     if (BuildConfig.VERSION_CODE != versionCode) {

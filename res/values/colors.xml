@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Default values of the deprecated android.R.color.*_text_* color state lists -->
+    <color name="text_primary_dark">@android:color/white</color>
+    <color name="text_primary_light">@android:color/black</color>
+    <color name="text_secondary_dark">#bebebe</color>
+</resources>

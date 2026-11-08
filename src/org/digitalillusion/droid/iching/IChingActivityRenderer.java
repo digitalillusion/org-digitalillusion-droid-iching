@@ -17,7 +17,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
@@ -50,6 +49,9 @@ import android.widget.TabWidget;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 
 import org.digitalillusion.droid.iching.changinglines.ChangingLinesEvaluator;
 import org.digitalillusion.droid.iching.connection.ConnectionManager;
@@ -591,8 +593,7 @@ public class IChingActivityRenderer extends Activity {
                     }
                 }
             });
-            DisplayMetrics metrics = new DisplayMetrics();
-            getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            DisplayMetrics metrics = getResources().getDisplayMetrics();
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, (int) (metrics.heightPixels * 0.3));
             lvHexList.setLayoutParams(params);
 
@@ -660,7 +661,7 @@ public class IChingActivityRenderer extends Activity {
                 etOutput.setText(RemoteResolver.getSpannedFromRemoteString(def));
 
                 if (Utils.isDarkMode(settings)) {
-                    etOutput.setTextColor(getResources().getColor(android.R.color.primary_text_dark));
+                    etOutput.setTextColor(ContextCompat.getColor(IChingActivityRenderer.this, R.color.text_primary_dark));
                 }
 
                 showToast(text);
@@ -932,7 +933,7 @@ public class IChingActivityRenderer extends Activity {
         final Spinner spinner = (Spinner) findViewById(R.id.spChanging);
         final TextView tvFurtherReadDesc = (TextView) findViewById(R.id.tvFurtherReadDesc);
         if (!Utils.isDarkMode(settings)) {
-            etOutput.setTextColor(getResources().getColor(android.R.color.primary_text_light));
+            etOutput.setTextColor(ContextCompat.getColor(IChingActivityRenderer.this, R.color.text_primary_light));
         }
         switch (current.screen) {
             case LINES:
@@ -975,9 +976,9 @@ public class IChingActivityRenderer extends Activity {
                 buildChangingLineSelector(spinner, lines, onItemSelect);
                 final TextView tvChanging = (TextView) findViewById(R.id.tvChanging);
                 tvChanging.setVisibility(View.VISIBLE);
-                tvChanging.setText(Html.fromHtml("<small>" + getChangingLinesDescription(current) + "</small>"));
+                tvChanging.setText(Utils.fromHtml("<small>" + getChangingLinesDescription(current) + "</small>"));
                 if (!Utils.isDarkMode(settings)) {
-                    tvChanging.setTextColor(getResources().getColor(android.R.color.primary_text_light));
+                    tvChanging.setTextColor(ContextCompat.getColor(IChingActivityRenderer.this, R.color.text_primary_light));
                 }
                 break;
             default:
@@ -1096,7 +1097,7 @@ public class IChingActivityRenderer extends Activity {
         final Spinner spinner = (Spinner) findViewById(R.id.spChanging);
         etOutput.setText(Utils.EMPTY_STRING);
         if (!Utils.isDarkMode(settings)) {
-            etOutput.setTextColor(getResources().getColor(android.R.color.primary_text_light));
+            etOutput.setTextColor(ContextCompat.getColor(IChingActivityRenderer.this, R.color.text_primary_light));
         }
         switch (mode) {
             case ORACLE:
@@ -1180,9 +1181,9 @@ public class IChingActivityRenderer extends Activity {
         final TextView tvChanging = (TextView) findViewById(R.id.tvChanging);
         tvChanging.setVisibility(View.VISIBLE);
         if (!Utils.isDarkMode(settings)) {
-            tvChanging.setTextColor(getResources().getColor(android.R.color.primary_text_light));
+            tvChanging.setTextColor(ContextCompat.getColor(IChingActivityRenderer.this, R.color.text_primary_light));
         }
-        tvChanging.setText(Html.fromHtml("<small>" + getChangingLinesDescription(current) + "</small>"));
+        tvChanging.setText(Utils.fromHtml("<small>" + getChangingLinesDescription(current) + "</small>"));
 
         renderOptionsMenu();
     }
@@ -1293,7 +1294,7 @@ public class IChingActivityRenderer extends Activity {
 
         if (row instanceof TableRow) {
             if (!Utils.isDarkMode(settings)) {
-                ((TableRow) row).setBackgroundDrawable(Utils.invertDrawable(getResources(), lineRes));
+                ViewCompat.setBackground(row, Utils.invertDrawable(getResources(), lineRes));
             } else {
                 ((TableRow) row).setBackgroundResource(lineRes);
             }
@@ -1306,7 +1307,7 @@ public class IChingActivityRenderer extends Activity {
             Bitmap bMapScaled = Bitmap.createScaledBitmap(bMap, width, height, true);
             if (!Utils.isDarkMode(settings)) {
                 bMapScaled = Utils.invert(bMapScaled);
-                tvRow.setTextColor(getResources().getColor(android.R.color.primary_text_light));
+                tvRow.setTextColor(ContextCompat.getColor(IChingActivityRenderer.this, R.color.text_primary_light));
             }
             Drawable drawable = new BitmapDrawable(getResources(), bMapScaled);
             tvRow.setCompoundDrawablesWithIntrinsicBounds(
@@ -1343,7 +1344,8 @@ public class IChingActivityRenderer extends Activity {
 
     protected void setScreenOrientation() {
         Serializable screenOrientation = settings.get(SETTINGS_MAP.SCREEN_ORIENTATION);
-        if (Consts.SCREEN_ORIENTATION_ROTATE.equals(screenOrientation)) {
+        // Where the setting is hidden, a lock chosen earlier must not stay applied out of the user's reach
+        if (!Utils.isScreenOrientationLockable() || Consts.SCREEN_ORIENTATION_ROTATE.equals(screenOrientation)) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         } else if (Consts.SCREEN_ORIENTATION_LANDSCAPE.equals(screenOrientation)) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
@@ -1366,7 +1368,7 @@ public class IChingActivityRenderer extends Activity {
                 TextView view = (TextView) super.getView(position, convertView, parent);
                 view.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.text_size_small));
                 if (Utils.isDarkMode(settings)) {
-                    view.setTextColor(getResources().getColor(android.R.color.primary_text_dark));
+                    view.setTextColor(ContextCompat.getColor(IChingActivityRenderer.this, R.color.text_primary_dark));
                 }
                 return view;
             }
@@ -1494,7 +1496,7 @@ public class IChingActivityRenderer extends Activity {
     private void renderQuestion() {
         final TextView tvQuestion = (TextView) findViewById(R.id.tvQuestionReadDesc);
         if (!Utils.isDarkMode(settings)) {
-            tvQuestion.setTextColor(getResources().getColor(android.R.color.primary_text_light));
+            tvQuestion.setTextColor(ContextCompat.getColor(IChingActivityRenderer.this, R.color.text_primary_light));
         }
         if (current.question != null && !current.question.isEmpty()) {
             tvQuestion.setText(current.question);

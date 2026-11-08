@@ -6,6 +6,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
+import androidx.core.content.res.ResourcesCompat;
+
 import org.digitalillusion.droid.iching.R;
 import org.digitalillusion.droid.iching.utils.Consts;
 
@@ -25,10 +27,10 @@ public class AnimCoin {
 
   public AnimCoin(final ImageView imageView, Resources res) {
     animation = new AnimationDrawable();
-    animation.addFrame(res.getDrawable(R.drawable.ic_yangcoin), (int) (250 + 100 * Math.random()));
-    animation.addFrame(res.getDrawable(R.drawable.ic_halfcoin), (int) (125 + 50 * Math.random()));
-    animation.addFrame(res.getDrawable(R.drawable.ic_yincoin), (int) (250 + 100 * Math.random()));
-    animation.addFrame(res.getDrawable(R.drawable.ic_halfcoin), (int) (125 + 75 * Math.random()));
+    animation.addFrame(ResourcesCompat.getDrawable(res, R.drawable.ic_yangcoin, null), (int) (250 + 100 * Math.random()));
+    animation.addFrame(ResourcesCompat.getDrawable(res, R.drawable.ic_halfcoin, null), (int) (125 + 50 * Math.random()));
+    animation.addFrame(ResourcesCompat.getDrawable(res, R.drawable.ic_yincoin, null), (int) (250 + 100 * Math.random()));
+    animation.addFrame(ResourcesCompat.getDrawable(res, R.drawable.ic_halfcoin, null), (int) (125 + 75 * Math.random()));
     animation.setOneShot(false);
     this.imageView = imageView;
     runAnimation();
@@ -105,17 +107,17 @@ public class AnimCoin {
     if (value == Consts.ICHING_COIN_YIN) {
       value = Consts.ICHING_COIN_YANG;
       animation = new AnimationDrawable();
-      animation.addFrame(res.getDrawable(R.drawable.ic_yincoin), (int) (50 + 100 * Math.random()));
-      animation.addFrame(res.getDrawable(R.drawable.ic_halfcoin), (int) (25 + 25 * Math.random()));
-      animation.addFrame(res.getDrawable(R.drawable.ic_yangcoin), (int) (50 + 100 * Math.random()));
+      animation.addFrame(ResourcesCompat.getDrawable(res, R.drawable.ic_yincoin, null), (int) (50 + 100 * Math.random()));
+      animation.addFrame(ResourcesCompat.getDrawable(res, R.drawable.ic_halfcoin, null), (int) (25 + 25 * Math.random()));
+      animation.addFrame(ResourcesCompat.getDrawable(res, R.drawable.ic_yangcoin, null), (int) (50 + 100 * Math.random()));
       runAnimation();
       return true;
     } else if (value == Consts.ICHING_COIN_YANG) {
       value = Consts.ICHING_COIN_YIN;
       animation = new AnimationDrawable();
-      animation.addFrame(res.getDrawable(R.drawable.ic_yangcoin), (int) (50 + 100 * Math.random()));
-      animation.addFrame(res.getDrawable(R.drawable.ic_halfcoin), (int) (25 + 25 * Math.random()));
-      animation.addFrame(res.getDrawable(R.drawable.ic_yincoin), (int) (50 + 100 * Math.random()));
+      animation.addFrame(ResourcesCompat.getDrawable(res, R.drawable.ic_yangcoin, null), (int) (50 + 100 * Math.random()));
+      animation.addFrame(ResourcesCompat.getDrawable(res, R.drawable.ic_halfcoin, null), (int) (25 + 25 * Math.random()));
+      animation.addFrame(ResourcesCompat.getDrawable(res, R.drawable.ic_yincoin, null), (int) (50 + 100 * Math.random()));
       runAnimation();
       return true;
     }

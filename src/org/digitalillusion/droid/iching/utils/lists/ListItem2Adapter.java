@@ -6,7 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.TwoLineListItem;
+import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.TextViewCompat;
 
 import org.digitalillusion.droid.iching.IChingActivityRenderer;
 import org.digitalillusion.droid.iching.R;
@@ -61,29 +64,28 @@ public abstract class ListItem2Adapter<T> extends BaseAdapter {
   public abstract String getText2(T entry);
 
   public View getView(int position, View convertView, ViewGroup parent) {
-    TwoLineListItem row;
-    if (convertView == null) {
-      row = (TwoLineListItem) inflater.inflate(
-          android.R.layout.simple_list_item_2, null);
-      row.getText1().setTextAppearance(context,
-          android.R.style.TextAppearance_Medium);
-      row.getText1().setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizeMedium);
-      row.getText2().setTextAppearance(context,
-          android.R.style.TextAppearance_Small);
-      row.getText2().setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizeSmall);
-    } else {
-      row = (TwoLineListItem) convertView;
+    View row = convertView;
+    if (row == null) {
+      row = inflater.inflate(android.R.layout.simple_list_item_2, null);
+      TextView text1 = row.findViewById(android.R.id.text1);
+      TextViewCompat.setTextAppearance(text1, android.R.style.TextAppearance_Medium);
+      text1.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizeMedium);
+      TextView text2 = row.findViewById(android.R.id.text2);
+      TextViewCompat.setTextAppearance(text2, android.R.style.TextAppearance_Small);
+      text2.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizeSmall);
     }
+    TextView text1 = row.findViewById(android.R.id.text1);
+    TextView text2 = row.findViewById(android.R.id.text2);
 
     @SuppressWarnings("unchecked")
     T entry = (T) getItem(position);
 
     if (Utils.isDarkMode(context.getSettingsManager())) {
-      row.getText1().setTextColor(context.getResources().getColor(android.R.color.primary_text_dark));
-      row.getText2().setTextColor(context.getResources().getColor(android.R.color.secondary_text_dark));
+      text1.setTextColor(ContextCompat.getColor(context, R.color.text_primary_dark));
+      text2.setTextColor(ContextCompat.getColor(context, R.color.text_secondary_dark));
     }
-    row.getText1().setText(getText1(entry));
-    row.getText2().setText(getText2(entry));
+    text1.setText(getText1(entry));
+    text2.setText(getText2(entry));
 
     return row;
   }

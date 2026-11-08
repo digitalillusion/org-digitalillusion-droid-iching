@@ -2,6 +2,8 @@ package org.digitalillusion.droid.iching.utils.lists;
 
 import static org.digitalillusion.droid.iching.utils.SettingsManager.NO_ACTION;
 
+import org.digitalillusion.droid.iching.utils.SettingsManager.SETTINGS_MAP;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,7 @@ public class SettingsEntry<T extends Serializable> {
   public static final String BACKUP_AND_RESTORE = "settings_backup_and_restore";
 
   private String optionName;
+  private SETTINGS_MAP setting;
   private T optionValue;
   private ArrayList<T> optionValues = new ArrayList<T>();
 
@@ -60,6 +63,20 @@ public class SettingsEntry<T extends Serializable> {
    */
   public void setOptionName(String optionName) {
     this.optionName = optionName;
+  }
+
+  /**
+   * @return The setting this option edits
+   */
+  public SETTINGS_MAP getSetting() {
+    return setting;
+  }
+
+  /**
+   * @param setting The setting this option edits
+   */
+  public void setSetting(SETTINGS_MAP setting) {
+    this.setting = setting;
   }
 
   /**

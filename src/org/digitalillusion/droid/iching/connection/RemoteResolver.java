@@ -1,23 +1,24 @@
 package org.digitalillusion.droid.iching.connection;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.res.Resources.NotFoundException;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
+import android.net.NetworkCapabilities;
+import android.os.Build;
 import android.os.Handler;
-import android.text.Html;
+import android.os.Looper;
 import android.text.Spanned;
 import android.widget.TextView;
 
 import org.digitalillusion.droid.iching.IChingActivityRenderer;
 import org.digitalillusion.droid.iching.R;
 import org.digitalillusion.droid.iching.changinglines.ChangingLinesEvaluator;
+import org.digitalillusion.droid.iching.utils.BackgroundTask;
 import org.digitalillusion.droid.iching.utils.Consts;
+import org.digitalillusion.droid.iching.utils.ProgressPopup;
 import org.digitalillusion.droid.iching.utils.SettingsManager.SETTINGS_MAP;
 import org.digitalillusion.droid.iching.utils.Utils;
 import org.digitalillusion.droid.iching.utils.sql.HexSection;
@@ -68,12 +69,12 @@ public abstract class RemoteResolver {
   /**
    * A pointer to the last remote request *
    */
-  private static AsyncTask<?, ?, ?> worker;
+  private static BackgroundTask<String> worker;
 
   /**
    * A pointer to the dialog showing the waiting animation *
    */
-  private static ProgressDialog progressDialog;
+  private static ProgressPopup progressDialog;
 
   /**
    * The dictionaries definitions
@@ -99,12 +100,12 @@ public abstract class RemoteResolver {
     Spanned spanned = null;
     if (result != null && result.indexOf(Utils.HEX_SECTION_QUOTE_DELIMITER) > 0) {
       result = result.replaceAll(Utils.NEWLINE, "<br/>");
-      spanned = Html.fromHtml(
+      spanned = Utils.fromHtml(
           "<small><em>" + result.substring(0, result.indexOf(Utils.HEX_SECTION_QUOTE_DELIMITER)) + "</em><br/>" +
               result.substring(result.indexOf(Utils.HEX_SECTION_QUOTE_DELIMITER) + 2) + "</small>"
       );
     } else {
-      spanned = Html.fromHtml("<small>" + Html.fromHtml(result) + "</small>");
+      spanned = Utils.fromHtml("<small>" + Utils.fromHtml(result) + "</small>");
     }
     return spanned;
   }
@@ -143,8 +144,7 @@ public abstract class RemoteResolver {
     component.setText(Utils.EMPTY_STRING);
 
     if (progressDialog == null) {
-      progressDialog = new ProgressDialog(activity);
-      progressDialog.setMessage(Utils.s(R.string.remoteconn_please_wait));
+      progressDialog = new ProgressPopup(activity, Utils.s(R.string.remoteconn_please_wait));
     }
 
     final HexSectionDataSource dataSource = activity.getHexSectionDataSource();
@@ -167,13 +167,11 @@ public abstract class RemoteResolver {
           worker.cancel(true);
         }
 
-        ConnectivityManager connMgr = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         try {
-          if (networkInfo != null && networkInfo.isConnected()) {
+          if (isNetworkConnected(activity)) {
             if (!progressDialog.isShowing()) {
               // Show loading animation after a while
-              Handler handler = new Handler();
+              Handler handler = new Handler(Looper.getMainLooper());
               handler.postDelayed(new Runnable() {
                 public void run() {
                   if (!activity.isFinishing() && !activity.isChangingConfigurations() && progressDialog != null) {
@@ -182,9 +180,9 @@ public abstract class RemoteResolver {
                 }
               }, 1000);
             }
-            worker = new AsyncTask<Object, Integer, String>() {
+            worker = new BackgroundTask<String>() {
               @Override
-              protected String doInBackground(Object... params) {
+              protected String doInBackground() {
                 try {
                   String connectionMode = (String) activity.getSettingsManager().get(SETTINGS_MAP.CONNECTION_MODE);
                   // Download only in online mode
@@ -203,8 +201,6 @@ public abstract class RemoteResolver {
 
               @Override
               protected void onPostExecute(String result) {
-                super.onPostExecute(result);
-
                 dismissProgressDialog();
 
                 askRetry = true;
@@ -224,7 +220,7 @@ public abstract class RemoteResolver {
                   }
                 }
               }
-            }.execute(hex, section);
+            }.execute();
           } else {
             throw new ExecutionException(new Throwable());
           }
@@ -251,13 +247,14 @@ public abstract class RemoteResolver {
       dismissProgressDialog();
       Spanned spanned = remoteStringCache.get(key);
       component.setText(spanned);
-    }
 
-    if (component.getText().length() == 0 && worker == null) {
-      remoteStringCache.remove(key);
-      renderRemoteString(component, retryAction, activity, hex, section);
+      if (component.getText().length() == 0 && worker == null) {
+        // Empty cached definition: load it again from the data source or the network.
+        // Retrying only here bounds the retry to one, as the key is no longer cached
+        remoteStringCache.remove(key);
+        renderRemoteString(component, retryAction, activity, hex, section);
+      }
     }
-
   }
 
   /**
@@ -322,8 +319,23 @@ public abstract class RemoteResolver {
     return Utils.streamToString(is);
   }
 
-  public static  AsyncTask<?, ?, ?> getWorker() {
+  public static BackgroundTask<String> getWorker() {
     return worker;
+  }
+
+  /**
+   * @param context The context providing the connectivity service
+   * @return True if the active network can reach the internet
+   */
+  @SuppressWarnings("deprecation")
+  private static boolean isNetworkConnected(Context context) {
+    ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      NetworkCapabilities capabilities = connMgr.getNetworkCapabilities(connMgr.getActiveNetwork());
+      return capabilities != null && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET);
+    }
+    android.net.NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+    return networkInfo != null && networkInfo.isConnected();
   }
 
 }

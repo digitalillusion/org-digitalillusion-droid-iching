@@ -11,7 +11,55 @@ Download from Play Store:
 
 https://play.google.com/store/apps/details?id=org.digitalillusion.droid.iching
 
+## Build
+
+Requirements:
+- JDK 21: Gradle 8.14 does not run on JDK 25
+- Gradle 8.14.3 (the repository has no Gradle wrapper); the Android Gradle Plugin 8.13 needs Gradle 8.13 or later
+- Android SDK with `platforms;android-36` and `build-tools;36.0.0`
+
+Two git-ignored files have to be created in the project root. `local.properties` points to the Android SDK:
+
+```properties
+sdk.dir=/path/to/Android/Sdk
+```
+
+`gradle.properties` enables AndroidX, used through `androidx.core`, and keeps resource IDs final, because the code uses them as `switch` cases:
+
+```properties
+android.useAndroidX=true
+android.nonFinalResIds=false
+```
+
+Then:
+
+```sh
+gradle assembleDebug   # APK in build/outputs/apk/debug/
+gradle lintDebug       # report in build/reports/lint-results-debug.html
+```
+
+The debug build has the `.debug` application ID suffix, so it installs next to the Play Store version.
+
+## Test
+
+There are no automated tests: changes are checked by hand on a device or an emulator. To set up an Android 16 emulator and run the debug build on it:
+
+```sh
+sdkmanager "platform-tools" "emulator" "system-images;android-36;google_apis;x86_64"
+avdmanager create avd -n api36 -k "system-images;android-36;google_apis;x86_64" -d pixel_7
+emulator -avd api36 &
+adb install -r build/outputs/apk/debug/org-digitalillusion-droid-iching-debug.apk
+adb shell am start -n org.digitalillusion.droid.iching.debug/org.digitalillusion.droid.iching.IChingActivity
+```
+
 ## Changelog
+
+*Bugfix Release 1.11.4*
+- Mandatory update to API 36
+- Screen orientation setting hidden on large screens with Android 16, which ignores it
+
+Bugfix:
+- App not responding when opening a definition not yet downloaded without a connection
 
 *Bugfix Release 1.11.3*
 - Mandatory upgrade encryption scheme

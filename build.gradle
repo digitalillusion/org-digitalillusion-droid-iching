@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.2.2'
+        classpath 'com.android.tools.build:gradle:8.13.2'
     }
 }
 apply plugin: 'com.android.application'
@@ -22,12 +22,12 @@ android {
         }
     }
     namespace 'org.digitalillusion.droid.iching'
-    compileSdk 34
+    compileSdk 36
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 34
-        versionCode 92
-        versionName "1.11.3"
+        minSdk 14
+        targetSdk 36
+        versionCode 93
+        versionName "1.11.4"
     }
     sourceSets {
         main {

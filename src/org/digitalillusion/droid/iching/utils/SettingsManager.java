@@ -2,6 +2,9 @@ package org.digitalillusion.droid.iching.utils;
 
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Build;
+
+import androidx.core.os.ConfigurationCompat;
 
 import org.digitalillusion.droid.iching.IChingActivityRenderer;
 import org.digitalillusion.droid.iching.utils.lists.SettingsEntry;
@@ -104,16 +107,17 @@ public class SettingsManager {
    * @param optionsList  The list of options to which this option has to be add
    * @param name         A name for the option
    * @param values       The possible settings for this option
-   * @param defaultValue The default setting for this option
+   * @param setting      The setting this option edits, providing its current value
    */
   @SuppressWarnings("unchecked")
-  public <T extends Serializable> void createOption(List<SettingsEntry<?>> optionsList, String name, T[] values, SETTINGS_MAP defaultValue) {
+  public <T extends Serializable> void createOption(List<SettingsEntry<?>> optionsList, String name, T[] values, SETTINGS_MAP setting) {
     SettingsEntry<T> newOption = new SettingsEntry<T>();
     for (T val : values) {
       newOption.addOptionValue(val);
     }
     newOption.setOptionName(name);
-    newOption.setOptionValue((T) get(defaultValue));
+    newOption.setSetting(setting);
+    newOption.setOptionValue((T) get(setting));
     optionsList.add(newOption);
   }
 
@@ -137,7 +141,7 @@ public class SettingsManager {
   public Serializable getDefault(SETTINGS_MAP setting) throws InvalidParameterException {
     Serializable defaultValue = null;
     if (setting.equals(SETTINGS_MAP.LANGUAGE)) {
-      defaultValue = context.getResources().getConfiguration().locale.getLanguage();
+      defaultValue = ConfigurationCompat.getLocales(context.getResources().getConfiguration()).get(0).getLanguage();
     }
 
     if (defaultValue != null && Arrays.asList(SETTINGS_VALUES_MAP.get(setting)).contains(defaultValue)) {
@@ -152,7 +156,19 @@ public class SettingsManager {
    */
   public Locale getLocale() {
     String lang = (String) get(SETTINGS_MAP.LANGUAGE);
-    return new Locale(lang);
+    return localeOf(lang);
+  }
+
+  /**
+   * @param language An ISO 639 language code
+   * @return The locale of the language
+   */
+  @SuppressWarnings("deprecation")
+  public static Locale localeOf(String language) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      return Locale.forLanguageTag(language);
+    }
+    return new Locale(language);
   }
 
   /**
@@ -201,12 +217,19 @@ public class SettingsManager {
    * @param locale
    * @return True if locale was updated, false otherwise
    */
+  @SuppressWarnings("deprecation")
   public boolean setLocale(Locale locale) {
     Resources resources = context.getResources();
     Configuration config = resources.getConfiguration();
-    if (!config.locale.equals(locale)) {
+    if (!locale.equals(ConfigurationCompat.getLocales(config).get(0))) {
       Locale.setDefault(locale);
-      config.locale = locale;
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        config.setLocale(locale);
+      } else {
+        config.locale = locale;
+      }
+      // Switches the language in place: its replacement, createConfigurationContext,
+      // would require recreating the activity at every language change
       resources.updateConfiguration(config, resources.getDisplayMetrics());
       put(SETTINGS_MAP.LANGUAGE, locale.getLanguage());
       return true;

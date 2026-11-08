@@ -10,9 +10,15 @@ import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.text.Spanned;
 import android.util.Log;
+import android.view.WindowManager;
+
+import androidx.core.text.HtmlCompat;
 
 import org.digitalillusion.droid.iching.changinglines.ChangingLinesEvaluator;
 import org.digitalillusion.droid.iching.utils.lists.HistoryEntry;
@@ -62,6 +68,10 @@ public class Utils {
    * Delimiter of the quote in hexagram sections definition *
    */
   public static final String HEX_SECTION_QUOTE_DELIMITER = "\\e";
+  /**
+   * Smallest width from which Android considers a display a large screen *
+   */
+  private static final int LARGE_SCREEN_SMALLEST_WIDTH_DP = 600;
   private static Context context;
 
   public static HistoryEntry buildDummyHistoryEntry() {
@@ -717,6 +727,29 @@ public class Utils {
       default:
         return true;
     }
+  }
+
+  /**
+   * @param html An HTML string
+   * @return The HTML rendered as styled text, as the legacy Html.fromHtml(String) did
+   */
+  public static Spanned fromHtml(String html) {
+    return HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_LEGACY);
+  }
+
+  /**
+   * Apps targeting Android 16 can't lock the screen orientation on displays
+   * whose smallest width is at least 600dp: the system ignores the request
+   *
+   * @return True if a screen orientation lock is honoured on this device
+   */
+  public static boolean isScreenOrientationLockable() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
+      Rect bounds = context.getSystemService(WindowManager.class).getMaximumWindowMetrics().getBounds();
+      float density = context.getResources().getDisplayMetrics().density;
+      return Math.min(bounds.width(), bounds.height()) / density < LARGE_SCREEN_SMALLEST_WIDTH_DP;
+    }
+    return true;
   }
 
   public static Drawable invertDrawable(Resources resources, int drawableId) {

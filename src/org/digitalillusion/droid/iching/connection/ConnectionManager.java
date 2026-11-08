@@ -1,17 +1,16 @@
 package org.digitalillusion.droid.iching.connection;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.res.Resources.NotFoundException;
-import android.os.AsyncTask;
 
 import org.digitalillusion.droid.iching.IChingActivity;
 import org.digitalillusion.droid.iching.IChingActivityRenderer;
 import org.digitalillusion.droid.iching.R;
 import org.digitalillusion.droid.iching.changinglines.ChangingLinesEvaluator;
+import org.digitalillusion.droid.iching.utils.BackgroundTask;
 import org.digitalillusion.droid.iching.utils.Consts;
+import org.digitalillusion.droid.iching.utils.ProgressPopup;
 import org.digitalillusion.droid.iching.utils.SettingsManager;
 import org.digitalillusion.droid.iching.utils.SettingsManager.SETTINGS_MAP;
 import org.digitalillusion.droid.iching.utils.Utils;
@@ -34,8 +33,8 @@ import java.util.List;
  */
 public class ConnectionManager {
 
-  AsyncTask<Object, Object, Object> task;
-  private ProgressDialog progressDialog;
+  BackgroundTask<Void> task;
+  private ProgressPopup progressPopup;
 
   /**
    * Safely abort the current download
@@ -43,12 +42,14 @@ public class ConnectionManager {
    * @param activity To display a toast message
    */
   public void cleanUp(IChingActivityRenderer activity) {
-    if (progressDialog != null && progressDialog.isShowing()) {
-      progressDialog.dismiss();
-      if (progressDialog.getProgress() < progressDialog.getMax() && task.cancel(true)) {
+    if (task != null) {
+      if (progressPopup.getProgress() < progressPopup.getMax() && task.cancel(true)) {
         activity.showToast(Utils.s(R.string.connection_on_to_off_abort));
       }
       task = null;
+    }
+    if (progressPopup != null) {
+      progressPopup.dismiss();
     }
   }
 
@@ -101,14 +102,14 @@ public class ConnectionManager {
     final HexSectionDataSource dataSource = activity.getHexSectionDataSource();
     if (settings.get(SETTINGS_MAP.CONNECTION_MODE).equals(Consts.CONNECTION_MODE_ONLINE)) {
       if (task == null || task.isCancelled()) {
-        task = new AsyncTask<Object, Object, Object>() {
+        task = new BackgroundTask<Void>() {
           @Override
-          protected Object doInBackground(Object... params) {
+          protected Void doInBackground() {
             List<Integer> specialCases = Arrays.asList(ChangingLinesEvaluator.ICHING_ALL_LINES_DESC);
             RemoteResolver.clearCache();
             for (int i = 0; i < Consts.HEX_COUNT && !isCancelled(); i++) {
               int hexIndex = i + 1;
-              progressDialog.setProgress(hexIndex);
+              progressPopup.setProgress(hexIndex);
               String hex = getHexFromIndex(hexIndex);
 
               List<String> sections = new ArrayList<String>();
@@ -149,8 +150,7 @@ public class ConnectionManager {
           }
 
           @Override
-          protected void onPostExecute(Object result) {
-            super.onPostExecute(result);
+          protected void onPostExecute(Void result) {
             cleanUp(activity);
             successTask.run();
             task = null;
@@ -158,30 +158,18 @@ public class ConnectionManager {
 
           @Override
           protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(activity) {
-              public void onBackPressed() {
-                cleanUp(activity);
-              }
-
-              ;
-            };
-            progressDialog.setMessage(Utils.s(R.string.connection_on_to_off_download));
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            progressDialog.setMax(Consts.HEX_COUNT);
-            progressDialog.setOnDismissListener(new OnDismissListener() {
-              public void onDismiss(DialogInterface dialog) {
-                cleanUp(activity);
-              }
-            });
-            progressDialog.setTitle(getTitle(dictionary, lang));
-            progressDialog.setProgress(1);
-            progressDialog.show();
+            progressPopup = new ProgressPopup(activity, getTitle(dictionary, lang),
+                Utils.s(R.string.connection_on_to_off_download), Consts.HEX_COUNT);
+            // Dismissing the popup, as with the back button, aborts the download
+            progressPopup.setOnDismissListener(dialog -> cleanUp(activity));
+            progressPopup.setCanceledOnTouchOutside(false);
+            progressPopup.setProgress(1);
+            progressPopup.show();
           }
         };
-        task.execute(new Object[0]);
-      } else if (progressDialog != null && !progressDialog.isShowing()) {
-        progressDialog.show();
+        task.execute();
+      } else if (progressPopup != null && !progressPopup.isShowing()) {
+        progressPopup.show();
       }
     }
   }

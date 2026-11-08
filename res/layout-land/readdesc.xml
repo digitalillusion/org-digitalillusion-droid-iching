@@ -264,6 +264,7 @@
                                 android:freezesText="true"
                                 android:gravity="top"
                                 android:inputType="textNoSuggestions|textMultiLine"
+                                android:justificationMode="inter_word"
                                 android:paddingLeft="5dp"
                                 android:requiresFadingEdge="vertical"
                                 android:scrollbarStyle="insideInset"

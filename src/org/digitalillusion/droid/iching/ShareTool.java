@@ -4,9 +4,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.Editable;
-import android.text.Html;
 import android.widget.Button;
 import android.widget.EditText;
+
+import androidx.core.text.HtmlCompat;
 
 import org.digitalillusion.droid.iching.changinglines.ChangingLinesEvaluator;
 import org.digitalillusion.droid.iching.connection.RemoteResolver;
@@ -80,7 +81,7 @@ public class ShareTool {
     // Question
     final String title = "<h1>" + current.question + "</h1>";
     if (shareContent != null) {
-      sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, Html.fromHtml(title + hexHeader + shareContent));
+      sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, Utils.fromHtml(title + hexHeader + shareContent));
       activity.startActivity(Intent.createChooser(sharingIntent, Utils.s(R.string.read_share_using)));
     } else {
       final AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
@@ -189,7 +190,7 @@ public class ShareTool {
       return null;
     }
     // Content
-    final String content = "<p>" + Html.toHtml(fakeEditText.getText()) + "</p>";
+    final String content = "<p>" + HtmlCompat.toHtml(fakeEditText.getText(), HtmlCompat.TO_HTML_PARAGRAPH_LINES_CONSECUTIVE) + "</p>";
     return em + content;
   }
 
