@@ -54,6 +54,11 @@ adb shell am start -n org.digitalillusion.droid.iching.debug/org.digitalillusion
 
 ## Changelog
 
+*Bugfix Release 1.11.5*
+
+Bugfix:
+- Back button and gesture not returning to the start page on some devices
+
 *Bugfix Release 1.11.4*
 - Mandatory update to API 36
 - Screen orientation setting hidden on large screens with Android 16, which ignores it

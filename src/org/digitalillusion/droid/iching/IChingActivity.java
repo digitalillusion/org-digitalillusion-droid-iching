@@ -2,6 +2,7 @@ package org.digitalillusion.droid.iching;
 
 import static org.digitalillusion.droid.iching.utils.SettingsManager.NO_ACTION;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -843,20 +844,14 @@ public class IChingActivity extends IChingActivityRenderer {
   }
 
   /**
-   * Implementation of the onKeyDown method to deal with back button
-   *
-   * @param keyCode The pressed key code
-   * @param event   The key down event
-   * @return true if the event has been consumed, false otherwise
+   * Back navigation when it is not delivered to the callback registered in onCreate:
+   * before Android 13, or on devices that still send back as a key event
    */
   @Override
-  public boolean onKeyDown(int keyCode, KeyEvent event) {
-    // From Android 13 back navigation is delivered to the callback registered in onCreate
-    if (keyCode == KeyEvent.KEYCODE_BACK && Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-      navigateBack();
-      return true;
-    }
-    return false;
+  @SuppressWarnings("deprecation")
+  @SuppressLint("GestureBackNavigation")
+  public void onBackPressed() {
+    navigateBack();
   }
 
   /**
